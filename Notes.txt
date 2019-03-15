@@ -12,3 +12,8 @@
 3. Game Manager:
 	a. Connects between player actions and the maze itself
 	b. Loops for required steps
+4. General Design:
+	a. Maze class
+	b. Player class
+	c. Manager class
+	d. 
