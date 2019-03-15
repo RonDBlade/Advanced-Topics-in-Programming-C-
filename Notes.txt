@@ -1,0 +1,14 @@
+1. Parse a maze
+	a. Open a file from command line - verify if more than two cmd arguments are considered as error?
+	b. Parse Header and check for errors in input file and print accordingly
+	c. Check output file
+	d. Check we have all needed characters in the maze
+	e. Save maze in memory as a class of two dimentional char arrays
+2. Create a player
+	a. Should include: Current position, Previous position (verify if we can keep it), Bookmark position
+	b. Logic: If stuck in a corner, enable moving to previous position, shouldn't move to previos position otherwise, generate possible moves set and remove previous position from it, try moving in a direction and remove it if it's blocked.
+	c. Functions: move() - returns enum , 
+	d. Check in forums: Can the player see the walls around him
+3. Game Manager:
+	a. Connects between player actions and the maze itself
+	b. Loops for required steps
