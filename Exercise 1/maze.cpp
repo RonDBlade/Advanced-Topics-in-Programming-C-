@@ -8,8 +8,9 @@
 #define HEADER_LENGTH 3
 #define TOKEN_LENGTH 2
 
-using std::cout
-using std::string
+using std::cout;
+using std::string;
+using std::endl;
 
 bool check_if_int(char* token){
     for (int i = 0; i < token.length(); i++){
@@ -67,15 +68,20 @@ bool file_exists(const string& file_path){
 }
 
 int main(int argc, char* argv[]){
-    ifstream input_file (argv[1])
+    if(argc==1){
+        cout<<"Missing maze file argument in command line"<<endl;
+        return 0;
+    }
+    ifstream input_file (argv[1]);
     if !(input_file.is_open()){
         // Add to errors
     }
     if !(is_header_valid(input_file)){
         // Errors
     }
-    if (file_exists(argv[2])){
-        // Print errors
+    if (file_exists(argv[2])){/*bad path==directories that describe this path don't exist i think(ron),need to add a check for that*/
+        cout<<"Command line argument for output file: " << argv[2] << "points to a bad path or to a file that already exists" << endl;
+
     }
     parse_maze();
 }
