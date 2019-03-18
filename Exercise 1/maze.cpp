@@ -26,49 +26,51 @@ bool check_if_int(char* token){
     return true;
 }
 
-bool is_header_valid(ifstream input_file, int* maze_data){
-    string line, word;
+bool is_header_valid(ifstream& input_file, int* maze_data){
+    string line;
+    char *token, *cstr_line;
     int i;
     bool valid = true;
     getline(input_file, line); // First row is not relevant for parsing
     while (i < HEADER_LENGTH){
         getline(input_file, line);
-        getline(line, word, delimiter);
+        strcpy(cstr_line, line.c_str());
+        token = strtok(cstr_line, delimiter);
         switch(i){
         case 0:
-            if (word != "MaxSteps"){
+            if (strcmp(token, "MaxSteps")){
                 // Print error
                 valid = false;
             }
             break;
         case 1:
-            if (word != "Rows"){
+            if (strcmp(token, "Rows")){
                 // Print error
                 valid = false;
             }
             break;
         case 2:
-            if (word != "Cols"){
+            if (strcmp(token, "Cols")){
                 // Print error
                 valid = false;
             }
             break;
         }
-        getline(line, word, delimiter);
-        if (word != "="){
+        token = strtok(nullptr, delimiter);
+        if (strcmp(token, "=")){//maybe change to strcmp if it yells that its a char since it is only 1 char long
             // Print error
             valid = false;
         }
-        getline(line, word, delimiter);
-        if (check_if_int(word)){
-                maze_data[i] = stoi(word);
+        token = strtok(nullptr, delimiter);
+        if (check_if_int(token)){
+                maze_data[i] = stoi(token);
         }
         else{
             // Print error
             valid = false;
         }
-        getline(line, word, delimiter);
-        if (word != nullptr){
+        token = strtok(nullptr, delimiter);
+        if (token != nullptr){
             // Print error - more tokens than needed
             valid = false;
         }
@@ -87,10 +89,11 @@ int main(int argc, char* argv[]){
         return 0;
     }
     ifstream input_file (argv[1]);
-    if !(input_file.is_open()){
+    if (!input_file.is_open()){
         // Add to errors
     }
-    if !(is_header_valid(input_file)){
+    int maze_data[3] = {0};
+    if (!is_header_valid(input_file, maze_data)){
         // Errors
     }
     if (file_exists(argv[2])){/*bad path==directories that describe this path don't exist i think(ron),need to add a check for that*/
