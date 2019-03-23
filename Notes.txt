@@ -17,3 +17,9 @@
 	b. Player class
 	c. Manager class
 	d. 
+	
+	
+	
+	
+5.NOTES:
+	a.When parsing the maze file,there might be spaces between the words,and there might not be(MaxSteps=69 is a legal row)
