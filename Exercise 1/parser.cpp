@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 #include <cstring>
-
+#include "maze.h"
 
 #define delimiter " \t\r"
 #define HEADER_LENGTH 3
@@ -29,7 +29,7 @@ bool check_if_int(char* token){
 bool is_header_valid(ifstream& input_file, int* maze_data){
     string line;
     char *token, *cstr_line;
-    int i;
+    int i = 0;
     bool valid = true;
     getline(input_file, line); // First row is not relevant for parsing
     while (i < HEADER_LENGTH){
@@ -100,5 +100,5 @@ int main(int argc, char* argv[]){
         cout<<"Command line argument for output file: " << argv[2] << "points to a bad path or to a file that already exists" << endl;
 
     }
-    parse_maze();
+
 }
