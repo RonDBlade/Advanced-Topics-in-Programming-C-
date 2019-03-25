@@ -1,6 +1,7 @@
 1. Parse a maze
 	a. Open a file from command line - verify if more than two cmd arguments are considered as error?
 	b. Parse Header and check for errors in input file and print accordingly
+		i. Find substrings and verify there are no extra chars that aren't part of header. For the last part, maybe scanf will work.
 	c. Check output file
 	d. Check we have all needed characters in the maze
 	e. Save maze in memory as a class of two dimentional char arrays
