@@ -22,6 +22,7 @@ public:
     void parse_maze(ifstream input_file); /*why do we need this?or atleast why here?*/
     pair<unsigned int, unsigned int> getStart()const;
     unsigned int getMaxSteps()const;
+    char getChar(pair<unsigned int, unsigned int>)const;
 };
 
 #endif // MAZE_H_INCLUDED

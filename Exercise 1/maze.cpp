@@ -28,3 +28,7 @@ pair<unsigned int, unsigned int> Maze::getStart()const{
 unsigned int Maze::getMaxSteps()const{
     return maxSteps;
 }
+
+char Maze::getChar(pair<unsigned int, unsigned int> mazePos)const{
+    return mazeData<mazePos.first><mazePos.second>;
+}
