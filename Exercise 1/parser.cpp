@@ -1,6 +1,8 @@
 #include <iostream>
+#include <regex>
 #include <fstream>
 #include <string>
+#include <sstream>
 #include <cstring>
 #include "maze.h"
 
@@ -26,56 +28,35 @@ bool check_if_int(char* token){
     return true;
 }
 
-bool is_header_valid(ifstream& input_file, int* maze_data){
-    string line;
-    char *token, *cstr_line;
-    int i = 0;
-    bool valid = true;
-    getline(input_file, line); // First row is not relevant for parsing
-    while (i < HEADER_LENGTH){
-        getline(input_file, line);
-        strcpy(cstr_line, line.c_str());
-        token = strtok(cstr_line, delimiter);
-        switch(i){
-        case 0:
-            if (strcmp(token, "MaxSteps")){
-                // Print error
-                valid = false;
-            }
-            break;
-        case 1:
-            if (strcmp(token, "Rows")){
-                // Print error
-                valid = false;
-            }
-            break;
-        case 2:
-            if (strcmp(token, "Cols")){
-                // Print error
-                valid = false;
-            }
-            break;
+bool does_header_contains_word(int line_number, string line, string word, bool* header_valid){
+    const std::regex header_pattern("\\s*\\b" + word + "\\b\\s*=\\s*[0-9]+\\s*");
+    if (!std::regex_match(line, header_pattern)){
+        if (*header_valid){
+            *header_valid = false;
+            cout << "Bad maze file header:" << endl;
         }
-        token = strtok(nullptr, delimiter);
-        if (strcmp(token, "=")){//maybe change to strcmp if it yells that its a char since it is only 1 char long
-            // Print error
-            valid = false;
-        }
-        token = strtok(nullptr, delimiter);
-        if (check_if_int(token)){
-                maze_data[i] = stoi(token);
-        }
-        else{
-            // Print error
-            valid = false;
-        }
-        token = strtok(nullptr, delimiter);
-        if (token != nullptr){
-            // Print error - more tokens than needed
-            valid = false;
-        }
+        cout << "expected in line " << line_number << " - " << word << " = <num>" << endl;
+        cout << "got: " << line;
+        return false;
     }
-    return valid;
+    return true;
+}
+
+bool is_header_valid(ifstream& input_file, int* maze_data){
+    string line, number;
+    bool header_valid = true;
+    istringstream iss(s);
+    getline(input_file, line); // First row is not relevant for parsing
+    getline(input_file, line);
+    if (does_header_contains_word(line, "MaxSteps")){
+        iss(line) >> >> >> std::stoi(number);
+        maze_data[0] = stoi(number);
+    }
+    getline(input_file, line);
+    does_header_contains_word(line, "Rows");
+    getline(input_file, line);
+    does_header_contains_word(line, "Cols");
+    return header_valid;
 }
 
 bool file_exists(const string& file_path){
