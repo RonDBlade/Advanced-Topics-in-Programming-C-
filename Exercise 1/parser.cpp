@@ -66,7 +66,7 @@ bool file_exists(const string& file_path){
 
 int main(int argc, char* argv[]){
     if(argc==1){
-        cout<<"Missing maze file argument in command line"<<endl;
+        cout << "Missing maze file argument in command line" << endl;
         return 0;
     }
     ifstream input_file (argv[1]);
@@ -77,8 +77,10 @@ int main(int argc, char* argv[]){
     if (!is_header_valid(input_file, maze_data)){
         // Errors
     }
+    Maze gameMaze = new Maze(maze_data[0], maze_data[1], maze_data[2]);
+    gameMaze.parse_maze(input_file);
     if (file_exists(argv[2])){/*bad path==directories that describe this path don't exist i think(ron),need to add a check for that*/
-        cout<<"Command line argument for output file: " << argv[2] << "points to a bad path or to a file that already exists" << endl;
+        cout << "Command line argument for output file: " << argv[2] << "points to a bad path or to a file that already exists" << endl;
 
     }
 

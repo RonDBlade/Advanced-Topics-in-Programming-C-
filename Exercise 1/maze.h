@@ -15,6 +15,7 @@ class Maze{
     unsigned int rows;
     unsigned int cols;
     pair<unsigned int, unsigned int> startPos;
+    pair<unsigned int, unsigned int> treasurePos;
     vector<vector<char>> mazeData;
 
 public:
