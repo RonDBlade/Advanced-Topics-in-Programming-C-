@@ -10,24 +10,49 @@ Maze::Maze(unsigned int maxSteps_, unsigned int rows_, unsigned int cols_): maxS
     }
 }
 
+string fixInputLine(string line, int required_length){
+    int line_length = line.length();
+    if (line_length > required_length){
+        return line.substr(0, required_length);
+    }
+    if (line_length < required_length){
+        return line.append(required_length - line_length, '0');
+    }
+    return line;
+}
+
+bool Maze::readMaze(ifstream input_file){
+    string line;
+    int current_line;
+    while (getline(input_file, line) && current_line < rows){
+        line = fixInputLine(line, cols);
+        mazeData[current_line++] = vector<char>(line.begin(), line.end());
+    }
+    while (current_line < rows){
+        mazeData[current_line++] = vector<char>(fixInputLine("", cols));
+    }
+}
+
+bool Maze::checkLineChars(string line, bool saw_treasure, bool saw_player, int col, int row){
+
+    if (line.find_first_not_of(" $@#") != string::npos){
+        cout << "Bad maze in maze file:" << endl <<
+    }
+}
 //TODO: Fix implementation to trim/pad a line according to it's length
 //and check if it's valid using     return str.find_first_not_of("0123456789") == std::string::npos;
 //Then, search for treasure and player in any way - char checking or finding indexes
 //Lastly, add line to vector by pushing it in any suitable way
 bool Maze::parse_maze(ifstream input_file){
     unsigned int curr_col, curr_row = 0;
-    bool saw_treasue = false;
-    bool saw_player = false;
-    string line;
-    istringstream iss;
-    char current_cell;
+    bool mazeValid = true;
+    readMaze(input_file);
+
     while ((curr_row < rows) && maze_valid){
         getline(input_file, line);
-        iss(line);
+        line = fixInputLine(line, cols);
         curr_col = 0;
         while (((curr_col < cols) && (curr_col < line.length())) && maze_valid){
-                iss >> current_cell;
-                mazeData[curr_row][curr_col] = current_cell;
                 switch(current_cell){
                     case ' ':
                         break;
