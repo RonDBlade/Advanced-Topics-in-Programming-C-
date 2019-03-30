@@ -13,10 +13,35 @@ pair<int, int> Player::player_pos()const{
     return current_position;
 }
 
-Move Player::chooseMove(){
-    return Move::UP; // TODO: Implement
+Move Player::chooseMove(){//for now,SIMPLE IMPLEMENTATION
+    bool checkLoc=Player::isKnown(current_position.first,current_position.second+1);//checks if the player discovered whats above him already
+    if(checkLoc)
+        return Move::UP;
+    checkLoc=Player::isKnown(current_position.first,current_position.second-1); //same for down
+    if(checkLoc)
+        return Move::DOWN;
+    checkLoc=Player::isKnown(current_position.first-1,current_position.second); //same for left
+    if(checkLoc)
+        return Move::LEFT;
+    checkLoc=Player::isKnown(current_position.first+1,current_position.second); //same for right
+    if(checkLoc)
+        return Move::RIGHT;
+    //if we got here,we already know ALL the locations which surround the player.Time to find which are a wall and which arent.
+    checkLoc=Player::isWall(current_position.first,current_position.second+1);//checks if the position above the player is a wall
+    if(!checkLoc)
+        return Move::UP;
+    checkLoc=Player::isWall(current_position.first,current_position.second-1);//same for down
+    if(!checkLoc)
+        return Move::DOWN;
+    checkLoc=Player::isWall(current_position.first-1,current_position.second);//same for left
+    if(!checkLoc)
+        return Move::LEFT;
+    checkLoc=Player::isWall(current_position.first+1,current_position.second);//same for right
+    if(!checkLoc)
+        return Move::RIGHT;
+    return Move::BOOKMARK;//if everything is a wall he is fucked lmaoooooooooooooooooooooo
 }
-void Player::update_map(char to_put,Move where){
+void Player::updateMap(char to_put,Move where){
         if(where==Move::UP)
             player_map[current_position.first][current_position.second+1]=to_put;
         else if(where==Move::DOWN)
