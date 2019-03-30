@@ -14,6 +14,7 @@ class Maze{
     unsigned int maxSteps;
     unsigned int rows;
     unsigned int cols;
+    bool mazeValid;
     pair<unsigned int, unsigned int> startPos;
     pair<unsigned int, unsigned int> treasurePos;
     vector<vector<char>> mazeData;

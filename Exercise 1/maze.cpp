@@ -3,7 +3,7 @@
 using std::vector;
 using std::string;
 
-Maze::Maze(unsigned int maxSteps_, unsigned int rows_, unsigned int cols_): maxSteps(maxSteps_), rows(rows_), cols(cols_){
+Maze::Maze(unsigned int maxSteps_, unsigned int rows_, unsigned int cols_): maxSteps(maxSteps_), rows(rows_), cols(cols_), mazeValid(true){
     mazeData.resize(rows);
     for(unsigned int i = 0; i < rows; i++){
         mazeData[i].resize(cols);
@@ -33,10 +33,16 @@ bool Maze::readMaze(ifstream input_file){
     }
 }
 
+bool findCharInMaze(char charToFind){
+    for (vector::iterator it = mazeData.begin(); it != mazeData.end(); it++){
+
+    }
+}
+
 bool Maze::checkLineChars(string line, bool saw_treasure, bool saw_player, int col, int row){
 
     if (line.find_first_not_of(" $@#") != string::npos){
-        cout << "Bad maze in maze file:" << endl <<
+        cout << "Bad maze in maze file:" << endl;
     }
 }
 //TODO: Fix implementation to trim/pad a line according to it's length
@@ -45,7 +51,6 @@ bool Maze::checkLineChars(string line, bool saw_treasure, bool saw_player, int c
 //Lastly, add line to vector by pushing it in any suitable way
 bool Maze::parse_maze(ifstream input_file){
     unsigned int curr_col, curr_row = 0;
-    bool mazeValid = true;
     readMaze(input_file);
 
     while ((curr_row < rows) && maze_valid){
@@ -94,4 +99,11 @@ unsigned int Maze::getMaxSteps()const{
 
 char Maze::getChar(pair<unsigned int, unsigned int> mazePos)const{
     return mazeData<mazePos.first><mazePos.second>;
+}
+
+bool Maze::printErrorHeader(){
+    if (mazeValid){
+        cout << "Bad maze in maze file:" << endl;
+        mazeValid = false;
+    }
 }
