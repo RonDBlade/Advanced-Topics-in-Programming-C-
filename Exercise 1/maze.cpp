@@ -64,17 +64,21 @@ bool findCharInMaze(char charToFind){
         }
     }
     if (!found_char){
+        printErrorHeader();
         cout << "Missing " << charToFind << " in maze" << endl;
         return false;
     }
     return true;
 }
 
-bool Maze::checkLineChars(string line, bool saw_treasure, bool saw_player, int col, int row){
-
-    if (line.find_first_not_of(" $@#") != string::npos){
-        cout << "Bad maze in maze file:" << endl;
+bool Maze::checkWrongChars(string allowedChars){
+    for (vector::iterator it = mazeData.begin(); it != mazeData.end(); it++){
+        if (it.has_not_of(allowedChars)){
+            printErrorHeader();
+            return false;
+        }
     }
+    return true;
 }
 //TODO: Fix implementation to trim/pad a line according to it's length
 //and check if it's valid using     return str.find_first_not_of("0123456789") == std::string::npos;
@@ -83,41 +87,13 @@ bool Maze::checkLineChars(string line, bool saw_treasure, bool saw_player, int c
 bool Maze::parse_maze(ifstream input_file){
     unsigned int curr_col, curr_row = 0;
     readMaze(input_file);
-
-    while ((curr_row < rows) && maze_valid){
-        getline(input_file, line);
-        line = fixInputLine(line, cols);
-        curr_col = 0;
-        while (((curr_col < cols) && (curr_col < line.length())) && maze_valid){
-                switch(current_cell){
-                    case ' ':
-                        break;
-                    case '@':
-                        if (saw_player){
-                                std::cout << "More than one @ in maze";
-                                return false;
-                                }
-                        saw_player = true;
-                        break;
-                    case '$':
-                        if (saw_treasue){
-                            std::cout << "More than one $ in maze";
-                                return false;
-                        }
-                        saw_treasue = true;
-                        break;
-                    default:
-
-                        }
-                mazeData[curr_row][curr_col] << line[curr_col];
-                curr_col++;
-        }
-        while (curr_col < cols){
-            mazeData[curr_row][curr_col] << ' ';
-            curr_col++;
-        }
-        curr_row++;
+    if (!findCharInMaze('@')){
+        return false;
     }
+    if (!findCharInMaze('$')){
+        return false;
+    }
+    return checkWrongChars("@$# ");
 }
 
 pair<unsigned int, unsigned int> Maze::getStart()const{
