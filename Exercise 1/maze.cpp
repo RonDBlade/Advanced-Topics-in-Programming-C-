@@ -34,9 +34,40 @@ bool Maze::readMaze(ifstream input_file){
 }
 
 bool findCharInMaze(char charToFind){
+    bool found_char = false;
+    iterator place_found_iter;
     for (vector::iterator it = mazeData.begin(); it != mazeData.end(); it++){
-
+        place_found_iter = std::find(it.begin(), it.end(), charToFind);
+        if (place_found_iter){
+            if(found_char){// We found it twice - not good
+                printErrorHeader();
+                cout << "More than one " << charToFind << " in maze" << endl;
+                return false;
+            }
+            found_char = true;
+            switch (charToFind){
+            case '@':
+                startPos.first = distance(mazeData.begin(), it);
+                startPos.second = distance(it.begin(), place_found_iter);
+                break;
+            case '$':
+                treasurePos.first = distance(mazeData.begin(), it);
+                treasurePos.second = distance(it.begin(), place_found_iter);
+                break;
+            }
+            place_found_iter = std::find(place_found_iter, it.end, charToFind);
+            if (place_found_iter){// Found the char again in the rest of the line
+                printErrorHeader();
+                cout << "More than one " << charToFind << " in maze" << endl;
+                return false;
+            }
+        }
     }
+    if (!found_char){
+        cout << "Missing " << charToFind << " in maze" << endl;
+        return false;
+    }
+    return true;
 }
 
 bool Maze::checkLineChars(string line, bool saw_treasure, bool saw_player, int col, int row){
