@@ -22,8 +22,9 @@ class Maze{
 
 public:
     Maze(unsigned int maxSteps_, unsigned int rows_, unsigned int cols_);
-    void parse_maze(ifstream input_file); /*why do we need this?or atleast why here?*/
+    void parse_maze(ifstream input_file);
     pair<unsigned int, unsigned int> getStart()const;
+    pair<unsigned int, unsigned int> getTreasure()const{
     unsigned int getMaxSteps()const;
     char getChar(pair<unsigned int, unsigned int>)const;
 };

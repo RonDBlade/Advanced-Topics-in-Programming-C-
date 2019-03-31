@@ -1,8 +1,5 @@
 #include "maze.h"
 
-using std::vector;
-using std::string;
-
 Maze::Maze(unsigned int maxSteps_, unsigned int rows_, unsigned int cols_): maxSteps(maxSteps_), rows(rows_), cols(cols_), mazeValid(true){
     mazeData.resize(rows);
     for(unsigned int i = 0; i < rows; i++){
@@ -33,7 +30,7 @@ bool Maze::readMaze(ifstream input_file){
     }
 }
 
-bool findCharInMaze(char charToFind){
+bool Maze::findCharInMaze(char charToFind)const{
     bool found_char = false;
     iterator place_found_iter;
     for (vector::iterator it = mazeData.begin(); it != mazeData.end(); it++){
@@ -71,7 +68,7 @@ bool findCharInMaze(char charToFind){
     return true;
 }
 
-bool Maze::checkWrongChars(string allowedChars){
+bool Maze::checkWrongChars(string allowedChars)const{
     for (vector::iterator it = mazeData.begin(); it != mazeData.end(); it++){
         if (it.has_not_of(allowedChars)){
             printErrorHeader();
@@ -80,10 +77,7 @@ bool Maze::checkWrongChars(string allowedChars){
     }
     return true;
 }
-//TODO: Fix implementation to trim/pad a line according to it's length
-//and check if it's valid using     return str.find_first_not_of("0123456789") == std::string::npos;
-//Then, search for treasure and player in any way - char checking or finding indexes
-//Lastly, add line to vector by pushing it in any suitable way
+
 bool Maze::parse_maze(ifstream input_file){
     unsigned int curr_col, curr_row = 0;
     readMaze(input_file);
@@ -98,6 +92,10 @@ bool Maze::parse_maze(ifstream input_file){
 
 pair<unsigned int, unsigned int> Maze::getStart()const{
     return startPos;
+}
+
+pair<unsigned int, unsigned int> Maze::getTreasure()const{
+    return treasurePos;
 }
 
 unsigned int Maze::getMaxSteps()const{
