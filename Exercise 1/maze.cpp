@@ -18,15 +18,16 @@ string fixInputLine(string line, int required_length){
     return line;
 }
 
-bool Maze::readMaze(ifstream input_file){
+void Maze::readMaze(ifstream input_file){
     string line;
-    int current_line;
+    unsigned int current_line;
     while (getline(input_file, line) && current_line < rows){
         line = fixInputLine(line, cols);
         mazeData[current_line++] = vector<char>(line.begin(), line.end());
     }
     while (current_line < rows){
-        mazeData[current_line++] = vector<char>(fixInputLine("", cols));
+        line = fixInputLine("", cols);
+        mazeData[current_line++] = vector<char>(line.begin(), line.end());
     }
 }
 

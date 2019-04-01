@@ -21,7 +21,7 @@ class Maze{
     vector<vector<char>> mazeData;
 
 
-    bool readMaze(ifstream input_file);
+    void readMaze(ifstream input_file);
 
 public:
     Maze(unsigned int maxSteps_, unsigned int rows_, unsigned int cols_);
