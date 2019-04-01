@@ -86,16 +86,15 @@ int main(int argc, char* argv[]){
         cout << "Command line argument for maze: " << argv[1] << "doesn't lead to a maze file or leads to a file that cannot be opened";
         return 1;
     }
+        if (file_exists(argv[2])){/*bad path==directories that describe this path don't exist i think(ron),need to add a check for that*/
+        cout << "Command line argument for output file: " << argv[2] << "points to a bad path or to a file that already exists" << endl;
+        is_valid_game = false;
+    }
     int maze_data[3] = {0};
     if (!is_header_valid(input_file, maze_data)){
         // Errors
         is_valid_game = false;
     }
-    Maze* gameMaze = new Maze(maze_data[0], maze_data[1], maze_data[2]);
-    is_valid_game = is_valid_game && gameMaze.parse_maze(input_file);
-    if (file_exists(argv[2])){/*bad path==directories that describe this path don't exist i think(ron),need to add a check for that*/
-        cout << "Command line argument for output file: " << argv[2] << "points to a bad path or to a file that already exists" << endl;
-
-    }
-
+    Maze *gameMaze = new Maze(maze_data[0], maze_data[1], maze_data[2]);
+    is_valid_game = is_valid_game && gameMaze->parse_maze(input_file);
 }

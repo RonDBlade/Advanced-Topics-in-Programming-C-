@@ -7,7 +7,7 @@ Maze::Maze(unsigned int maxSteps_, unsigned int rows_, unsigned int cols_): maxS
     }
 }
 
-bool Maze::parse_maze(ifstream input_file){
+bool Maze::parse_maze(istream input_file){
     readMaze(input_file);
     if (!findCharInMaze('@')){
         return false;
