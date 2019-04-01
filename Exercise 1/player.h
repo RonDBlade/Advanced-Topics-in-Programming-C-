@@ -29,7 +29,7 @@ class Player{
 public:
     Player();
     pair<int, int> player_pos()const;
-    Move chooseMove();
+    Move move();
     void updateMap(char to_put,Move where);
 };
 

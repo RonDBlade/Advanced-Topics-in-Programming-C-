@@ -30,13 +30,15 @@ unsigned int Maze::getMaxSteps()const{
     return maxSteps;
 }
 
-char Maze::getChar(pair<unsigned int, unsigned int> mazePos)const{
-    return mazeData<mazePos.first><mazePos.second>;
+unsigned int Maze::getRows()const{
+    return rows;
 }
 
-bool Maze::printErrorHeader(){
-    if (mazeValid){
-        cout << "Bad maze in maze file:" << endl;
-        mazeValid = false;
-    }
+unsigned int Maze::getCols()const{
+    return cols;
 }
+
+char Maze::getChar(pair<unsigned int, unsigned int> mazePos)const{
+    return mazeData[mazePos.first][mazePos.second];
+}
+

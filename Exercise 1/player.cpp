@@ -13,7 +13,7 @@ pair<int, int> Player::player_pos()const{
     return current_position;
 }
 
-Move Player::chooseMove(){//for now,SIMPLE IMPLEMENTATION
+Move Player::move(){//for now,SIMPLE IMPLEMENTATION
     bool checkLoc=Player::isKnown(current_position.first,current_position.second+1);//checks if the player discovered whats above him already
     if(checkLoc)
         return Move::UP;

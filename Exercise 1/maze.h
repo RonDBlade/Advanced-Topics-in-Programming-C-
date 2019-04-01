@@ -5,11 +5,14 @@
 #include <string>
 #include <utility>
 #include <algorithm>
+#include <iostream>
 
 using std::vector;
 using std::string;
 using std::ifstream;
 using std::pair;
+using std::endl;
+using std::cout;
 
 class Maze{
     unsigned int maxSteps;
@@ -18,7 +21,7 @@ class Maze{
     bool mazeValid;
     pair<unsigned int, unsigned int> startPos;
     pair<unsigned int, unsigned int> treasurePos;
-    vector<vector<char> > mazeData;
+    vector<string> mazeData;
 
 
 
@@ -28,7 +31,7 @@ class Maze{
             return line.substr(0, required_length);
         }
         if (line_length < required_length){
-            return line.append(required_length - line_length, '0');
+            return line.append(required_length - line_length, ' ');
         }
         return line;
     }
@@ -38,22 +41,21 @@ class Maze{
         unsigned int current_line;
         while (getline(input_file, line) && current_line < rows){
             line = fixInputLine(line, cols);
-            mazeData[current_line++] = vector<char>(line.begin(), line.end());
+            mazeData.push_back(line);
         }
         while (current_line < rows){
             line = fixInputLine("", cols);
-            mazeData[current_line++] = vector<char>(line.begin(), line.end());
+            mazeData.push_back(line);
         }
     }
 
 
-    bool findCharInMaze(char charToFind)const{
+    bool findCharInMaze(char charToFind){
         bool found_char = false;
-        vector<char>::iterator place_found_iter;
-        vector<vector<char> >::iterator it;
-        for (it = mazeData.begin(); it != mazeData.end(); it++){
-            place_found_iter = std::find(it.begin(), it.end(), charToFind);
-            if (place_found_iter){
+        size_t index_of_char;
+        for (auto it = mazeData.begin(); it != mazeData.end(); it++){
+            index_of_char = (*it).find(charToFind);
+            if (index_of_char != string::npos){
                 if(found_char){// We found it twice - not good
                     printErrorHeader();
                     cout << "More than one " << charToFind << " in maze" << endl;
@@ -63,15 +65,15 @@ class Maze{
                 switch (charToFind){
                 case '@':
                     startPos.first = distance(mazeData.begin(), it);
-                    startPos.second = distance(it.begin(), place_found_iter);
+                    startPos.second = index_of_char;
                     break;
                 case '$':
                     treasurePos.first = distance(mazeData.begin(), it);
-                    treasurePos.second = distance(it.begin(), place_found_iter);
+                    treasurePos.second = index_of_char;
                     break;
                 }
-                place_found_iter = std::find(place_found_iter, it.end, charToFind);
-                if (place_found_iter){// Found the char again in the rest of the line
+                index_of_char = (*it).find(charToFind, index_of_char);
+                if (index_of_char != string::npos){// Found the char again in the rest of the line
                     printErrorHeader();
                     cout << "More than one " << charToFind << " in maze" << endl;
                     return false;
@@ -86,10 +88,25 @@ class Maze{
         return true;
     }
 
-    bool checkWrongChars(string allowedChars)const{
-        for (vector::iterator it = mazeData.begin(); it != mazeData.end(); it++){
-            if (it.has_not_of(allowedChars)){
+    void printErrorHeader(){
+        if (mazeValid){
+            cout << "Bad maze in maze file:" << endl;
+            mazeValid = false;
+        }
+    }
+
+    bool checkWrongChars(string allowedChars){
+        std::size_t index_of_char;
+        for (vector<string>::iterator it = mazeData.begin(); it != mazeData.end(); it++){
+            index_of_char = (*it).find_first_not_of(allowedChars);
+            if (index_of_char != string::npos){
                 printErrorHeader();
+                if ((*it)[index_of_char] != '\t'){
+                    cout << "Wrong character in maze: " << (*it)[index_of_char] << " in row " << distance(mazeData.begin(), it) << ", col " << index_of_char << endl;
+                }
+                else{
+                    cout << "Wrong character in maze: TAB in row " << distance(mazeData.begin(), it) << ", col " << index_of_char << endl;
+                }
                 return false;
             }
         }
@@ -98,10 +115,12 @@ class Maze{
 
 public:
     Maze(unsigned int maxSteps_, unsigned int rows_, unsigned int cols_);
-    void parse_maze(ifstream input_file);
+    bool parse_maze(ifstream input_file);
     pair<unsigned int, unsigned int> getStart()const;
     pair<unsigned int, unsigned int> getTreasure()const;
     unsigned int getMaxSteps()const;
+    unsigned int getRows()const;
+    unsigned int getCols()const;
     char getChar(pair<unsigned int, unsigned int>)const;
 };
 

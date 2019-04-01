@@ -17,23 +17,25 @@ void gameFlow(Maze& gameMaze){
         else{
             switch(currPlayerMove){
             case Move::UP:
-                playerPos.second = (playerPos.second + 1) % gameMaze.rows;
+                playerPos.second = (playerPos.second + 1) % gameMaze.getRows();
                 break;
             case Move::DOWN:
-                playerPos.second = (playerPos.second - 1) % gameMaze.rows;
+                playerPos.second = (playerPos.second - 1) % gameMaze.getRows();
                 break;
             case Move::RIGHT:
-                playerPos.first = (playerPos.first + 1) % gameMaze.cols;
+                playerPos.first = (playerPos.first + 1) % gameMaze.getCols();
                 break;
             case Move::LEFT:
-                playerPos.first = (playerPos.first - 1) % gameMaze.cols;
+                playerPos.first = (playerPos.first - 1) % gameMaze.getCols();
+                break;
+            case Move::BOOKMARK:
                 break;
             }
             requestedTile = gameMaze.getChar(playerPos);
-            switch(requestedTile){
-            case ' ':
+            //switch(requestedTile){
+            //case ' ':
+            cout << requestedTile;
 
-            }
         }
     }
 }
