@@ -70,7 +70,7 @@ bool file_exists(const string& file_path){
     return file.good();
 }
 
-int main(int argc, char* argv[]){
+int parse_input(int num_of_arguments, char *arguments[]){
     bool is_valid_game;
     if(argc < 3){
         if (argc < 2){
@@ -96,5 +96,6 @@ int main(int argc, char* argv[]){
         is_valid_game = false;
     }
     Maze *gameMaze = new Maze(maze_data[0], maze_data[1], maze_data[2]);
-    is_valid_game = is_valid_game && gameMaze->parse_maze(input_file);
+    is_valid_game = is_valid_game && gameMaze->parse_maze(&input_file);
+    input_file.close();
 }

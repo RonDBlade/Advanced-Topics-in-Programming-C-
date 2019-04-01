@@ -5,6 +5,6 @@
 #include "player.h"
 #include <utility>
 
-void gameFlow(Maze& gameMaze);
+int gameFlow(int num_of_arguments, char *arguments[]);
 
 #endif // GAMEMANAGER_H_INCLUDED
