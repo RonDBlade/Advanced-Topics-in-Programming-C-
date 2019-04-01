@@ -2,8 +2,10 @@
 
 using std::pair;
 
-int gameFlow(int num_of_arguments, char *arguments[]){
+GameManager::GameManager(){};
 
+int gameFlow(int num_of_arguments, char *arguments[]){
+    parse_input(num_of_arguments, arguments);
     Player player = Player(); // Do we need it or we should just use empty constructor
     pair<unsigned int, unsigned int> playerPos = gameMaze.getStart(), bookmarkPos;
     int maxSteps = gameMaze.getMaxSteps(), currMoveNumber = 0;

@@ -1,22 +1,4 @@
-#include <iostream>
-#include <regex>
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <cstring>
-#include "maze.h"
-
-#define delimiter " \t\r"
-#define HEADER_LENGTH 3
-#define TOKEN_LENGTH 2
-
-using std::cout;
-using std::string;
-using std::endl;
-using std::stoi;
-using std::strtok;
-using std::ifstream;
-
+#include "parser.h"
 
 bool check_if_int(char* token){
     int string_length = strlen(token);
@@ -70,7 +52,7 @@ bool file_exists(const string& file_path){
     return file.good();
 }
 
-int parse_input(int num_of_arguments, char *arguments[]){
+Maze* parse_input(int num_of_arguments, char *arguments[]){
     bool is_valid_game;
     if(argc < 3){
         if (argc < 2){
@@ -86,9 +68,9 @@ int parse_input(int num_of_arguments, char *arguments[]){
         cout << "Command line argument for maze: " << argv[1] << "doesn't lead to a maze file or leads to a file that cannot be opened";
         return 1;
     }
-        if (file_exists(argv[2])){/*bad path==directories that describe this path don't exist i think(ron),need to add a check for that*/
-        cout << "Command line argument for output file: " << argv[2] << "points to a bad path or to a file that already exists" << endl;
-        is_valid_game = false;
+    if (file_exists(argv[2])){/*bad path==directories that describe this path don't exist i think(ron),need to add a check for that*/
+    cout << "Command line argument for output file: " << argv[2] << "points to a bad path or to a file that already exists" << endl;
+    is_valid_game = false;
     }
     int maze_data[3] = {0};
     if (!is_header_valid(input_file, maze_data)){
