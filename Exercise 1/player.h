@@ -16,7 +16,6 @@ class Player{
     int moveNumber=0;//keeps the count of moves for
     pair<int, int> current_position;
     pair<int, int> bookmark_position; /*should keep this as game manager data,since he doesnt remember where he put it*/
-    void hitWall(){}
     bool isKnown(int x,int y){//this PRIVATE method checks if player has been on this coordination yet.On HIS map,not the maze map.
         if(!player_map.count(x))//no point in this x coordination has been discovered,so this one hasn't either
             return false;
@@ -50,6 +49,7 @@ public:
     pair<int, int> player_pos()const;
     pair<int, int> bookmark_pos()const;
     Move move();
+    void hitWall(){}
     void updateMap(char to_put,Move where);
     void increaseMovenum();
     void setLocMove(int x,int y);

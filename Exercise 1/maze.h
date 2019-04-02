@@ -9,7 +9,7 @@
 
 using std::vector;
 using std::string;
-using std::istream;
+using std::ifstream;
 using std::pair;
 using std::endl;
 using std::cout;
@@ -36,7 +36,7 @@ class Maze{
         return line;
     }
 
-    void readMaze(istream& input_file){
+    void readMaze(ifstream& input_file){
         string line;
         unsigned int current_line = 0;
         while (getline(input_file, line) && current_line++ < rows){
@@ -115,7 +115,7 @@ class Maze{
 
 public:
     Maze(unsigned int maxSteps_, unsigned int rows_, unsigned int cols_);
-    bool parse_maze(istream input_file);
+    bool parse_maze(ifstream &input_file);
     pair<unsigned int, unsigned int> getStart()const;
     pair<unsigned int, unsigned int> getTreasure()const;
     unsigned int getMaxSteps()const;
