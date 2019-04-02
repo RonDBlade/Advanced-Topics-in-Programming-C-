@@ -72,7 +72,7 @@ class Maze{
                     treasurePos.second = index_of_char;
                     break;
                 }
-                index_of_char = (*it).find(charToFind, index_of_char);
+                index_of_char = (*it).find(charToFind, index_of_char + 1);
                 if (index_of_char != string::npos){// Found the char again in the rest of the line
                     printErrorHeader();
                     cout << "More than one " << charToFind << " in maze" << endl;
