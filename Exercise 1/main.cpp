@@ -1,5 +1,5 @@
 #include "gameManager.h"
 
 int main(int argc, char *argv[]){
-    return gameManager.
+    return gameFlow(argc, argv);
 }
