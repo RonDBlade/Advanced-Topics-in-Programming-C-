@@ -27,14 +27,38 @@ class Player{
     bool isWall(int x,int y){
         return player_map[x][y]=='#';
     }
+    int findMoveNum(Move mov){
+        if(mov==Move::UP)
+            return Player::getLocMove(current_position.first,current_position.second+1);
+        if(mov==Move::DOWN)
+            return Player::getLocMove(current_position.first,current_position.second-1);
+        if(mov==Move::LEFT)
+            return Player::getLocMove(current_position.first-1,current_position.second);
+        return Player::getLocMove(current_position.first+1,current_position.second);
+    }
+    void setbyMove(Move mov){
+        if(mov==Move::UP)
+            when_wasOn[current_position.first][current_position.second+1]=moveNumber;
+        if(mov==Move::DOWN)
+            when_wasOn[current_position.first][current_position.second-1]=moveNumber;
+        if(mov==Move::LEFT)
+            when_wasOn[current_position.first-1][current_position.second]=moveNumber;
+        when_wasOn[current_position.first+1][current_position.second]=moveNumber;
+    }
 public:
     Player();
     pair<int, int> player_pos()const;
+    pair<int, int> bookmark_pos()const;
     Move move();
     void updateMap(char to_put,Move where);
     void increaseMovenum();
     void setLocMove(int x,int y);
     int getLocMove(int x, int y);
+    void hitBookmark();
+    int firstPlyr();
+    int secondPlyr();
+    int firstBook();
+    int secondBook();
 };
 
 #endif // PLAYER_H_INCLUDED
