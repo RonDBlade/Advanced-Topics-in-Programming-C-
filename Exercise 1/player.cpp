@@ -32,34 +32,49 @@ void Player::hitBookmark(){//we want to update the map of locations
         tmp=movekeep[tmpsize-1-i];
         if(tmp.first==Move::BOOKMARK)
             continue;
-        if(tmp.first==Move::UP){
-            pos.second--;
-            player_map[pos.first][pos.second]=tmp.second;
-            when_wasOn[pos.first][pos.second]=cnt;//put it in each if SPECIFICALLY AND ON PURPOSE.DONT PUT THIS IN THE END TO SAVE LINES
-            if(tmp.second=='#')
-                pos.second++;
-        }
-        else if(tmp.first==Move::DOWN){
-            pos.second++;
-            player_map[pos.first][pos.second]=tmp.second;
-            when_wasOn[pos.first][pos.second]=cnt;
-            if(tmp.second=='#')
+        if(tmp.second==' '){
+            if(tmp.first==Move::UP){
                 pos.second--;
-        }
-        else if(tmp.first==Move::LEFT){
-            pos.first++;
-            player_map[pos.first][pos.second]=tmp.second;
-            when_wasOn[pos.first][pos.second]=cnt;
-            if(tmp.second=='#')
-                pos.first--;
-        }
-        else{
-            pos.first--;
-            player_map[pos.first][pos.second]=tmp.second;
-            when_wasOn[pos.first][pos.second]=cnt;
-            if(tmp.second=='#')
-                pos.first++;
+                player_map[pos.first][pos.second]=tmp.second;
+                when_wasOn[pos.first][pos.second]=cnt;//put it in each if SPECIFICALLY AND ON PURPOSE.DONT PUT THIS IN THE END TO SAVE LINES
 
+            }
+            else if(tmp.first==Move::DOWN){
+                pos.second++;
+                player_map[pos.first][pos.second]=tmp.second;
+                when_wasOn[pos.first][pos.second]=cnt;
+
+            }
+            else if(tmp.first==Move::LEFT){
+                pos.first++;
+                player_map[pos.first][pos.second]=tmp.second;
+                when_wasOn[pos.first][pos.second]=cnt;
+
+            }
+            else{
+                pos.first--;
+                player_map[pos.first][pos.second]=tmp.second;
+                when_wasOn[pos.first][pos.second]=cnt;
+            }
+
+        }
+        else{//if we walked into a wall in that one,then only need to set it as a wall for later.
+            if(tmp.first==Move::UP){
+                player_map[pos.first][pos.second+1]=tmp.second;
+
+            }
+            else if(tmp.first==Move::DOWN){
+                player_map[pos.first][pos.second-1]=tmp.second;
+
+            }
+            else if(tmp.first==Move::LEFT){
+                player_map[pos.first-1][pos.second]=tmp.second;
+
+            }
+            else if(tmp.first==Move::RIGHT){
+                player_map[pos.first+1][pos.second]=tmp.second;
+
+            }
         }
     }
 
