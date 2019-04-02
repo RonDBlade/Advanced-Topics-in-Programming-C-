@@ -5,6 +5,7 @@
 #include "maze.h"
 #include "player.h"
 #include <utility>
+#include <fstream>
 
 /*
 class GameManager{

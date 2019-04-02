@@ -13,6 +13,11 @@ int gameFlow(int num_of_arguments, char *arguments[]){
     Move currPlayerMove;
     char requestedTile;
     bool foundTreasure = false;
+    std::ofstream output_file(arguments[2]);
+    if (!output_file.is_open()){
+        //Need to add Adam error for not opening file for writing
+        return 1;
+    }
     while((currMoveNumber < maxSteps) && (!foundTreasure)){
         currPlayerMove = player.move();
         if (currPlayerMove == Move::BOOKMARK){
@@ -22,20 +27,24 @@ int gameFlow(int num_of_arguments, char *arguments[]){
             switch(currPlayerMove){
             case Move::UP:
                 playerPos.second = (playerPos.second + 1) % gameMaze->getRows();
+                output_file << "U" << endl;
                 break;
             case Move::DOWN:
                 playerPos.second = (playerPos.second - 1) % gameMaze->getRows();
+                output_file << "D" << endl;
                 break;
             case Move::RIGHT:
                 playerPos.first = (playerPos.first + 1) % gameMaze->getCols();
+                output_file << "R" << endl;
                 break;
             case Move::LEFT:
                 playerPos.first = (playerPos.first - 1) % gameMaze->getCols();
+                output_file << "L" << endl;
                 break;
             case Move::BOOKMARK:
                 bookmarkPos = playerPos;
-                //continue;  ??? want to start loop over
-                break;
+                output_file << "B" << endl;
+                continue; // Next loop iteration, don't check current character
             }
             requestedTile = gameMaze->getChar(playerPos);
             switch(requestedTile){
@@ -48,11 +57,16 @@ int gameFlow(int num_of_arguments, char *arguments[]){
                 player.hitWall();
                 break;
             case '$':
-                //FIX
+                cout << "Succeeded in " << currMoveNumber << " steps" << endl;
+                foundTreasure = true;
+                output_file << "!";
                 break;
             }
-
         }
     }
-    return 1;
+    if (!foundTreasure){
+        cout << "Failed to solve maze in " << maxSteps << " steps" << endl;
+        output_file << "X";
+    }
+    return 0;
 }

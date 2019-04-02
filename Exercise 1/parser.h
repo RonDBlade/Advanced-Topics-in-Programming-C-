@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include <cstring>
+#include <sys/stat.h>
 #include "maze.h"
 
 #define delimiter " \t\r"
