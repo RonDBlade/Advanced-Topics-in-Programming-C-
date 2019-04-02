@@ -5,6 +5,20 @@ using std::map;
 using std::pair;
 using std::vector;
 
+int Player::firstBook(){
+    return bookmark_position.first;
+}
+int Player::secondBook(){
+    return bookmark_position.second;
+}
+
+pair<int, int> Player::bookmark_pos()const{
+    return bookmark_position;
+}
+
+void Player::hitBookmark(){
+}
+
 Player::Player(): current_position(0, 0), bookmark_position(0, 0){
     player_map[0][0]=' ';
 }
@@ -30,28 +44,13 @@ Move whatMove(int movnum){
 int Player::getLocMove(int x, int y){
     return when_wasOn[x][y];
 }
-int findMoveNum(Move mov){
-    if(mov==Move::UP)
-        return Player::getLocMove(current_position.first,current_position.second+1);
-    if(mov==Move::DOWN)
-        return Player::getLocMove(current_position.first,current_position.second-1);
-    if(mov==Move::LEFT)
-        return Player::getLocMove(current_position.first-1,current_position.second);
-    return Player::getLocMove(current_position.first+1,current_position.second);
-}
-void setbyMove(Move mov){
-    if(mov==Move::UP)
-        return when_wasOn[current_position.first][current_position.second+1];
-    if(mov==Move::DOWN)
-        return when_wasOn[current_position.first][current_position.second-1];
-    if(mov==Move::LEFT)
-        return when_wasOn[current_position.first-1][current_position.second];
-    return when_wasOn[current_position.first+1][current_position.second];
-}
+
 
 Move Player::move(){//for now,SIMPLE IMPLEMENTATION
     //first check places we haven't been to yet.
-    int tmp1,tmp2=2,147,483,647;//to keep the least visited loc for later in the func.tmp2 is max integer value for flow in loop
+    int tmp1;
+    int tmp2;
+    tmp2=2147483647;//to keep the least visited loc for later in the func.tmp2 is max integer value for flow in loop
     Move tmp3,returnMove;
     moveNumber++;
     bool checkLoc=Player::isKnown(current_position.first,current_position.second+1);//checks if the player discovered whats above him already
@@ -88,12 +87,12 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
     checkLoc=Player::isWall(current_position.first+1,current_position.second);//same for right
     if(!checkLoc)
         movevec.push_back(3);
-    if movevec.empty()
+    if (movevec.empty())
         return Move::BOOKMARK;//if everything is a wall he is fucked lmaoooooooooooooooooooooo
-    if movevec.size()==1
+    if (movevec.size()==1)
         return whatMove(movevec.front());
     //now we have all the tiles around him which are not walls.lets visit the one we visited the earliest between them!
-    for(int i=0;i<movevec.size();i++){//finally, find the place we visited the most in the past from our current options
+    for(unsigned int i=0;i<movevec.size();i++){//finally, find the place we visited the most in the past from our current options
         tmp1=movevec.back();
         tmp3=whatMove(tmp1);
         tmp1=findMoveNum(tmp3);
