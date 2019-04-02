@@ -2,10 +2,12 @@
 #define PLAYER_H_INCLUDED
 #include <map>
 #include <utility>
+#include <vector>
 
 
 using std::map;
 using std::pair;
+using std::vector;
 
 enum class Move{LEFT, RIGHT, UP, DOWN, BOOKMARK};
 
@@ -16,6 +18,8 @@ class Player{
     int moveNumber=0;//keeps the count of moves for
     pair<int, int> current_position;
     pair<int, int> bookmark_position; /*should keep this as game manager data,since he doesnt remember where he put it*/
+    int bookmark_move;//ke
+    vector<pair<Move,char> > movekeep;//keeps us the moves we did until we hit a bookmark
     bool isKnown(int x,int y){//this PRIVATE method checks if player has been on this coordination yet.On HIS map,not the maze map.
         if(!player_map.count(x))//no point in this x coordination has been discovered,so this one hasn't either
             return false;
