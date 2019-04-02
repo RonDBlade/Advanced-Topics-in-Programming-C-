@@ -30,6 +30,8 @@ void Player::hitBookmark(){//we want to update the map of locations
             continue;
         }
         tmp=movekeep[tmpsize-1-i];
+        if(tmp.first==Move::BOOKMARK)
+            continue;
         if(tmp.first==Move::UP){
             pos.second--;
             player_map[pos.first][pos.second]=tmp.second;
