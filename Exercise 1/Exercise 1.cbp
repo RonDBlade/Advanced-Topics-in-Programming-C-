@@ -35,9 +35,15 @@
 		<Unit filename="gameManager.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="main.cpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="maze.cpp" />
 		<Unit filename="maze.h" />
 		<Unit filename="parser.cpp" />
+		<Unit filename="parser.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="player.cpp" />
 		<Unit filename="player.h" />
 		<Extensions>
