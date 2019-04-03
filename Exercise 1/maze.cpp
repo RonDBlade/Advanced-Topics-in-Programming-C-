@@ -1,7 +1,7 @@
 #include "maze.h"
 
 Maze::Maze(unsigned int maxSteps_, unsigned int rows_, unsigned int cols_): maxSteps(maxSteps_), rows(rows_), cols(cols_), mazeValid(true){
-    mazeData.reserve(rows);
+    mazeData.resize(rows);
     for(unsigned int i = 0; i < rows; i++){
         mazeData[i].reserve(cols);
     }
