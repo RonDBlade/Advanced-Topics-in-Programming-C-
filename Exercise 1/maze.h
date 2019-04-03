@@ -97,6 +97,7 @@ class Maze{
 
     bool checkWrongChars(string allowedChars){
         std::size_t index_of_char;
+        bool is_valid = true;
         for (vector<string>::iterator it = mazeData.begin(); it != mazeData.end(); it++){
             index_of_char = (*it).find_first_not_of(allowedChars);
             if (index_of_char != string::npos){
@@ -107,10 +108,10 @@ class Maze{
                 else{
                     cout << "Wrong character in maze: TAB in row " << distance(mazeData.begin(), it) << ", col " << index_of_char << endl;
                 }
-                return false;
+                is_valid = false;
             }
         }
-        return true;
+        return is_valid;
     }
 
 public:
