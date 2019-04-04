@@ -53,7 +53,7 @@ public:
     pair<int, int> player_pos()const;
     pair<int, int> bookmark_pos()const;
     Move move();
-    void hitWall(){}
+    void hitWall();
     void updateMap(char to_put,Move where);
     void increaseMovenum();
     void setLocMove(int x,int y);
@@ -63,6 +63,7 @@ public:
     int secondPlyr();
     int firstBook();
     int secondBook();
+    void pushtoMoveKeep(Move moved,char tileWentTo);
 };
 
 #endif // PLAYER_H_INCLUDED

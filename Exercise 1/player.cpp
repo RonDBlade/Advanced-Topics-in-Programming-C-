@@ -1,9 +1,27 @@
 #include <vector>
 #include "player.h"
+#include <iostream>
 
 using std::map;
 using std::pair;
 using std::vector;
+
+void Player::pushtoMoveKeep(Move moved,char tileWentTo){
+    movekeep.push_back({moved,tileWentTo});
+}
+
+void Player::hitWall(){
+    player_map[current_position.first][current_position.second];
+    Move moved= movekeep[-1].first;
+    if(moved==Move::UP)
+        current_position.second--;
+    if(moved==Move::DOWN)
+        current_position.second++;
+    if(moved==Move::LEFT)
+        current_position.first++;
+    if(moved==Move::RIGHT)
+        current_position.first--;
+}
 
 int Player::firstBook(){
     return bookmark_position.first;
@@ -121,6 +139,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
     bool checkLoc=Player::isKnown(current_position.first,current_position.second+1);//checks if the player discovered whats above him already
     if(!checkLoc){
         setLocMove(current_position.first,current_position.second+1);
+        std::cout<< "yeet" << std::endl;
         return Move::UP;
     }
     checkLoc=Player::isKnown(current_position.first,current_position.second-1); //same for down
