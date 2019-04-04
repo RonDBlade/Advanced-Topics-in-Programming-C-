@@ -9,6 +9,7 @@ using std::vector;
 
 void Player::hitWall(){
     std::cout << "ouch!" << std::endl;
+    std::cout << current_position.first << "@@@" << current_position.second << std::endl;
     player_map[current_position.first][current_position.second]='#';
     pair<Move,char> moved= movekeep.back();
     if(moved.first==Move::UP)
@@ -20,6 +21,7 @@ void Player::hitWall(){
     else if(moved.first==Move::RIGHT)
         current_position.first--;
     movekeep.back().second='#';
+    std::cout << current_position.first << "%%%" << current_position.second << std::endl;
 }
 
 
@@ -149,7 +151,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         current_position.second++;
         setLocMove(current_position.first,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
-        pushtoMoveKeep(returnMove,' ');
+        pushtoMoveKeep(Move::UP,' ');
         std::cout<< "UP" << std::endl;
         return Move::UP;
     }
@@ -158,7 +160,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         current_position.second--;
         setLocMove(current_position.first,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
-        pushtoMoveKeep(returnMove,' ');
+        pushtoMoveKeep(Move::DOWN,' ');
         std::cout<< "DOWN" << std::endl;
         return Move::DOWN;
     }
@@ -167,7 +169,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         current_position.first--;
         setLocMove(current_position.first-1,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
-        pushtoMoveKeep(returnMove,' ');
+        pushtoMoveKeep(Move::LEFT,' ');
         std::cout<< "LEFT" << std::endl;
         return Move::LEFT;
     }
@@ -176,7 +178,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         current_position.first++;
         setLocMove(current_position.first+1,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
-        pushtoMoveKeep(returnMove,' ');
+        pushtoMoveKeep(Move::RIGHT,' ');
         std::cout<< "RIGHT" << std::endl;
         return Move::RIGHT;
     }
