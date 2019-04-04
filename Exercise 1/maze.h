@@ -103,10 +103,10 @@ class Maze{
             if (index_of_char != string::npos){
                 printErrorHeader();
                 if ((*it)[index_of_char] != '\t'){
-                    cout << "Wrong character in maze: " << (*it)[index_of_char] << " in row " << distance(mazeData.begin(), it) << ", col " << index_of_char << endl;
+                    cout << "Wrong character in maze: " << (*it)[index_of_char] << " in row " << distance(mazeData.begin(), it)+1 << ", col " << index_of_char+1 << endl;
                 }
                 else{
-                    cout << "Wrong character in maze: TAB in row " << distance(mazeData.begin(), it) << ", col " << index_of_char << endl;
+                    cout << "Wrong character in maze: TAB in row " << distance(mazeData.begin(), it)+1 << ", col " << index_of_char+1 << endl;
                 }
                 is_valid = false;
             }
