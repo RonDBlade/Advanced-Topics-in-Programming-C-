@@ -5,14 +5,15 @@ Maze::Maze(unsigned int maxSteps_, unsigned int rows_, unsigned int cols_): maxS
 }
 
 bool Maze::parse_maze(ifstream &input_file){
+    bool is_valid_maze = true;
     readMaze(input_file);
     if (!findCharInMaze('@')){
-        return false;
+        is_valid_maze = false;
     }
     if (!findCharInMaze('$')){
-        return false;
+        is_valid_maze = false;
     }
-    return checkWrongChars("@$# ");
+    return checkWrongChars("@$# ") || is_valid_maze;
 }
 
 pair<unsigned int, unsigned int> Maze::getStart()const{

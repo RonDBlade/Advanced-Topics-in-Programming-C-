@@ -18,7 +18,7 @@ bool does_header_contains_word(int line_number, string line, string word, bool* 
             cout << "Bad maze file header:" << endl;
         }
         cout << "expected in line " << line_number << " - " << word << " = <num>" << endl;
-        cout << "got: " << line;
+        cout << "got: " << line << endl;
         return false;
     }
     return true;
