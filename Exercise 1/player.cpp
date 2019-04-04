@@ -9,7 +9,6 @@ using std::vector;
 
 void Player::hitWall(){
     std::cout << "ouch!" << std::endl;
-    std::cout << current_position.first << "@@@" << current_position.second << std::endl;
     player_map[current_position.first][current_position.second]='#';
     pair<Move,char> moved= movekeep.back();
     if(moved.first==Move::UP)
@@ -21,7 +20,6 @@ void Player::hitWall(){
     else if(moved.first==Move::RIGHT)
         current_position.first--;
     movekeep.back().second='#';
-    std::cout << current_position.first << "%%%" << current_position.second << std::endl;
 }
 
 

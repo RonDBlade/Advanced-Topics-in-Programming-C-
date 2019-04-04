@@ -10,12 +10,6 @@ int gameFlow(int num_of_arguments, char *arguments[]){
     Move currPlayerMove;
     char requestedTile;
     bool foundTreasure = false;
-    for (unsigned int i = 0; i < gameMaze->getRows(); i++){
-        for (unsigned int j = 0; j < gameMaze->getCols(); j++){
-            cout << gameMaze->getChar(std::make_pair(j,i));
-        }
-        cout << endl;
-    }
     std::ofstream output_file(arguments[2]);
     if (!output_file.is_open()){
         cout << "Error opening output file" << endl;
@@ -82,6 +76,23 @@ int gameFlow(int num_of_arguments, char *arguments[]){
                 foundTreasure = true;
                 output_file << "!";
                 break;
+            }
+            for (unsigned int i = 0; i < gameMaze->getRows(); i++){
+                for (unsigned int j = 0; j < gameMaze->getCols(); j++){
+                    if ((playerPos.first == j) && (playerPos.second == i)){
+                        cout << "@";
+                    }
+                    else{
+                        char temp = gameMaze->getChar(std::make_pair(j,i));
+                        if (temp == '@'){
+                            cout << " ";
+                        }
+                        else{
+                            cout << temp;
+                        }
+                    }
+                }
+                cout << endl;
             }
         }
     }
