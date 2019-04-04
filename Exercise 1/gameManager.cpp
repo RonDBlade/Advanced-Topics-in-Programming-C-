@@ -22,22 +22,41 @@ int gameFlow(int num_of_arguments, char *arguments[]){
             bookmarkPos = playerPos;
         }
         else{
-            cout << playerPos.first << " !!! " << playerPos.second << endl;
             switch(currPlayerMove){
             case Move::UP:
-                playerPos.second = (playerPos.second - 1) % gameMaze->getRows();
+                if (playerPos.second > 0){
+                    playerPos.second = (playerPos.second - 1);
+                }
+                else{
+                    playerPos.second = gameMaze->getRows() - 1;
+                }
                 output_file << "U" << endl;
                 break;
             case Move::DOWN:
-                playerPos.second = (playerPos.second + 1) % gameMaze->getRows();
+                if (playerPos.second < gameMaze->getRows() - 1){
+                    playerPos.second = (playerPos.second + 1);
+                }
+                else{
+                    playerPos.second = 0;
+                }
                 output_file << "D" << endl;
                 break;
             case Move::RIGHT:
-                playerPos.first = (playerPos.first + 1) % gameMaze->getCols();
+                if (playerPos.first < gameMaze->getCols() - 1){
+                    playerPos.first = (playerPos.first + 1);
+                }
+                else{
+                    playerPos.first = 0;
+                }
                 output_file << "R" << endl;
                 break;
             case Move::LEFT:
-                playerPos.first = (playerPos.first - 1) % gameMaze->getCols();
+                if (playerPos.first > 0){
+                    playerPos.first = (playerPos.first - 1);
+                }
+                else{
+                    playerPos.first = gameMaze->getCols() - 1;
+                }
                 output_file << "L" << endl;
                 break;
             case Move::BOOKMARK:
@@ -77,6 +96,7 @@ int gameFlow(int num_of_arguments, char *arguments[]){
                 output_file << "!";
                 break;
             }
+            cout << playerPos.first << " !!! " << playerPos.second << endl;
             for (unsigned int i = 0; i < gameMaze->getRows(); i++){
                 for (unsigned int j = 0; j < gameMaze->getCols(); j++){
                     if ((playerPos.first == j) && (playerPos.second == i)){

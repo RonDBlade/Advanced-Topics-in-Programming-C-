@@ -201,6 +201,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
     //now we have all the tiles around him which are not walls.lets visit the one we visited the earliest between them!
     for(unsigned int i=0;i<movevec.size();i++){//finally, find the place we visited the most in the past from our current options
         tmp1=movevec.back();
+        movevec.pop_back();
         tmp3=whatMove(tmp1);
         tmp1=findMoveNum(tmp3);
         if(tmp1<tmp2){
