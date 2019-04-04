@@ -11,6 +11,7 @@ void Player::hitWall(){
     std::cout << "ouch!" << std::endl;
     player_map[current_position.first][current_position.second]='#';
     pair<Move,char> moved= movekeep.back();
+    std::cout << "ouch2!" << std::endl;
     if(moved.first==Move::UP)
         current_position.second--;
     else if(moved.first==Move::DOWN)
@@ -149,6 +150,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         current_position.second++;
         setLocMove(current_position.first,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
+        pushtoMoveKeep(returnMove,' ');
         std::cout<< "UP" << std::endl;
         return Move::UP;
     }
@@ -157,6 +159,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         current_position.second--;
         setLocMove(current_position.first,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
+        pushtoMoveKeep(returnMove,' ');
         std::cout<< "DOWN" << std::endl;
         return Move::DOWN;
     }
@@ -165,6 +168,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         current_position.first--;
         setLocMove(current_position.first-1,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
+        pushtoMoveKeep(returnMove,' ');
         std::cout<< "LEFT" << std::endl;
         return Move::LEFT;
     }
@@ -173,6 +177,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         current_position.first++;
         setLocMove(current_position.first+1,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
+        pushtoMoveKeep(returnMove,' ');
         std::cout<< "RIGHT" << std::endl;
         return Move::RIGHT;
     }
