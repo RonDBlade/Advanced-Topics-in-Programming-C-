@@ -30,6 +30,11 @@ class Player{
     bool isWall(int x,int y){
         return player_map[x][y]=='#';
     }
+
+    void pushtoMoveKeep(Move moved,char tileWentTo){
+    movekeep.push_back({moved,tileWentTo});
+}
+
     int findMoveNum(Move mov){
         if(mov==Move::UP)
             return Player::getLocMove(current_position.first,current_position.second+1);
@@ -40,20 +45,27 @@ class Player{
         return Player::getLocMove(current_position.first+1,current_position.second);
     }
     void setbyMove(Move mov){
-        if(mov==Move::UP)
-            when_wasOn[current_position.first][current_position.second+1]=moveNumber;
-        if(mov==Move::DOWN)
-            when_wasOn[current_position.first][current_position.second-1]=moveNumber;
-        if(mov==Move::LEFT)
-            when_wasOn[current_position.first-1][current_position.second]=moveNumber;
-        when_wasOn[current_position.first+1][current_position.second]=moveNumber;
+        if(mov==Move::UP){
+            current_position.second++;
+
+        }
+        if(mov==Move::DOWN){
+            current_position.second--;
+        }
+        if(mov==Move::LEFT){
+            current_position.first--;
+        }
+        if(mov==Move::RIGHT){
+            current_position.first++;
+        }
+        when_wasOn[current_position.first][current_position.second]=moveNumber;
+        player_map[current_position.first][current_position.second]=' ';
     }
 public:
     Player();
     pair<int, int> player_pos()const;
     pair<int, int> bookmark_pos()const;
     Move move();
-    void hitWall();
     void updateMap(char to_put,Move where);
     void increaseMovenum();
     void setLocMove(int x,int y);
@@ -63,7 +75,7 @@ public:
     int secondPlyr();
     int firstBook();
     int secondBook();
-    void pushtoMoveKeep(Move moved,char tileWentTo);
+    void hitWall();
 };
 
 #endif // PLAYER_H_INCLUDED
