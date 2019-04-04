@@ -26,11 +26,11 @@ int gameFlow(int num_of_arguments, char *arguments[]){
         else{
             switch(currPlayerMove){
             case Move::UP:
-                playerPos.second = (playerPos.second + 1) % gameMaze->getRows();
+                playerPos.second = (playerPos.second - 1) % gameMaze->getRows();
                 output_file << "U" << endl;
                 break;
             case Move::DOWN:
-                playerPos.second = (playerPos.second - 1) % gameMaze->getRows();
+                playerPos.second = (playerPos.second + 1) % gameMaze->getRows();
                 output_file << "D" << endl;
                 break;
             case Move::RIGHT:
