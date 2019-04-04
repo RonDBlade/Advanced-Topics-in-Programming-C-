@@ -1,8 +1,5 @@
 #include "gameManager.h"
 
-using std::pair;
-
-
 int gameFlow(int num_of_arguments, char *arguments[]){
     Maze *gameMaze = parse_input(num_of_arguments, arguments);
     if (gameMaze == nullptr)// Input file isn't valid
@@ -13,6 +10,12 @@ int gameFlow(int num_of_arguments, char *arguments[]){
     Move currPlayerMove;
     char requestedTile;
     bool foundTreasure = false;
+    for (unsigned int i = 0; i < gameMaze->getRows(); i++){
+        for (unsigned int j = 0; j < gameMaze->getCols(); j++){
+            cout << gameMaze->getChar(std::make_pair(j,i));
+        }
+        cout << endl;
+    }
     std::ofstream output_file(arguments[2]);
     if (!output_file.is_open()){
         cout << "Error opening output file" << endl;
@@ -25,6 +28,7 @@ int gameFlow(int num_of_arguments, char *arguments[]){
             bookmarkPos = playerPos;
         }
         else{
+            cout << playerPos.first << " !!! " << playerPos.second << endl;
             switch(currPlayerMove){
             case Move::UP:
                 playerPos.second = (playerPos.second - 1) % gameMaze->getRows();
@@ -56,6 +60,22 @@ int gameFlow(int num_of_arguments, char *arguments[]){
                 break;
             case '#':
                 player.hitWall();
+                switch(currPlayerMove){// Reverse player move
+                case Move::UP:
+                    playerPos.second = (playerPos.second + 1) % gameMaze->getRows();
+                    break;
+                case Move::DOWN:
+                    playerPos.second = (playerPos.second - 1) % gameMaze->getRows();
+                    break;
+                case Move::RIGHT:
+                    playerPos.first = (playerPos.first - 1) % gameMaze->getCols();
+                    break;
+                case Move::LEFT:
+                    playerPos.first = (playerPos.first + 1) % gameMaze->getCols();
+                    break;
+                case Move::BOOKMARK:
+                    break; // Won't get here, only to avoid compilation errors
+                }
                 break;
             case '$':
                 cout << "Succeeded in " << currMoveNumber << " steps" << endl;

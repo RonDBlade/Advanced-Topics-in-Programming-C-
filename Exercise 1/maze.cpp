@@ -37,6 +37,6 @@ unsigned int Maze::getCols()const{
 }
 
 char Maze::getChar(pair<unsigned int, unsigned int> mazePos)const{
-    return mazeData[mazePos.first][mazePos.second];
+    return mazeData[mazePos.second][mazePos.first];
 }
 

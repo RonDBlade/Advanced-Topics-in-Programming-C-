@@ -64,12 +64,12 @@ class Maze{
                 found_char = true;
                 switch (charToFind){
                 case '@':
-                    startPos.first = distance(mazeData.begin(), it);
-                    startPos.second = index_of_char;
+                    startPos.first = index_of_char;
+                    startPos.second = distance(mazeData.begin(), it);
                     break;
                 case '$':
-                    treasurePos.first = distance(mazeData.begin(), it);
-                    treasurePos.second = index_of_char;
+                    treasurePos.first = index_of_char;
+                    treasurePos.second = distance(mazeData.begin(), it);
                     break;
                 }
                 index_of_char = (*it).find(charToFind, index_of_char + 1);

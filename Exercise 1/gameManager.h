@@ -8,6 +8,8 @@
 #include <fstream>
 #include <iostream>
 
+using std::pair;
+
 int gameFlow(int num_of_arguments, char *arguments[]);
 
 #endif // GAMEMANAGER_H_INCLUDED

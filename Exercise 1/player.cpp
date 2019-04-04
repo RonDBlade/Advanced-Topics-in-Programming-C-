@@ -11,7 +11,6 @@ void Player::hitWall(){
     std::cout << "ouch!" << std::endl;
     player_map[current_position.first][current_position.second]='#';
     pair<Move,char> moved= movekeep.back();
-    std::cout << "ouch2!" << std::endl;
     if(moved.first==Move::UP)
         current_position.second--;
     else if(moved.first==Move::DOWN)
