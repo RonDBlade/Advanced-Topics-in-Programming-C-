@@ -6,22 +6,22 @@ using std::map;
 using std::pair;
 using std::vector;
 
-void Player::pushtoMoveKeep(Move moved,char tileWentTo){
-    movekeep.push_back({moved,tileWentTo});
-}
 
 void Player::hitWall(){
-    player_map[current_position.first][current_position.second];
-    Move moved= movekeep[-1].first;
-    if(moved==Move::UP)
+    std::cout << "ouch!" << std::endl;
+    player_map[current_position.first][current_position.second]='#';
+    pair<Move,char> moved= movekeep.back();
+    if(moved.first==Move::UP)
         current_position.second--;
-    if(moved==Move::DOWN)
+    else if(moved.first==Move::DOWN)
         current_position.second++;
-    if(moved==Move::LEFT)
+    else if(moved.first==Move::LEFT)
         current_position.first++;
-    if(moved==Move::RIGHT)
+    else if(moved.first==Move::RIGHT)
         current_position.first--;
+    movekeep.back().second='#';
 }
+
 
 int Player::firstBook(){
     return bookmark_position.first;
@@ -104,6 +104,7 @@ void Player::hitBookmark(){//we want to update the map of locations
 
 Player::Player(): current_position(0, 0), bookmark_position(0, 0){
     player_map[0][0]=' ';
+    when_wasOn[0][0]=0;
 }
 pair<int, int> Player::player_pos()const{
     return current_position;
@@ -131,30 +132,48 @@ int Player::getLocMove(int x, int y){
 
 Move Player::move(){//for now,SIMPLE IMPLEMENTATION
     //first check places we haven't been to yet.
+    std::cout<< current_position.first << " " << current_position.second << std::endl;
     int tmp1;
     int tmp2;
     tmp2=2147483647;//to keep the least visited loc for later in the func.tmp2 is max integer value for flow in loop
     Move tmp3,returnMove=Move::UP;
     moveNumber++;
+ //   if(putBookmark()){
+    //    bookmark_pos()=player_pos();
+    //    pushtoMoveKeep(Move::BOOKMARK,' ');
+    //    std::cout<< "BOOKMARK" << std::endl;
+     //   return Move::BOOKMARK;
+    //}
     bool checkLoc=Player::isKnown(current_position.first,current_position.second+1);//checks if the player discovered whats above him already
     if(!checkLoc){
-        setLocMove(current_position.first,current_position.second+1);
-        std::cout<< "yeet" << std::endl;
+        current_position.second++;
+        setLocMove(current_position.first,current_position.second);
+        player_map[current_position.first][current_position.second]=' ';
+        std::cout<< "UP" << std::endl;
         return Move::UP;
     }
     checkLoc=Player::isKnown(current_position.first,current_position.second-1); //same for down
     if(!checkLoc){
-        setLocMove(current_position.first,current_position.second-1);
+        current_position.second--;
+        setLocMove(current_position.first,current_position.second);
+        player_map[current_position.first][current_position.second]=' ';
+        std::cout<< "DOWN" << std::endl;
         return Move::DOWN;
     }
     checkLoc=Player::isKnown(current_position.first-1,current_position.second); //same for left
     if(!checkLoc){
+        current_position.first--;
         setLocMove(current_position.first-1,current_position.second);
+        player_map[current_position.first][current_position.second]=' ';
+        std::cout<< "LEFT" << std::endl;
         return Move::LEFT;
     }
     checkLoc=Player::isKnown(current_position.first+1,current_position.second); //same for right
     if(!checkLoc){
+        current_position.first++;
         setLocMove(current_position.first+1,current_position.second);
+        player_map[current_position.first][current_position.second]=' ';
+        std::cout<< "RIGHT" << std::endl;
         return Move::RIGHT;
     }
     //if we got here,we already know ALL the locations which surround the player.Time to find which are a wall and which arent.
@@ -186,6 +205,8 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         }
     }
     setbyMove(returnMove);
+    pushtoMoveKeep(returnMove,' ');
+
     return returnMove;
 }
 void Player::updateMap(char to_put,Move where){
