@@ -6,16 +6,8 @@
 #include "player.h"
 #include <utility>
 #include <fstream>
+#include <iostream>
 
-/*
-class GameManager{
-    Maze gameMaze();
-    Player gamePlayer();
-
-public:
-    GameManager();
-};
-*/
 int gameFlow(int num_of_arguments, char *arguments[]);
 
 #endif // GAMEMANAGER_H_INCLUDED

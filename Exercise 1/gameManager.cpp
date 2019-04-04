@@ -5,7 +5,7 @@ using std::pair;
 
 int gameFlow(int num_of_arguments, char *arguments[]){
     Maze *gameMaze = parse_input(num_of_arguments, arguments);
-    if (gameMaze == nullptr)
+    if (gameMaze == nullptr)// Input file isn't valid
         return 1;
     Player player = Player(); // Do we need it or we should just use empty constructor
     pair<unsigned int, unsigned int> playerPos = gameMaze->getStart(), bookmarkPos;
@@ -15,11 +15,12 @@ int gameFlow(int num_of_arguments, char *arguments[]){
     bool foundTreasure = false;
     std::ofstream output_file(arguments[2]);
     if (!output_file.is_open()){
-        //Need to add Adam error for not opening file for writing
+        cout << "Error opening output file" << endl;
         return 1;
     }
     while((currMoveNumber < maxSteps) && (!foundTreasure)){
         currPlayerMove = player.move();
+        currMoveNumber++;
         if (currPlayerMove == Move::BOOKMARK){
             bookmarkPos = playerPos;
         }

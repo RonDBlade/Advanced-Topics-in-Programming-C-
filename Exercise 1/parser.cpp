@@ -70,11 +70,11 @@ Maze* parse_input(int num_of_arguments, char *arguments[]){
         cout << "Command line argument for maze: " << arguments[1] << "doesn't lead to a maze file or leads to a file that cannot be opened";
         return nullptr;
     }
-    /*if (file_exists(arguments[2])){ bad path==directories that describe this path don't exist i think(ron),need to add a check for that
+    /*if (file_exists(arguments[2])){ //bad path==directories that describe this path don't exist i think(ron),need to add a check for that
     cout << "Command line argument for output file: " << arguments[2] << "points to a bad path or to a file that already exists" << endl;
     is_valid_game = false;
-    }
-    */
+    }*/
+
     int maze_data[3] = {0};
     if (!is_header_valid(input_file, maze_data)){
         // Errors
