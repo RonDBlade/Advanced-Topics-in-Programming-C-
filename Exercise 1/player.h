@@ -9,13 +9,14 @@ using std::map;
 using std::pair;
 using std::vector;
 
-enum class Move{LEFT, UP, RIGHT, DOWN, BOOKMARK};
+enum class Move{LEFT, RIGHT, UP, DOWN, BOOKMARK};
 
 class Player{
     map<int, map<int,char> > player_map; /*should change to map of maps.From my understanding of the implementation we start the player from position
     (0,0) in his perspective,and if we treat some positions as "-" positions(down from (0,0) is (0,-1)),we cant do that with vectors*/
     map<int, map<int,int> > when_wasOn; //keeps for each location when we have last visited it.helps us decide which way to go.
     int moveNumber=0;//keeps the count of moves for
+    Move lastMove;
     pair<int, int> current_position;
     pair<int, int> bookmark_position; /*should keep this as game manager data,since he doesnt remember where he put it*/
     vector<pair<Move,char> > movekeep;//keeps us the moves we did until we hit a bookmark
@@ -70,15 +71,14 @@ class Player{
     void setbyMove(Move mov){
         if(mov==Move::UP){
             current_position.second++;
-
         }
-        if(mov==Move::DOWN){
+        else if(mov==Move::DOWN){
             current_position.second--;
         }
-        if(mov==Move::LEFT){
+        else if(mov==Move::LEFT){
             current_position.first--;
         }
-        if(mov==Move::RIGHT){
+        else if(mov==Move::RIGHT){
             current_position.first++;
         }
         when_wasOn[current_position.first][current_position.second]=moveNumber;
