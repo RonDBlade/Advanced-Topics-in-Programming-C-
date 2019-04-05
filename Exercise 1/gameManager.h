@@ -12,4 +12,8 @@ using std::pair;
 
 int gameFlow(int num_of_arguments, char *arguments[]);
 
+inline int positiveModulo(int i, int n) {
+    return (i % n + n) % n;
+}
+
 #endif // GAMEMANAGER_H_INCLUDED

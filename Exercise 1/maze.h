@@ -15,12 +15,12 @@ using std::endl;
 using std::cout;
 
 class Maze{
-    unsigned int maxSteps;
-    unsigned int rows;
-    unsigned int cols;
+    int maxSteps;
+    int rows;
+    int cols;
     bool mazeValid;
-    pair<unsigned int, unsigned int> startPos;
-    pair<unsigned int, unsigned int> treasurePos;
+    pair<int, int> startPos;
+    pair<int, int> treasurePos;
     vector<string> mazeData;
 
 
@@ -38,7 +38,7 @@ class Maze{
 
     void readMaze(ifstream& input_file){
         string line;
-        unsigned int current_line = 0;
+        int current_line = 0;
         while (getline(input_file, line) && current_line++ < rows){
             line = fixInputLine(line, cols);
             mazeData.push_back(line);
@@ -115,14 +115,14 @@ class Maze{
     }
 
 public:
-    Maze(unsigned int maxSteps_, unsigned int rows_, unsigned int cols_);
+    Maze(int maxSteps_, int rows_, int cols_);
     bool parse_maze(ifstream &input_file);
-    pair<unsigned int, unsigned int> getStart()const;
-    pair<unsigned int, unsigned int> getTreasure()const;
-    unsigned int getMaxSteps()const;
-    unsigned int getRows()const;
-    unsigned int getCols()const;
-    char getChar(pair<unsigned int, unsigned int>)const;
+    pair<int, int> getStart()const;
+    pair<int, int> getTreasure()const;
+    int getMaxSteps()const;
+    int getRows()const;
+    int getCols()const;
+    char getChar(pair<int, int>)const;
 };
 
 #endif // MAZE_H_INCLUDED

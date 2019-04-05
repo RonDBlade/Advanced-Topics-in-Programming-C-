@@ -5,7 +5,7 @@ int gameFlow(int num_of_arguments, char *arguments[]){
     if (gameMaze == nullptr)// Input file isn't valid
         return 1;
     Player player = Player(); // Do we need it or we should just use empty constructor
-    pair<unsigned int, unsigned int> playerPos = gameMaze->getStart(), bookmarkPos;
+    pair<int, int> playerPos = gameMaze->getStart(), bookmarkPos;
     int maxSteps = gameMaze->getMaxSteps(), currMoveNumber = 0;
     Move currPlayerMove;
     char requestedTile;
@@ -15,6 +15,7 @@ int gameFlow(int num_of_arguments, char *arguments[]){
         cout << "Error opening output file" << endl;
         return 1;
     }
+    cout << (-2 % 5) << endl;
     while((currMoveNumber < maxSteps) && (!foundTreasure)){
         currPlayerMove = player.move();
         currMoveNumber++;
@@ -24,39 +25,19 @@ int gameFlow(int num_of_arguments, char *arguments[]){
         else{
             switch(currPlayerMove){
             case Move::UP:
-                if (playerPos.second > 0){
-                    playerPos.second = (playerPos.second - 1);
-                }
-                else{
-                    playerPos.second = gameMaze->getRows() - 1;
-                }
+                playerPos.second = positiveModulo(playerPos.second - 1, gameMaze->getRows());
                 output_file << "U" << endl;
                 break;
             case Move::DOWN:
-                if (playerPos.second < gameMaze->getRows() - 1){
-                    playerPos.second = (playerPos.second + 1);
-                }
-                else{
-                    playerPos.second = 0;
-                }
+                playerPos.second = positiveModulo(playerPos.second + 1, gameMaze->getRows());
                 output_file << "D" << endl;
                 break;
             case Move::RIGHT:
-                if (playerPos.first < gameMaze->getCols() - 1){
-                    playerPos.first = (playerPos.first + 1);
-                }
-                else{
-                    playerPos.first = 0;
-                }
+                playerPos.first = positiveModulo(playerPos.first + 1, gameMaze->getCols());
                 output_file << "R" << endl;
                 break;
             case Move::LEFT:
-                if (playerPos.first > 0){
-                    playerPos.first = (playerPos.first - 1);
-                }
-                else{
-                    playerPos.first = gameMaze->getCols() - 1;
-                }
+                playerPos.first = positiveModulo(playerPos.first - 1, gameMaze->getCols());
                 output_file << "L" << endl;
                 break;
             case Move::BOOKMARK:
@@ -75,16 +56,16 @@ int gameFlow(int num_of_arguments, char *arguments[]){
                 player.hitWall();
                 switch(currPlayerMove){// Reverse player move
                 case Move::UP:
-                    playerPos.second = (playerPos.second + 1) % gameMaze->getRows();
+                    playerPos.second = positiveModulo(playerPos.second + 1, gameMaze->getRows());
                     break;
                 case Move::DOWN:
-                    playerPos.second = (playerPos.second - 1) % gameMaze->getRows();
+                    playerPos.second = positiveModulo(playerPos.second - 1, gameMaze->getRows());
                     break;
                 case Move::RIGHT:
-                    playerPos.first = (playerPos.first - 1) % gameMaze->getCols();
+                    playerPos.first = positiveModulo(playerPos.first - 1, gameMaze->getCols());
                     break;
                 case Move::LEFT:
-                    playerPos.first = (playerPos.first + 1) % gameMaze->getCols();
+                    playerPos.first = positiveModulo(playerPos.first + 1, gameMaze->getCols());
                     break;
                 case Move::BOOKMARK:
                     break; // Won't get here, only to avoid compilation errors
@@ -97,8 +78,8 @@ int gameFlow(int num_of_arguments, char *arguments[]){
                 break;
             }
             cout << playerPos.first << " !!! " << playerPos.second << endl;
-            for (unsigned int i = 0; i < gameMaze->getRows(); i++){
-                for (unsigned int j = 0; j < gameMaze->getCols(); j++){
+            for (int i = 0; i < gameMaze->getRows(); i++){
+                for (int j = 0; j < gameMaze->getCols(); j++){
                     if ((playerPos.first == j) && (playerPos.second == i)){
                         cout << "@";
                     }
