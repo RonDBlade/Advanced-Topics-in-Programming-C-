@@ -37,6 +37,7 @@ pair<int, int> Player::bookmark_pos()const{
 
 void Player::hitBookmark(){//we want to update the map of locations
     int cnt=moveNumber;
+    bookmark_on=false;
     bookmark_count/=1.5;
     current_position=bookmark_pos();
     pair<int, int> pos=bookmark_pos();
