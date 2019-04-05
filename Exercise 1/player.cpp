@@ -24,12 +24,6 @@ void Player::hitWall(){
 }
 
 
-int Player::firstBook(){
-    return bookmark_position.first;
-}
-int Player::secondBook(){
-    return bookmark_position.second;
-}
 
 pair<int, int> Player::bookmark_pos()const{
     return bookmark_position;
@@ -37,7 +31,7 @@ pair<int, int> Player::bookmark_pos()const{
 
 void Player::hitBookmark(){//we want to update the map of locations
     int cnt=moveNumber;
-    std::cout << "FOUND BOOKMARK" << std::endl;
+    std::cout << "FOUND BOOKMARK IN POSITION"<<bookmark_position.first << " "<< bookmark_position.second << std::endl;
     bookmark_on=false;
     bookmark_count/=1.5;
     current_position=bookmark_pos();
@@ -146,10 +140,11 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         bookmark_count++;
     if(putBookmark()){
         bookmark_count=0;
-        bookmark_pos()=player_pos();
+        bookmark_position.first=player_pos().first;
+        bookmark_position.second=player_pos().second;
         pushtoMoveKeep(Move::BOOKMARK,' ');
         when_wasOn[current_position.first][current_position.second]=moveNumber;
-        std::cout<< "BOOKMARK" << std::endl;
+        std::cout<< "BOOKMARK IN POSITION"<<bookmark_position.first << " "<< bookmark_position.second << std::endl;
         return Move::BOOKMARK;
     }
     bool checkLoc=Player::isKnown(current_position.first,current_position.second+1);//checks if the player discovered whats above him already
@@ -226,14 +221,3 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
     moved_to_new=false;
     return returnMove;
 }
-void Player::updateMap(char to_put,Move where){
-        if(where==Move::UP)
-            player_map[current_position.first][current_position.second+1]=to_put;
-        else if(where==Move::DOWN)
-            player_map[current_position.first][current_position.second-1]=to_put;
-        else if(where==Move::LEFT)
-            player_map[current_position.first-1][current_position.second]=to_put;
-        else if(where==Move::RIGHT)
-            player_map[current_position.first+1][current_position.second]=to_put;
-        //dont need to put anything if move was BOOKMARK
-    }
