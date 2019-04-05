@@ -23,6 +23,7 @@ class Player{
     int put_bookmark=10;//when bookmark_count==put_bookmark then we put a new bookmark
     int bookmark_count=0;
     bool bookmark_on=false;//true when we have a bookmark on the board
+    bool moved_to_new=false;
     bool isKnown(int x,int y){//this PRIVATE method checks if player has been on this coordination yet.On HIS map,not the maze map.
         if(!player_map.count(x))//no point in this x coordination has been discovered,so this one hasn't either
             return false;
@@ -40,7 +41,7 @@ class Player{
             bookmark_on=true;
             return true;
         }
-        else if(bookmark_on==false&&when_wasOn[current_position.first][current_position.second]==moveNumber-1){
+        else if(bookmark_on==false&&moved_to_new){
             //if we dont have a bookmark and this is a new place we just went to
             bookmark_on=true;
             return true;
