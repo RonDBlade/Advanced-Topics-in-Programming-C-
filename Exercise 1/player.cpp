@@ -44,9 +44,9 @@ void Player::hitBookmark(){//we want to update the map of locations
     pair<int, int> pos=bookmark_pos();
     pair<Move,char> tmp;
     unsigned int tmpsize=movekeep.size();//so wont need to keep calculating this
-    for(unsigned int i=0;i<tmpsize;i++){
+    for(int i=0;(unsigned int)i<tmpsize;i++){
         cnt--;
-        if(i==tmpsize-1){//last iteration.this is where we started.which means it has to be a space.
+        if((unsigned int)i==tmpsize-1){//last iteration.this is where we started.which means it has to be a space.
             player_map[pos.first][pos.second]=' ';
             when_wasOn[pos.first][pos.second]=cnt;
             continue;
@@ -211,7 +211,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
     else if (movevec.size()==1)
         return whatMove(movevec.front());
     //now we have all the tiles around him which are not walls.lets visit the one we visited the earliest between them!
-    for(unsigned int i=0;i<movevec.size();i++){//finally, find the place we visited the most in the past from our current options
+    for(int i=0;(unsigned int)i<movevec.size();i++){//finally, find the place we visited the most in the past from our current options
         tmp1=movevec.back();
         movevec.pop_back();
         tmp3=whatMove(tmp1);
