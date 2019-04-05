@@ -20,6 +20,8 @@ class Player{
     pair<int, int> bookmark_position; /*should keep this as game manager data,since he doesnt remember where he put it*/
     vector<pair<Move,char> > movekeep;//keeps us the moves we did until we hit a bookmark
     //IMPORTANT: to add the moves to this vector,we cant do it in move.this adds to the vector what move we did and were it got us to.so it has to be push_back()ed in gameManager
+    int put_bookmark=10;
+    int bookmark_count=0;
     bool isKnown(int x,int y){//this PRIVATE method checks if player has been on this coordination yet.On HIS map,not the maze map.
         if(!player_map.count(x))//no point in this x coordination has been discovered,so this one hasn't either
             return false;
@@ -29,6 +31,10 @@ class Player{
     }
     bool isWall(int x,int y){
         return player_map[x][y]=='#';
+    }
+
+    bool putBookmark()
+
     }
 
     void pushtoMoveKeep(Move moved,char tileWentTo){
