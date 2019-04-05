@@ -20,6 +20,7 @@ void Player::hitWall(){
     else if(moved.first==Move::RIGHT)
         current_position.first--;
     movekeep.back().second='#';
+    when_wasOn[current_position.first][current_position.second]=moveNumber;
 }
 
 
@@ -138,12 +139,12 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
     tmp2=2147483647;//to keep the least visited loc for later in the func.tmp2 is max integer value for flow in loop
     Move tmp3,returnMove=Move::UP;
     moveNumber++;
- //   if(putBookmark()){
-    //    bookmark_pos()=player_pos();
-    //    pushtoMoveKeep(Move::BOOKMARK,' ');
-    //    std::cout<< "BOOKMARK" << std::endl;
-     //   return Move::BOOKMARK;
-    //}
+    if(putBookmark()){
+        bookmark_pos()=player_pos();
+        pushtoMoveKeep(Move::BOOKMARK,' ');
+        std::cout<< "BOOKMARK" << std::endl;
+        return Move::BOOKMARK;
+    }
     bool checkLoc=Player::isKnown(current_position.first,current_position.second+1);//checks if the player discovered whats above him already
     if(!checkLoc){
         current_position.second++;
