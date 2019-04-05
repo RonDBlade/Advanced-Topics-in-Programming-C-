@@ -37,6 +37,7 @@ pair<int, int> Player::bookmark_pos()const{
 
 void Player::hitBookmark(){//we want to update the map of locations
     int cnt=moveNumber;
+    bookmark_count/=1.5;
     current_position=bookmark_pos();
     pair<int, int> pos=bookmark_pos();
     pair<Move,char> tmp;
@@ -139,9 +140,12 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
     tmp2=2147483647;//to keep the least visited loc for later in the func.tmp2 is max integer value for flow in loop
     Move tmp3,returnMove=Move::UP;
     moveNumber++;
+    bookmark_count++;
     if(putBookmark()){
+        bookmark_count=0;
         bookmark_pos()=player_pos();
         pushtoMoveKeep(Move::BOOKMARK,' ');
+        when_wasOn[current_position.first][current_position.second]=moveNumber;
         std::cout<< "BOOKMARK" << std::endl;
         return Move::BOOKMARK;
     }
