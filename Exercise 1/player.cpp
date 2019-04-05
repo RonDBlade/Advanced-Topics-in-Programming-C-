@@ -37,6 +37,7 @@ pair<int, int> Player::bookmark_pos()const{
 
 void Player::hitBookmark(){//we want to update the map of locations
     int cnt=moveNumber;
+    std::cout << "FOUND BOOKMARK" << std::endl;
     bookmark_on=false;
     bookmark_count/=1.5;
     current_position=bookmark_pos();
@@ -141,7 +142,8 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
     tmp2=2147483647;//to keep the least visited loc for later in the func.tmp2 is max integer value for flow in loop
     Move tmp3,returnMove=Move::UP;
     moveNumber++;
-    bookmark_count++;
+    if(bookmark_on)
+        bookmark_count++;
     if(putBookmark()){
         bookmark_count=0;
         bookmark_pos()=player_pos();
@@ -156,6 +158,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         setLocMove(current_position.first,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
         pushtoMoveKeep(Move::UP,' ');
+        moved_to_new=true;
         std::cout<< "UP" << std::endl;
         return Move::UP;
     }
@@ -165,6 +168,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         setLocMove(current_position.first,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
         pushtoMoveKeep(Move::DOWN,' ');
+        moved_to_new=true;
         std::cout<< "DOWN" << std::endl;
         return Move::DOWN;
     }
@@ -174,6 +178,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         setLocMove(current_position.first-1,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
         pushtoMoveKeep(Move::LEFT,' ');
+        moved_to_new=true;
         std::cout<< "LEFT" << std::endl;
         return Move::LEFT;
     }
@@ -183,6 +188,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         setLocMove(current_position.first+1,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
         pushtoMoveKeep(Move::RIGHT,' ');
+        moved_to_new=true;
         std::cout<< "RIGHT" << std::endl;
         return Move::RIGHT;
     }
@@ -217,7 +223,7 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
     }
     setbyMove(returnMove);
     pushtoMoveKeep(returnMove,' ');
-
+    moved_to_new=false;
     return returnMove;
 }
 void Player::updateMap(char to_put,Move where){
