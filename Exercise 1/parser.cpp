@@ -24,27 +24,28 @@ bool does_header_contains_word(int line_number, string line, string word, bool* 
     return true;
 }
 
+int extract_number_from_header(string line){
+    string number, temp;
+    line.erase(remove_if(line.begin(), line.end(), isspace), line.end());
+    number = line.substr(line.find("=") + 1, string::npos);
+    return stoi(number);
+}
+
 bool is_header_valid(ifstream& input_file, int* maze_data){
-    string line, number, temp;
+    string line;
     bool header_valid = true;
     getline(input_file, line); // First row is not relevant for parsing
     getline(input_file, line);
     if (does_header_contains_word(2, line, "MaxSteps", &header_valid)){
-        std::istringstream iss(line);
-        iss >> temp >> temp >> number;
-        maze_data[0] = stoi(number);
+        maze_data[0] = extract_number_from_header(line);
     }
     getline(input_file, line);
     if (does_header_contains_word(3, line, "Rows", &header_valid)){
-        std::istringstream iss(line);
-        iss >> temp >> temp >> number;
-        maze_data[1] = stoi(number);
+        maze_data[1] = extract_number_from_header(line);
     }
     getline(input_file, line);
     if (does_header_contains_word(4, line, "Cols", &header_valid)){
-        std::istringstream iss(line);
-        iss >> temp >> temp >> number;
-        maze_data[2] = stoi(number);
+        maze_data[2] = extract_number_from_header(line);
     }
     return header_valid;
 }

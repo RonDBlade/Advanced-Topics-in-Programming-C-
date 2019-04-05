@@ -15,7 +15,6 @@ int gameFlow(int num_of_arguments, char *arguments[]){
         cout << "Error opening output file" << endl;
         return 1;
     }
-    cout << (-2 % 5) << endl;
     while((currMoveNumber < maxSteps) && (!foundTreasure)){
         currPlayerMove = player.move();
         currMoveNumber++;

@@ -9,7 +9,7 @@ using std::map;
 using std::pair;
 using std::vector;
 
-enum class Move{LEFT, RIGHT, UP, DOWN, BOOKMARK};
+enum class Move{LEFT, UP, RIGHT, DOWN, BOOKMARK};
 
 class Player{
     map<int, map<int,char> > player_map; /*should change to map of maps.From my understanding of the implementation we start the player from position
