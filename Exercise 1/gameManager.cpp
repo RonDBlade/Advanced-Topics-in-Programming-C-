@@ -49,6 +49,7 @@ int gameFlow(int num_of_arguments, char *arguments[]){
             case ' ':
                 if (playerPos == bookmarkPos){
                     player.hitBookmark();
+                    bookmarkPos = {-1,-1};
                 }
                 break;
             case '#':

@@ -34,7 +34,10 @@ void Player::hitBookmark(){//we want to update the map of locations
     std::cout << "FOUND BOOKMARK IN POSITION"<<bookmark_position.first << " "<< bookmark_position.second << std::endl;
     bookmark_on=false;
     std::cout << "put_bookmark is of size before"<< put_bookmark << std::endl;
-    bookmark_count/=1.5;
+    put_bookmark/=2;
+    if (put_bookmark<10)
+        put_bookmark=10;
+    bookmark_count=0;
     std::cout << "put_bookmark is of size after"<< put_bookmark << std::endl;
     current_position=bookmark_pos();
     pair<int, int> pos=bookmark_pos();
