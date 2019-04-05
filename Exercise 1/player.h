@@ -42,6 +42,7 @@ class Player{
         }
         else if(bookmark_on==false&&when_wasOn[current_position.first][current_position.second]==moveNumber-1){
             //if we dont have a bookmark and this is a new place we just went to
+            bookmark_on=true;
             return true;
         }
         else if(bookmark_count==put_bookmark){//if we waited too long for a bookmark
