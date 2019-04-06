@@ -68,22 +68,7 @@ class Player{
             return Player::getLocMove(current_position.first-1,current_position.second);
         return Player::getLocMove(current_position.first+1,current_position.second);
     }
-    void setbyMove(Move mov){
-        if(mov==Move::UP){
-            current_position.second++;
-        }
-        else if(mov==Move::DOWN){
-            current_position.second--;
-        }
-        else if(mov==Move::LEFT){
-            current_position.first--;
-        }
-        else if(mov==Move::RIGHT){
-            current_position.first++;
-        }
-        when_wasOn[current_position.first][current_position.second]=moveNumber;
-        player_map[current_position.first][current_position.second]=' ';
-    }
+
 public:
     Player();
     pair<int, int> player_pos()const;
@@ -98,6 +83,7 @@ public:
     int secondPlyr();
     int firstBook();
     int secondBook();
+    void setbyMove(Move mov);
     void hitWall();
 };
 
