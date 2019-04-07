@@ -4,7 +4,7 @@ int gameFlow(int num_of_arguments, char *arguments[]){
     Maze *gameMaze = parse_input(num_of_arguments, arguments);
     if (gameMaze == nullptr)// Input file isn't valid
         return 1;
-    Player player = Player(); // Do we need it or we should just use empty constructor
+    Player player = Player();
     pair<int, int> playerPos = gameMaze->getStart(), bookmarkPos;
     int maxSteps = gameMaze->getMaxSteps(), currMoveNumber = 0;
     Move currPlayerMove;
@@ -49,7 +49,7 @@ int gameFlow(int num_of_arguments, char *arguments[]){
             case ' ':
                 if (playerPos == bookmarkPos){
                     player.hitBookmark();
-                    bookmarkPos = {-1,-1};
+                    bookmarkPos = {-1,-1}; // Reset bookmark position
                 }
                 break;
             case '#':
@@ -76,24 +76,6 @@ int gameFlow(int num_of_arguments, char *arguments[]){
                 foundTreasure = true;
                 output_file << "!";
                 break;
-            }
-            cout << playerPos.first << " !!! " << playerPos.second << endl;
-            for (int i = 0; i < gameMaze->getRows(); i++){
-                for (int j = 0; j < gameMaze->getCols(); j++){
-                    if ((playerPos.first == j) && (playerPos.second == i)){
-                        cout << "@";
-                    }
-                    else{
-                        char temp = gameMaze->getChar(std::make_pair(j,i));
-                        if (temp == '@'){
-                            cout << " ";
-                        }
-                        else{
-                            cout << temp;
-                        }
-                    }
-                }
-                cout << endl;
             }
         }
     }

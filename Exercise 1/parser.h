@@ -10,10 +10,6 @@
 #include <sys/stat.h>
 #include "maze.h"
 
-#define delimiter " \t\r"
-#define HEADER_LENGTH 3
-#define TOKEN_LENGTH 2
-
 using std::cout;
 using std::string;
 using std::endl;

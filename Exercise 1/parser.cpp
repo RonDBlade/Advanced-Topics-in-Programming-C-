@@ -1,14 +1,5 @@
 #include "parser.h"
 
-bool check_if_int(char* token){
-    int string_length = strlen(token);
-    for (int i = 0; i < string_length; i++){
-        if (isdigit(token[i]) == false){
-            return false;
-        }
-    }
-    return true;
-}
 
 bool does_header_contains_word(int line_number, string line, string word, bool* header_valid){
     const std::regex header_pattern("\\s*\\b" + word + "\\b\\s*=\\s*[0-9]+\\s*");
@@ -64,7 +55,7 @@ Maze* parse_input(int num_of_arguments, char *arguments[]){
     }
     ifstream input_file(arguments[1]);
     if (!input_file.is_open()){
-        cout << "Command line argument for maze: " << arguments[1] << "doesn't lead to a maze file or leads to a file that cannot be opened" << endl;;
+        cout << "Command line argument for maze: " << arguments[1] << "doesn't lead to a maze file or leads to a file that cannot be opened" << endl;
         input_correct = false;
     }
     if (num_of_arguments < 3){
