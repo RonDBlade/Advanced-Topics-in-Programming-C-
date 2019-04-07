@@ -52,39 +52,44 @@ bool is_header_valid(ifstream& input_file, int* maze_data){
 
 bool file_exists(const string& file_path){
     struct stat buffer;
-    return (stat (file_path.c_str(), &buffer) == 0);
+    return ((stat(file_path.c_str(), &buffer) == 0) && (buffer.st_mode & S_IFREG )); // Check the given output path doesn't exist as a file (and not folder)
 }
 
 Maze* parse_input(int num_of_arguments, char *arguments[]){
-    bool is_valid_game = true;
-    if(num_of_arguments < 3){
-        if (num_of_arguments < 2){
-            cout << "Missing maze file argument in command line" << endl;
-            cout << "Missing output file argument in command line" << endl;
-            return nullptr;
-        }
+    bool input_correct = true, output_correct = true;
+    if (num_of_arguments < 2){
+        cout << "Missing maze file argument in command line" << endl;
         cout << "Missing output file argument in command line" << endl;
-        is_valid_game = false;
+        return nullptr;
     }
     ifstream input_file(arguments[1]);
     if (!input_file.is_open()){
-        cout << "Command line argument for maze: " << arguments[1] << "doesn't lead to a maze file or leads to a file that cannot be opened";
+        cout << "Command line argument for maze: " << arguments[1] << "doesn't lead to a maze file or leads to a file that cannot be opened" << endl;;
+        input_correct = false;
+    }
+    if (num_of_arguments < 3){
+        cout << "Missing output file argument in command line" << endl;
+        if (!input_correct){
+            return nullptr;
+        }
+        output_correct = false;
+    }
+    if ((output_correct) && (file_exists(arguments[2]))){
+        cout << "Command line argument for output file: " << arguments[2] << " points to a bad path or to a file that already exists" << endl;
+        output_correct = false;
+    }
+    if (!input_correct){
         return nullptr;
     }
-    /*if (file_exists(arguments[2])){ //bad path==directories that describe this path don't exist i think(ron),need to add a check for that
-    cout << "Command line argument for output file: " << arguments[2] << "points to a bad path or to a file that already exists" << endl;
-    is_valid_game = false;
-    }*/
-
     int maze_data[3] = {0};
     if (!is_header_valid(input_file, maze_data)){
-        // Errors
-        is_valid_game = false;
+        input_file.close();
+        return nullptr;
     }
     Maze *gameMaze = new Maze(maze_data[0], maze_data[1], maze_data[2]);
-    is_valid_game = is_valid_game && gameMaze->parse_maze(input_file);
+    input_correct = input_correct && gameMaze->parse_maze(input_file);
     input_file.close();
-    if (is_valid_game){
+    if (input_correct && output_correct){
         return gameMaze;
     }
     return nullptr;
