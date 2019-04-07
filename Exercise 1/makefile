@@ -1,6 +1,6 @@
 COMP = g++-5.3.0
 #put all your object files here
-OBJS = #objects should be placed here! 
+OBJS = main.o player.o parser.o maze.o gameManager.o
 #The executabel filename DON'T CHANGE
 EXEC = ex1
 CPP_COMP_FLAG = -std=c++17 -Wall -Wextra \

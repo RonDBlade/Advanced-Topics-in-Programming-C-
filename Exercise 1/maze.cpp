@@ -13,7 +13,7 @@ bool Maze::parse_maze(ifstream &input_file){
     if (!findCharInMaze('$')){
         is_valid_maze = false;
     }
-    return checkWrongChars("@$# ") || is_valid_maze;
+    return checkWrongChars("@$# \r") || is_valid_maze;
 }
 
 pair<int, int> Maze::getStart()const{
