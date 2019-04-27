@@ -1,0 +1,5 @@
+Need for the game manager to keep all each location of each bookmark that was set.when one is stepped on,
+we return him to the position he was at when stepping on that one,and giving the player knowledge on all the previous steps he has been 
+to before putting that bookmark,including this bookmark(if we put  1 2 3 4 5 6 bookmarks,and stepped on bookmark 4,then the manager tells him
+he stepped on 4,and removes bookmarks 1-4.the player can from that look at his vector of moves and infer what moves he did and "teleport"
+himself to the location he was at according to the player map)
