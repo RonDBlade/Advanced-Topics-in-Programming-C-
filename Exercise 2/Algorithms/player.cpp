@@ -116,15 +116,6 @@ void Player::setLocMove(int x,int y){
         when_wasOn[x][y]=moveNumber;
     }
 
-AbstractAlgorithm::Move whatMove(int movnum){
-    if(movnum==0)
-        return AbstractAlgorithm::Move::UP;
-    else if(movnum==1)
-        return AbstractAlgorithm::Move::DOWN;
-    else if(movnum==2)
-        return AbstractAlgorithm::Move::LEFT;
-    return AbstractAlgorithm::Move::RIGHT;
-}
 int Player::getLocMove(int x, int y){
     return when_wasOn[x][y];
 }
@@ -192,35 +183,34 @@ AbstractAlgorithm::Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         return Move::RIGHT;
     }
     //if we got here,we already know ALL the locations which surround the player.Time to find which are a wall and which aren't.
-    vector<int> movevec;
+    vector<Move> movevec;
 
     checkLoc=Player::isWall(current_position.first,current_position.second+1);//checks if the position above the player is a wall
     if(!checkLoc)
-        movevec.push_back(0);
+        movevec.push_back(Move::UP);
     checkLoc=Player::isWall(current_position.first,current_position.second-1);//same for down
     if(!checkLoc)
-        movevec.push_back(1);
+        movevec.push_back(Move::DOWN);
     checkLoc=Player::isWall(current_position.first-1,current_position.second);//same for left
     if(!checkLoc)
-        movevec.push_back(2);
+        movevec.push_back(Move::LEFT);
     checkLoc=Player::isWall(current_position.first+1,current_position.second);//same for right
     if(!checkLoc){
-        movevec.push_back(3);
+        movevec.push_back(Move::RIGHT);
     }
     if (movevec.empty())
         return Move::BOOKMARK;// everything is a wall
     else if (movevec.size()==1){
         if(bookmark_on)
-            pushtoMoveKeep(whatMove(movevec.front()),' ');
-        lastMove=whatMove(movevec.front());
+            pushtoMoveKeep(movevec.front(),' ');
+        lastMove=movevec.front();
         setbyMove(lastMove);
         return lastMove;
     }
     //now we have all the tiles around him which are not walls.lets visit the one we visited the earliest between them!
     for(int i=0;movevec.size()!=0;i++){//finally, find the place we visited the most in the past from our current options
-        tmp1=movevec.back();
+        tmp3=movevec.back();
         movevec.pop_back();
-        tmp3=whatMove(tmp1);
         tmp1=findMoveNum(tmp3);
         if(tmp1<tmp2){
             tmp2=tmp1;
