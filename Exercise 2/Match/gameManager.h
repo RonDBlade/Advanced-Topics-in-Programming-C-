@@ -2,8 +2,8 @@
 #define GAMEMANAGER_H_INCLUDED
 
 #include "parser.h"
-#include "maze.h"
-#include "player.h"
+#include "../Algorithms/maze.h"
+#include "../Algorithms/player.h"
 #include <utility>
 #include <fstream>
 #include <iostream>
