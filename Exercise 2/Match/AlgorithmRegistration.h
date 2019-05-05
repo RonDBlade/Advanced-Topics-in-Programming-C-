@@ -19,5 +19,3 @@ AlgorithmRegistration register_me_##class_name \
 	([]{return std::make_unique<class_name>();} );
 
 #endif // ALGORITHMREGISTRATION_H_INCLUDED
-
-
