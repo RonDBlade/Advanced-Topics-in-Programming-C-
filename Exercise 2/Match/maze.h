@@ -17,6 +17,7 @@ using std::endl;
 using std::cout;
 
 class Maze{
+    string mazeName;
     int maxSteps;
     int rows;
     int cols;

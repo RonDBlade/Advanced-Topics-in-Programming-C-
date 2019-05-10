@@ -7,10 +7,23 @@
 #include <utility>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
 using std::pair;
 
-int gameFlow(int num_of_arguments, char *arguments[]);
+int runAlgorithmsOnMaze(shared_ptr<Maze> gameMaze, vector<AbstractAlgorithm> loadedAlgorithms);
+
+class gameInstance{
+    AbstractAlgorithm algorithm;
+    pair<int, int> playerPos;
+    vector<pair<int, int>> bookmarkPositions;
+    bool foundTreasure;
+    std::ostream outputFile;
+    int stepsTaken;
+
+public:
+    gameInstance(shared_ptr<Maze> gameMaze_, pair<string, AbstractAlgorithm> algorithm_, string outputFolder_);
+};
 
 inline int positiveModulo(int i, int n) {
     return (i % n + n) % n;

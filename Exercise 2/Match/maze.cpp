@@ -1,6 +1,6 @@
 #include "maze.h"
 
-Maze::Maze(int maxSteps_, int rows_, int cols_): maxSteps(maxSteps_), rows(rows_), cols(cols_), mazeValid(true){
+Maze::Maze(string mazeName_, int maxSteps_, int rows_, int cols_): mazeName(mazeName_), maxSteps(maxSteps_), rows(rows_), cols(cols_), mazeValid(true){
     mazeData.reserve(rows);
 }
 

@@ -58,7 +58,8 @@ std::shared_ptr<Maze> addMaze(string mazePath){
         input_file.close();
         return nullptr;
     }
-    std::shared_ptr<Maze> gameMaze = std::make_shared<Maze>(maze_data[0], maze_data[1], maze_data[2]});
+    string fileName = std::filesystem::path(mazePath).stem();
+    std::shared_ptr<Maze> gameMaze = std::make_shared<Maze>(fileName, maze_data[0], maze_data[1], maze_data[2]});
     input_correct = input_correct && gameMaze->parse_maze(input_file);
     input_file.close();
     if (input_correct){
