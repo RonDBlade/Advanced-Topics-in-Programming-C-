@@ -12,8 +12,7 @@ using std::vector;
 
 
 class Player: public AbstractAlgorithm {
-    map<int, map<int,char> > player_map; /*should change to map of maps.From my understanding of the implementation we start the player from position
-    (0,0) in his perspective,and if we treat some positions as "-" positions(down from (0,0) is (0,-1)),we cant do that with vectors*/
+    map<int, map<int,char> > player_map;
     map<int, map<int,int> > when_wasOn; //keeps for each location when we have last visited it.helps us decide which way to go.
     int moveNumber=0;//keeps the count of moves for
     Move lastMove;

@@ -2,9 +2,9 @@
 
 AlgorithmLoader AlgorithmLoader::instance;
 
-void registerAlgorithm(std::string algorithmFileName) {
+void AlgorithmLoader::registerAlgorithm(string algorithmFileName) {
     void *handle;
-    std::unique_ptr<AbstractAlgorithm> algorithm;
+    std::function<std::unique_ptr<AbstractAlgorithm>()> algorithm;
     char *error;
     handle = dlopen (algorithmFileName, RTLD_LAZY);
     if (!handle) {
@@ -13,7 +13,8 @@ void registerAlgorithm(std::string algorithmFileName) {
     }
     dlerror();
     algorithm = dlsym(handle, "NEED TO ADD ALGORITHM SYMBOL HERE");
-    if ((error = dlerror()) != NULL)  {
+    if ((error = dlerror()) != NULL)
+    {
         fprintf (stderr, "%s\n", error);
         exit(1);
     }
@@ -21,8 +22,8 @@ void registerAlgorithm(std::string algorithmFileName) {
     factoryVec.push_back(algorithm);
 }
 
-void AlgorithmLoader::loadAll() const {
+void AlgorithmLoader::moveAll() const {
     for(auto algorithmFactory : factoryVec) {
-        algorithmFactory()->loadAlgorithm();
+        algorithmFactory()->move();
     }
 }

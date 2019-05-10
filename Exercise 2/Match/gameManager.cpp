@@ -4,10 +4,10 @@ int gameFlow(int num_of_arguments, char *arguments[]){
     Maze *gameMaze = parse_input(num_of_arguments, arguments);
     if (gameMaze == nullptr)// Input file isn't valid
         return 1;
-    Player player = Player();
+    AbstractAlgorithm algorithm = AbstractAlgorithm();
     pair<int, int> playerPos = gameMaze->getStart(), bookmarkPos;
     int maxSteps = gameMaze->getMaxSteps(), currMoveNumber = 0;
-    Move currPlayerMove;
+    AbstractAlgorithm::Move currPlayerMove;
     char requestedTile;
     bool foundTreasure = false;
     std::ofstream output_file(arguments[2]);
@@ -16,30 +16,30 @@ int gameFlow(int num_of_arguments, char *arguments[]){
         return 1;
     }
     while((currMoveNumber < maxSteps) && (!foundTreasure)){
-        currPlayerMove = player.move();
+        currPlayerMove = algorithm.move();
         currMoveNumber++;
-        if (currPlayerMove == Move::BOOKMARK){
+        if (currPlayerMove == AbstractAlgorithm::Move::BOOKMARK){
             bookmarkPos = playerPos;
         }
         else{
             switch(currPlayerMove){
-            case Move::UP:
+            case AbstractAlgorithm::Move::UP:
                 playerPos.second = positiveModulo(playerPos.second - 1, gameMaze->getRows());
                 output_file << "U" << endl;
                 break;
-            case Move::DOWN:
+            case AbstractAlgorithm::Move::DOWN:
                 playerPos.second = positiveModulo(playerPos.second + 1, gameMaze->getRows());
                 output_file << "D" << endl;
                 break;
-            case Move::RIGHT:
+            case AbstractAlgorithm::Move::RIGHT:
                 playerPos.first = positiveModulo(playerPos.first + 1, gameMaze->getCols());
                 output_file << "R" << endl;
                 break;
-            case Move::LEFT:
+            case AbstractAlgorithm::Move::LEFT:
                 playerPos.first = positiveModulo(playerPos.first - 1, gameMaze->getCols());
                 output_file << "L" << endl;
                 break;
-            case Move::BOOKMARK:
+            case AbstractAlgorithm::Move::BOOKMARK:
                 bookmarkPos = playerPos;
                 output_file << "B" << endl;
                 continue; // Next loop iteration, don't check current character
@@ -55,19 +55,19 @@ int gameFlow(int num_of_arguments, char *arguments[]){
             case '#':
                 player.hitWall();
                 switch(currPlayerMove){// Reverse player move
-                case Move::UP:
+                case AbstractAlgorithm::Move::UP:
                     playerPos.second = positiveModulo(playerPos.second + 1, gameMaze->getRows());
                     break;
-                case Move::DOWN:
+                case AbstractAlgorithm::Move::DOWN:
                     playerPos.second = positiveModulo(playerPos.second - 1, gameMaze->getRows());
                     break;
-                case Move::RIGHT:
+                case AbstractAlgorithm::Move::RIGHT:
                     playerPos.first = positiveModulo(playerPos.first - 1, gameMaze->getCols());
                     break;
-                case Move::LEFT:
+                case AbstractAlgorithm::Move::LEFT:
                     playerPos.first = positiveModulo(playerPos.first + 1, gameMaze->getCols());
                     break;
-                case Move::BOOKMARK:
+                case AbstractAlgorithm::Move::BOOKMARK:
                     break; // Won't get here, only to avoid compilation errors
                 }
                 break;

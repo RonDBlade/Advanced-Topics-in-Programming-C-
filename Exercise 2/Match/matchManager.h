@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include "gameManager.h"
+#include "parser.h"
 
 
 using std::string;

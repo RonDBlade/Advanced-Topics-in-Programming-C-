@@ -6,7 +6,7 @@
 #include <utility>
 #include <algorithm>
 #include <iostream>
-#include "../Utilities/AbstractAlgorithm.h"
+#include "AbstractAlgorithm.h"
 
 
 using std::vector;
