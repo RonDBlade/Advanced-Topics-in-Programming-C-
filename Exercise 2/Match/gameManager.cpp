@@ -1,10 +1,7 @@
 #include "gameManager.h"
 
-int gameFlow(int num_of_arguments, char *arguments[]){
-    Maze *gameMaze = parse_input(num_of_arguments, arguments);
-    if (gameMaze == nullptr)// Input file isn't valid
-        return 1;
-    AbstractAlgorithm algorithm = AbstractAlgorithm();
+int runAlgorithmsOnMaze(shared_ptr<Maze> gameMaze, vector<AbstractAlgorithm> loadedAlgorithms){
+    vector<pair<pair<AbstractAlgorithm, gameMaze>, int>> results;
     pair<int, int> playerPos = gameMaze->getStart(), bookmarkPos;
     int maxSteps = gameMaze->getMaxSteps(), currMoveNumber = 0;
     AbstractAlgorithm::Move currPlayerMove;

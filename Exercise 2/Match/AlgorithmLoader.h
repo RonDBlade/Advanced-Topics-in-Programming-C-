@@ -8,16 +8,16 @@
 #include <functional>
 #include <memory>
 //#include <dlfcn.h>
-#include "AbstractAlgorithm.h"
+#include "matchManager.h"
 
 using std::string;
 
 class AlgorithmLoader{
     static AlgorithmLoader instance;
-    std::vector<std::function<std::unique_ptr<AbstractAlgorithm>()>> factoryVec;
+    std::vector<std::function<std::unique_ptr<AbstractAlgorithm>()>> loadedAlgorithms;
 
 public:
-    void registerAlgorithm(string algorithmFileName);
+    void registerAlgorithm(std::function<std::unique_ptr<AbstractAlgorithm>()> algorithm);
     void moveAll() const;
 
     static AlgorithmLoader& getInstance() {

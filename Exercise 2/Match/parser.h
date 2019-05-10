@@ -25,7 +25,7 @@ struct FilePaths{
     string output_path;
 };
 
-FilePaths :: FilePaths(int num_of_arguments, char* arguments[]): maze_path(std::filesystem::current_path()), algorithm_path(std::filesystem::current_path());
+FilePaths::FilePaths(int num_of_arguments, char* arguments[]): maze_path(std::filesystem::current_path()), algorithm_path(std::filesystem::current_path());
 vector<string> findAllFilesByExtension(string path, string extension);
 Maze* parse_input(int num_of_arguments, char *arguments[]);
 

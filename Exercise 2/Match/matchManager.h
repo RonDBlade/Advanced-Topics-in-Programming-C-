@@ -10,11 +10,8 @@
 
 using std::string;
 
-
-struct FilePaths{
-    string maze_path;
-    string algorithm_path;
-    string output_path;
+class matchManager(){
+    std::vector<std::function<std::unique_ptr<AbstractAlgorithm>()>> loadedAlgorithms;
 };
 
 #endif // MATCHMANAGER_H_INCLUDED
