@@ -1,5 +1,6 @@
 #include "matchManager.h"
 
+
 void initializeMatch (int num_of_arguments, char *arguments[]){
     FilePaths paths = FilePaths(num_of_arguments, arguments);
     vector<string> mazeFiles = findAllFilesByExtension(paths.maze_path, ".maze");
@@ -7,6 +8,20 @@ void initializeMatch (int num_of_arguments, char *arguments[]){
 
 }
 
+
+void runMatches(vector<string> mazeFiles, string outputFolder){
+    vector<string> validMazes;
+    vector<pair<string, vector<gameInstance>>> resultsForMaze;
+    int longestMazeName = 0;
+    for(auto mazeFile = mazeFiles.begin(), mazeFile != mazeFiles.end(); mazeFile++){
+        std::shared_ptr<Maze> gameMaze = parser::addMaze(*mazeFile);
+        if (gameMaze != nullptr){
+            validMazes.push_back(*mazeFile);
+            resultsForMaze.push_back(std::make_pair(*mazeFile, gameManager::runAlgorithmsOnMaze(gameMaze, loadedAlgorithms, outputFolder));
+        }
+    }
+
+}
 
 void openSOFile(string filePath){
     void *handle;

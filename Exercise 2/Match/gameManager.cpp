@@ -14,7 +14,7 @@ gameInstance::gameInstance(shared_ptr<Maze> gameMaze_, pair<string, AbstractAlgo
     }
 }
 
-int runAlgorithmsOnMaze(shared_ptr<Maze> gameMaze, vector<pair<string, AbstractAlgorithm>> loadedAlgorithms, string outputFolder){
+vector<gameInstance> runAlgorithmsOnMaze(shared_ptr<Maze> gameMaze, vector<pair<string, AbstractAlgorithm>> loadedAlgorithms, string outputFolder){
     vector<gameInstance> allGamesForMaze;
     int maxSteps = gameMaze->getMaxSteps(), currMoveNumber = 0;
     int numOfAlgorithms = 0;
@@ -22,7 +22,11 @@ int runAlgorithmsOnMaze(shared_ptr<Maze> gameMaze, vector<pair<string, AbstractA
     AbstractAlgorithm::Move currPlayerMove;
     char requestedTile;
     for(auto it = loadedAlgorithms.begin(); it != loadedAlgorithms.end(); it++){
-        allGamesForMaze.push(gameInstance(gameMaze, *it, outputFolder));
+        gameInstance instance = gameInstance(gameMaze, *it, outputFolder);
+        if (instance.outputFile == nullptr){
+            instance.outputFile = ;
+        }
+        allGamesForMaze.push_back(instance);
         numOfAlgorithms++;
     }
     while((currMoveNumber < maxSteps) && (numFinished < numOfAlgorithms)){
@@ -93,7 +97,8 @@ int runAlgorithmsOnMaze(shared_ptr<Maze> gameMaze, vector<pair<string, AbstractA
     for (auto player = allGamesForMaze.begin(); player != allGamesForMaze.end(); player++){
         if (!*player.foundTreasure){
             *player.outputFile << "X";
+            *player.stepsTaken = -1;
         }
     }
-    return 0;
+    return allGamesForMaze;
 }

@@ -11,7 +11,7 @@
 
 using std::pair;
 
-int runAlgorithmsOnMaze(shared_ptr<Maze> gameMaze, vector<AbstractAlgorithm> loadedAlgorithms);
+int runAlgorithmsOnMaze(shared_ptr<Maze> gameMaze, vector<pair<string, AbstractAlgorithm>> loadedAlgorithms, string outputFolder);
 
 class gameInstance{
     AbstractAlgorithm algorithm;
