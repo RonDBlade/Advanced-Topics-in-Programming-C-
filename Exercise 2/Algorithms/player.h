@@ -24,55 +24,16 @@ class Player: public AbstractAlgorithm {
     int bookmark_count=0;
     bool bookmark_on=false;//true when we have a bookmark on the board
     bool moved_to_new=false;
-    bool isKnown(int x,int y){//this PRIVATE method checks if player has been on this coordination yet.On HIS map,not the maze map.
-        if(!player_map.count(x))//no point in this x coordination has been discovered,so this one hasn't either
-            return false;
-        if(!player_map[x].count(y))//this specific point hasn't been discovered yet
-            return false;
-        return true;//we have visited this cell in the past
-    }
-    bool isWall(int x,int y){
-        return player_map[x][y]=='#';
-    }
-
-    bool putBookmark(){
-        if(moveNumber==1){
-            //just started the game
-            bookmark_on=true;
-            return true;
-        }
-        else if(bookmark_on==false&&moved_to_new){
-            //if we dont have a bookmark and this is a new place we just went to
-            bookmark_on=true;
-            return true;
-        }
-        else if(bookmark_count==put_bookmark){//if we waited too long for a bookmark
-            put_bookmark*=2;
-            bookmark_on=true;
-            return true;
-        }
-        return false;
-    }
-
-    void pushtoMoveKeep(Move moved,char tileWentTo){
-    movekeep.push_back({moved,tileWentTo});
-}
-
-    int findMoveNum(Move mov){
-        if(mov==Move::UP)
-            return Player::getLocMove(current_position.first,current_position.second+1);
-        if(mov==Move::DOWN)
-            return Player::getLocMove(current_position.first,current_position.second-1);
-        if(mov==Move::LEFT)
-            return Player::getLocMove(current_position.first-1,current_position.second);
-        return Player::getLocMove(current_position.first+1,current_position.second);
-    }
-
+    
+    
 public:
     Player();
+    Move move();
+    void hitWall();
+    
+private:
     pair<int, int> player_pos()const;
     pair<int, int> bookmark_pos()const;
-    Move move();
     void updateMap(char to_put,Move where);
     void increaseMovenum();
     void setLocMove(int x,int y);
@@ -83,7 +44,11 @@ public:
     int firstBook();
     int secondBook();
     void setbyMove(Move mov);
-    void hitWall();
+    int findMoveNum(Move mov);
+    void pushtoMoveKeep(Move moved,char tileWentTo);
+    bool putBookmark();
+    bool isWall(int x,int y);
+    bool isKnown(int x,int y);
 };
 
 #endif // PLAYER_H_INCLUDED
