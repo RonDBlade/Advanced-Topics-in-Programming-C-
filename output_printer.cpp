@@ -64,7 +64,6 @@ void outputData(bool tofile,const vector<vector<int>> steps,const vector<string>
 /*outputData is the real function,the main is just so that we give him the data.in the real implementation,we need to*/
 int main()
 {
-    cout<<'a'*5<<endl;
     string outfile="outfile.txt";
     bool to_out=false;
     vector<string> mazes = {"maze1","maze2","maze3","maze4"};
