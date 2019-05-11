@@ -1,6 +1,6 @@
 #include "gameManager.h"
 
-gameInstance::gameInstance(shared_ptr<Maze> gameMaze_, pair<string, AbstractAlgorithm> algorithm_, string outputFolder_): algorithm(algorithm_), playerPos(gameMaze_->getStart()), foundTreasure(false), stepsTaken(0){
+gameInstance::gameInstance(shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> algorithm_, string outputFolder_): algorithm(algorithm_), playerPos(gameMaze_->getStart()), foundTreasure(false), stepsTaken(0){
     if (outputFolder_ != nullptr){
         string outputFileName = outputFolder_ + gameMaze_->mazeName + "_" + algorithm_.first() + ".output";
         outputFile = (outputFileName);
@@ -15,7 +15,7 @@ gameInstance::gameInstance(shared_ptr<Maze> gameMaze_, pair<string, AbstractAlgo
     }
 }
 
-vector<gameInstance> runAlgorithmsOnMaze(shared_ptr<Maze> gameMaze, vector<pair<string, AbstractAlgorithm>> loadedAlgorithms, string outputFolder){
+vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<pair<string, vector<std::function<std::unique_ptr<AbstractAlgorithm>()>>>> loadedAlgorithms, string outputFolder){
     vector<gameInstance> allGamesForMaze;
     int maxSteps = gameMaze->getMaxSteps(), currMoveNumber = 0;
     int numOfAlgorithms = 0;

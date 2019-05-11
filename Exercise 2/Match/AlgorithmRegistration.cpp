@@ -1,6 +1,6 @@
 #include "AlgorithmRegistration.h"
-#include "AlgorithmLoader.h"
+#include "matchManager.h"
 
 AlgorithmRegistration::AlgorithmRegistration(std::function<std::unique_ptr<AbstractAlgorithm>()> algorithm) {
-    AlgorithmLoader::getInstance().registerAlgorithm(algorithm);
+    matchManager::getInstance().registerAlgorithm(algorithm);
 }

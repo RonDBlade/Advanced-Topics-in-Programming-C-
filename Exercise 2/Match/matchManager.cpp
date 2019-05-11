@@ -1,43 +1,52 @@
 #include "matchManager.h"
 
 
-void initializeMatch (int num_of_arguments, char *arguments[]){
-    FilePaths paths = FilePaths(num_of_arguments, arguments);
-    vector<string> mazeFiles = findAllFilesByExtension(paths.maze_path, ".maze");
-    vector<string> algoFiles = findAllFilesByExtension(paths.algorithm_path, ".so");
-
-}
+matchManager matchManager::instance;
 
 
 void runMatches(vector<string> mazeFiles, string outputFolder){
     vector<string> validMazes;
     vector<pair<string, vector<gameInstance>>> resultsForMaze;
     int longestMazeName = 0;
-    for(auto mazeFile = mazeFiles.begin(), mazeFile != mazeFiles.end(); mazeFile++){
-        std::shared_ptr<Maze> gameMaze = parser::addMaze(*mazeFile);
+    for(auto mazeFile = mazeFiles.begin(); mazeFile != mazeFiles.end(); mazeFile++){
+        std::shared_ptr<Maze> gameMaze = addMaze(*mazeFile);
         if (gameMaze != nullptr){
             validMazes.push_back(*mazeFile);
-            resultsForMaze.push_back(std::make_pair(*mazeFile, gameManager::runAlgorithmsOnMaze(gameMaze, loadedAlgorithms, outputFolder));
+            resultsForMaze.push_back(std::make_pair(*mazeFile, runAlgorithmsOnMaze(gameMaze, matchManager::loadedAlgorithms, outputFolder));
         }
     }
 
 }
 
-void openSOFile(string filePath){
+vector<void*> registerSoFiles(vector<string> algoFiles){
+    vector<void*> handles;
     void *handle;
-    std::function<std::unique_ptr<AbstractAlgorithm>()> algorithm;
     char *error;
-    handle = dlopen (filePath, RTLD_LAZY);
-    if (!handle) {
-        fprintf (stderr, "%s\n", dlerror());
-        exit(1);
+    for (auto algoPath = std::begin(algoFiles); algoPath != std::end(algoFiles); algoPath++){
+        handle = dlopen (algoPath, RTLD_LAZY);
+        if (!handle) {
+            fprintf (stderr, "%s\n", dlerror());
+        }
+        else{
+            handles.push_back(handle);
+            loadedAlgorithms.back().first = *algoPath;
+        }
     }
-    dlerror();
-    algorithm = dlsym(handle, "NEED TO ADD ALGORITHM SYMBOL HERE");
-    if ((error = dlerror()) != NULL)
-    {
-        fprintf (stderr, "%s\n", error);
-        exit(1);
+    return handles;
+}
+
+void closeSoFiles(vector<void *> handles){
+    for (auto handle = std::begin(handles); handle != std::end(handles); handle++){
+        dlclose(handle);
     }
-    dlclose(handle);
+}
+
+
+void processMatch (int num_of_arguments, char *arguments[]){
+    FilePaths paths = FilePaths(num_of_arguments, arguments);
+    vector<string> mazeFiles = findAllFilesByExtension(paths.maze_path, ".maze");
+    vector<string> algoFiles = findAllFilesByExtension(paths.algorithm_path, ".so");
+    vector<void*> handles = registerSoFiles(algoFiles);
+    runMatches(mazeFiles, paths.output_path);
+    closeSoFiles(handles);
 }

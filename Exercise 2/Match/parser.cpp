@@ -85,7 +85,7 @@ string getPathFromVector(vector<string> arguments, string search_string){
 }
 
 
-FilePaths::FilePaths(int num_of_arguments, char* arguments[]): maze_path(std::filesystem::current_path()), algorithm_path(std::filesystem::current_path()){
+parser::FilePaths::FilePaths(int num_of_arguments, char* arguments[]): maze_path(std::filesystem::current_path()), algorithm_path(std::filesystem::current_path()){
     string argument;
     vector<string> arguments;
     auto place_in_vector;

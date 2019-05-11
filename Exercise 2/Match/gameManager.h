@@ -8,13 +8,12 @@
 #include <fstream>
 #include <iostream>
 #include <algorithm>
+#include <memory>
 
 using std::pair;
 
-int runAlgorithmsOnMaze(shared_ptr<Maze> gameMaze, vector<pair<string, AbstractAlgorithm>> loadedAlgorithms, string outputFolder);
-
 class gameInstance{
-    AbstractAlgorithm algorithm;
+    pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> algorithm;
     pair<int, int> playerPos;
     vector<pair<int, int>> bookmarkPositions;
     bool foundTreasure;
@@ -22,11 +21,13 @@ class gameInstance{
     int stepsTaken;
 
 public:
-    gameInstance(shared_ptr<Maze> gameMaze_, pair<string, AbstractAlgorithm> algorithm_, string outputFolder_);
+    gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> algorithm_, string outputFolder_);
 };
 
 inline int positiveModulo(int i, int n) {
     return (i % n + n) % n;
 }
+
+vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<pair<string, vector<std::function<std::unique_ptr<AbstractAlgorithm>()>>>> loadedAlgorithms, string outputFolder);
 
 #endif // GAMEMANAGER_H_INCLUDED

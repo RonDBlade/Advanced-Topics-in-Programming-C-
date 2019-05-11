@@ -23,9 +23,11 @@ struct FilePaths{
     string maze_path;
     string algorithm_path;
     string output_path;
+
+public:
+    FilePaths(int num_of_arguments, char* arguments[]);
 };
 
-FilePaths::FilePaths(int num_of_arguments, char* arguments[]): maze_path(std::filesystem::current_path()), algorithm_path(std::filesystem::current_path());
 vector<string> findAllFilesByExtension(string path, string extension);
 std::shared_ptr<Maze> addMaze(string mazePath);
 

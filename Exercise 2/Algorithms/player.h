@@ -25,12 +25,14 @@ class Player: public AbstractAlgorithm {
     bool bookmark_on=false;//true when we have a bookmark on the board
     bool moved_to_new=false;
     int highest_bookmark=0;
-    
+
 public:
     Player();
     Move move();
-    void hitWall(int seq);
-    
+    void hitWall();
+    void hitBookmark(int seq);
+
+
 private:
     pair<int, int> player_pos()const;
     pair<int, int> bookmark_pos()const;
@@ -38,7 +40,6 @@ private:
     void increaseMovenum();
     void setLocMove(int x,int y);
     int getLocMove(int x, int y);
-    void hitBookmark();
     int firstPlyr();
     int secondPlyr();
     int firstBook();
