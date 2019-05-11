@@ -46,15 +46,25 @@ void outputData(bool tofile,const vector<vector<int>> steps,const vector<string>
     lengths.pop_back();
     int alglen=lengths.back();
     lengths.pop_back();
-    printer(tofile,'-'*linelen);
-    string toprint='|'+' '*alglen+1+'|';
-    for(int i=0;i<)
+    printer(tofile,string(linelen,'-'));
+    string toprint="|"+string(alglen+1,' ')+"|";
+    for(int i=0;i<mazes.size();i++){//print the first line here
+
+    }
     printer(tofile,toprint);
+    printer(tofile,string(linelen,'-'));
+    for(int i=0;i<algs.size();i++){//print the rest of the lines
+        for(int j=0;j<mazes.size();j++){
+
+        }
+        printer(tofile,string(linelen,'-'));
+    }
 }
 
 /*outputData is the real function,the main is just so that we give him the data.in the real implementation,we need to*/
 int main()
 {
+    cout<<'a'*5<<endl;
     string outfile="outfile.txt";
     bool to_out=false;
     vector<string> mazes = {"maze1","maze2","maze3","maze4"};
