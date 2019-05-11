@@ -1,17 +1,17 @@
 #include "gameManager.h"
 
-gameInstance::gameInstance(shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> algorithm_, string outputFolder_): algorithm(algorithm_), playerPos(gameMaze_->getStart()), foundTreasure(false), stepsTaken(0){
-    if (outputFolder_ != nullptr){
-        string outputFileName = outputFolder_ + gameMaze_->mazeName + "_" + algorithm_.first() + ".output";
-        outputFile = (outputFileName);
-        if (!outputFile.is_open()){
+gameInstance::gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> algorithm_, string outputFolder_): algorithm(algorithm_), playerPos(gameMaze_->getStart()), foundTreasure(false), outputFile(nullptr), stepsTaken(0){
+    if (outputFolder_ != ""){
+        string outputFileName = outputFolder_ + gameMaze_->getMazeName() + "_" + algorithm_.first() + ".output";
+        std::filebuf fileBuffer;
+        fileBuffer.open(outputFileName.c_str, std::ios_base::out);
+        if (!fileBuffer.is_open()){
             cout << "Error opening output file " << outputFileName << endl;
             // In case of error opening the file (or we didn't received output folder) constructing it with null will cause a no-op each time we use it
-            outputFile = (nullptr);
         }
-    }
-    else{
-        outputFile = (nullptr);
+        else{
+            ouputFile.rdbuf(&fileBuffer);
+        }
     }
 }
 

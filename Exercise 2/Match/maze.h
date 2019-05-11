@@ -126,6 +126,7 @@ public:
     int getRows()const;
     int getCols()const;
     char getChar(pair<int, int>)const;
+    string getMazeName()const;
 };
 
 #endif // MAZE_H_INCLUDED
