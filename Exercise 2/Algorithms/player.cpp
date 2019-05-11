@@ -14,6 +14,7 @@ bool Player::isWall(int x,int y){
     }
 
     bool Player::putBookmark(){
+        highest_bookmark++;
         if(moveNumber==1){
             //just started the game
             bookmark_on=true;
