@@ -29,7 +29,7 @@ class Player: public AbstractAlgorithm {
 public:
     Player();
     Move move();
-    void hitWall();
+    void hitWall(int seq);
     
 private:
     pair<int, int> player_pos()const;
