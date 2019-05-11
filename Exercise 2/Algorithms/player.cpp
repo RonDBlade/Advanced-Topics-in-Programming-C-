@@ -1,6 +1,52 @@
 #include "player.h"
 
 
+bool Player::isKnown(int x,int y){//this method checks if player has been on this coordination yet.On HIS map,not the maze map.
+        if(!player_map.count(x))//no point in this x coordination has been discovered,so this one hasn't either
+            return false;
+        if(!player_map[x].count(y))//this specific point hasn't been discovered yet
+            return false;
+        return true;//we have visited this cell in the past
+    }
+
+bool Player::isWall(int x,int y){
+        return player_map[x][y]=='#';
+    }
+
+    bool Player::putBookmark(){
+        if(moveNumber==1){
+            //just started the game
+            bookmark_on=true;
+            return true;
+        }
+        else if(bookmark_on==false&&moved_to_new){
+            //if we dont have a bookmark and this is a new place we just went to
+            bookmark_on=true;
+            return true;
+        }
+        else if(bookmark_count==put_bookmark){//if we waited too long for a bookmark
+            put_bookmark*=2;
+            bookmark_on=true;
+            return true;
+        }
+        return false;
+    }
+
+void Player::pushtoMoveKeep(Move moved,char tileWentTo){
+        movekeep.push_back({moved,tileWentTo});
+    }
+
+int Player::findMoveNum(Move mov){
+        if(mov==Move::UP)
+            return Player::getLocMove(current_position.first,current_position.second+1);
+        if(mov==Move::DOWN)
+            return Player::getLocMove(current_position.first,current_position.second-1);
+        if(mov==Move::LEFT)
+            return Player::getLocMove(current_position.first-1,current_position.second);
+        return Player::getLocMove(current_position.first+1,current_position.second);
+    }
+
+
 void Player::setbyMove(Move mov){
         if(mov==Move::UP){
             current_position.second++;
