@@ -24,7 +24,7 @@ class Player: public AbstractAlgorithm {
     int bookmark_count=0;
     bool bookmark_on=false;//true when we have a bookmark on the board
     bool moved_to_new=false;
-    
+    int highest_bookmark=0;
     
 public:
     Player();
