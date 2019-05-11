@@ -6,11 +6,12 @@ gameInstance::gameInstance(shared_ptr<Maze> gameMaze_, pair<string, AbstractAlgo
         outputFile = (outputFileName);
         if (!outputFile.is_open()){
             cout << "Error opening output file " << outputFileName << endl;
-            outputFile = nullptr;
+            // In case of error opening the file (or we didn't received output folder) constructing it with null will cause a no-op each time we use it
+            outputFile = (nullptr);
         }
     }
     else{
-        outputFile = nullptr;
+        outputFile = (nullptr);
     }
 }
 
@@ -23,9 +24,6 @@ vector<gameInstance> runAlgorithmsOnMaze(shared_ptr<Maze> gameMaze, vector<pair<
     char requestedTile;
     for(auto it = loadedAlgorithms.begin(); it != loadedAlgorithms.end(); it++){
         gameInstance instance = gameInstance(gameMaze, *it, outputFolder);
-        if (instance.outputFile == nullptr){
-            instance.outputFile = ;
-        }
         allGamesForMaze.push_back(instance);
         numOfAlgorithms++;
     }
