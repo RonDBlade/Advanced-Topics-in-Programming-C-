@@ -187,8 +187,7 @@ AbstractAlgorithm::Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         when_wasOn[current_position.first][current_position.second]=moveNumber;
         return Move::BOOKMARK;
     }
-    
-    checkLoc=Player::isKnown(current_position.first,current_position.second-1); //same for down
+    bool checkLoc=Player::isKnown(current_position.first,current_position.second-1); //same for down
     if(!checkLoc){
         current_position.second--;
         setLocMove(current_position.first,current_position.second);
@@ -199,7 +198,7 @@ AbstractAlgorithm::Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         lastMove=Move::DOWN;
         return Move::DOWN;
     }
-    bool checkLoc=Player::isKnown(current_position.first,current_position.second+1);//checks if the player discovered whats above him already
+    checkLoc=Player::isKnown(current_position.first,current_position.second+1);//checks if the player discovered whats above him already
     if(!checkLoc){
         current_position.second++;
         setLocMove(current_position.first,current_position.second);

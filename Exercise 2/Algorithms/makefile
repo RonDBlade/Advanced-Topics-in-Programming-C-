@@ -8,17 +8,17 @@ CPP_LINK_FLAG = -shared
 
 all: $(SHARED_OBJS)
 
-_314615600_a.so: $(OBJS)
-	$(COMP) $(CPP_LINK_FLAG) -o $@ $^
-
-_314615600_a.o: _314615600_a.cpp 
+_314615600_a.o: _314615600_a.cpp player.h
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp 
 
-_314615600_b.so: $(OBJS)
+_314615600_a.so: _314615600_a.o
 	$(COMP) $(CPP_LINK_FLAG) -o $@ $^
 
-_314615600_b.o: _314615600_b.cpp 
+_314615600_b.o: _314615600_b.cpp player.h
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp 
+
+_314615600_b.so:  _314615600_b.o
+	$(COMP) $(CPP_LINK_FLAG) -o $@ $^
 	
 clean:
 	rm -f $(OBJS) $(SHARED_OBJS)
