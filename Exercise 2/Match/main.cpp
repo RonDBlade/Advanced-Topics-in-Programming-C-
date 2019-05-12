@@ -1,7 +1,6 @@
 #include "matchManager.h"
 
 int main(int argc, char *argv[]){
-    matchManager mM = new matchManager();
-    mM.processMatch(argc, argv);
-    return 0;
+    std::shared_ptr<matchManager> mM = std::make_shared<matchManager>();
+    mM->processMatch(argc, argv);
 }
