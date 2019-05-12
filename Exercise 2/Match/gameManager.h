@@ -17,11 +17,30 @@ class gameInstance{
     pair<int, int> playerPos;
     vector<pair<int, int>> bookmarkPositions;
     bool foundTreasure;
-    std::ostream outputFile;
+    vector<string> gameOutput;
     int stepsTaken;
 
 public:
-    gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> algorithm_, string outputFolder_);
+    gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> algorithm_);
+
+    pair<int, int> getPlayerPos();
+    int getPlayerRow();
+    int getPlayerCol();
+    vector<pair<int, int>> getBookmarkPositions();
+    bool getFoundTreasure();
+    vector<string> getGameOutput();
+    int getStepsTaken();
+    AbstractAlgorithm::Move moveAlgorithm();
+
+	void hitAlgorithmWall();
+	void hitAlgorithmBookmark(int seq);
+    void setPlayerPos(pair<int, int> position);
+    void setPlayerRow(int row);
+    void setPlayerCol(int col);
+    void addBookmarkPosition();
+    void setFoundTreasure(bool treasureStatus);
+    void addToGameOutput(string newLine);
+    void raiseStepsTaken();
 };
 
 inline int positiveModulo(int i, int n) {

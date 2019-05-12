@@ -1,21 +1,76 @@
 #include "gameManager.h"
 
-gameInstance::gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> algorithm_, string outputFolder_): algorithm(algorithm_), playerPos(gameMaze_->getStart()), foundTreasure(false), outputFile(nullptr), stepsTaken(0){
-    if (outputFolder_ != ""){
-        string outputFileName = outputFolder_ + gameMaze_->getMazeName() + "_" + algorithm_.first() + ".output";
-        std::filebuf fileBuffer;
-        fileBuffer.open(outputFileName.c_str, std::ios_base::out);
-        if (!fileBuffer.is_open()){
-            cout << "Error opening output file " << outputFileName << endl;
-            // In case of error opening the file (or we didn't received output folder) constructing it with null will cause a no-op each time we use it
-        }
-        else{
-            ouputFile.rdbuf(&fileBuffer);
-        }
-    }
+gameInstance::gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> algorithm_): algorithm(algorithm_), playerPos(gameMaze_->getStart()), foundTreasure(false), stepsTaken(0){}
+
+pair<int, int> gameInstance::getPlayerPos(){
+    return playerPos;
 }
 
-vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<pair<string, vector<std::function<std::unique_ptr<AbstractAlgorithm>()>>>> loadedAlgorithms, string outputFolder){
+int gameInstance::getPlayerRow(){
+    return playerPos.second;
+}
+
+int gameInstance::getPlayerCol(){
+    return playerPos.first;
+}
+
+vector<pair<int, int>> gameInstance::getBookmarkPositions(){
+    return bookmarkPositions;
+}
+
+bool gameInstance::getFoundTreasure(){
+    return foundTreasure;
+}
+
+vector<string> gameInstance::getGameOutput(){
+    return gameOutput;
+}
+
+int gameInstance::getStepsTaken(){
+    return stepsTaken;
+}
+
+AbstractAlgorithm::Move gameInstance::moveAlgorithm(){
+    return algorithm.second()->move();
+}
+
+void gameInstance::hitAlgorithmWall(){
+    algorithm.second()->hitWall();
+}
+
+void gameInstance::hitAlgorithmBookmark(int seq){
+    algorithm.second()->hitBookmark(seq);
+}
+
+void gameInstance::setPlayerPos(pair<int, int> position){
+    playerPos = position;
+}
+
+void gameInstance::setPlayerRow(int row){
+    playerPos.second = row;
+}
+
+void gameInstance::setPlayerCol(int col){
+    playerPos.first = col;
+}
+
+void gameInstance::addBookmarkPosition(){
+    bookmarkPositions.push_back(playerPos);
+}
+
+void gameInstance::setFoundTreasure(bool treasureStatus){
+    foundTreasure = treasureStatus;
+}
+
+void gameInstance::addToGameOutput(string newLine){
+    gameOutput.push_back(newLine);
+}
+
+void gameInstance::raiseStepsTaken(){
+    stepsTaken++;
+}
+
+vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> loadedAlgorithms){
     vector<gameInstance> allGamesForMaze;
     int maxSteps = gameMaze->getMaxSteps(), currMoveNumber = 0;
     int numOfAlgorithms = 0;
@@ -23,35 +78,35 @@ vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<
     AbstractAlgorithm::Move currPlayerMove;
     char requestedTile;
     for(auto it = loadedAlgorithms.begin(); it != loadedAlgorithms.end(); it++){
-        gameInstance instance = gameInstance(gameMaze, *it, outputFolder);
+        gameInstance instance = gameInstance(gameMaze, *it);
         allGamesForMaze.push_back(instance);
         numOfAlgorithms++;
     }
     while((currMoveNumber < maxSteps) && (numFinished < numOfAlgorithms)){
         currMoveNumber++;
         for(auto player = allGamesForMaze.begin(); player != allGamesForMaze.end(); player++){
-            if(!*player.foundTreasure){
-                currPlayerMove = *player.algorithm.move();
+            if(!player->getFoundTreasure()){
+                currPlayerMove = player->moveAlgorithm();
                 switch(currPlayerMove){
                 case AbstractAlgorithm::Move::UP:
-                    *player.playerPos.second = positiveModulo(playerPos.second - 1, gameMaze->getRows());
-                    *player.outputFile << "U" << endl;
+                    player->setPlayerRow(positiveModulo(player->getPlayerRow() - 1, gameMaze->getRows()));
+                    player->addToGameOutput("U");
                     break;
                 case AbstractAlgorithm::Move::DOWN:
-                    *player.playerPos.second = positiveModulo(playerPos.second + 1, gameMaze->getRows());
-                    *player.outputFile << "D" << endl;
+                    player->setPlayerRow(positiveModulo(player->getPlayerRow() + 1, gameMaze->getRows()));
+                    player->addToGameOutput("D");
                     break;
                 case AbstractAlgorithm::Move::RIGHT:
-                    *player.playerPos.first = positiveModulo(playerPos.first + 1, gameMaze->getCols());
-                    *player.outputFile << "R" << endl;
+                    player->setPlayerCol(positiveModulo(player->getPlayerCol() + 1, gameMaze->getCols()));
+                    player->addToGameOutput("R");
                     break;
                 case AbstractAlgorithm::Move::LEFT:
-                    *player.playerPos.first = positiveModulo(playerPos.first - 1, gameMaze->getCols());
-                    *player.outputFile << "L" << endl;
+                    player->setPlayerCol(positiveModulo(player->getPlayerCol() - 1, gameMaze->getCols()));
+                    player->addToGameOutput("L");
                     break;
                 case AbstractAlgorithm::Move::BOOKMARK:
-                    *player.bookmarkPositions.push_back(playerPos);
-                    *player.outputFile << "B" << endl;
+                    player->addBookmarkPosition();
+                    player->addToGameOutput("B");
                     continue; // Next loop iteration, don't check current character
                 }
                 requestedTile = gameMaze->getChar(*player.playerPos);
@@ -86,7 +141,7 @@ vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<
                 case '$':
                     *player.stepsTaken = currMoveNumber;
                     *player.foundTreasure = true;
-                    *player.outputFile << "!";
+                    *player.gameOutput.push_back("!");
                     break;
                 }
             }
@@ -94,7 +149,7 @@ vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<
     }
     for (auto player = allGamesForMaze.begin(); player != allGamesForMaze.end(); player++){
         if (!*player.foundTreasure){
-            *player.outputFile << "X";
+            *player.gameOutput.push_back("X");
             *player.stepsTaken = -1;
         }
     }

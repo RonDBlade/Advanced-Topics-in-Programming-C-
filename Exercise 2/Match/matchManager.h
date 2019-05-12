@@ -12,7 +12,7 @@ using std::string;
 
 class matchManager{
     static matchManager instance;
-    std::vector<pair <string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> loadedAlgorithms;
+    static std::vector<pair <string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> loadedAlgorithms;
 
 public:
     void registerAlgorithm(std::function<std::unique_ptr<AbstractAlgorithm>()> algorithm) {

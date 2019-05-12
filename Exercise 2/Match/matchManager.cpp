@@ -7,7 +7,6 @@ matchManager matchManager::instance;
 void runMatches(vector<string> mazeFiles, string outputFolder){
     vector<string> validMazes;
     vector<pair<string, vector<gameInstance>>> resultsForMaze;
-    int longestMazeName = 0;
     for(auto mazeFile = mazeFiles.begin(); mazeFile != mazeFiles.end(); mazeFile++){
         std::shared_ptr<Maze> gameMaze = addMaze(*mazeFile);
         if (gameMaze != nullptr){
