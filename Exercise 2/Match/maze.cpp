@@ -40,6 +40,6 @@ char Maze::getChar(pair<int, int> mazePos)const{
     return mazeData[mazePos.second][mazePos.first];
 }
 
-string Maze::getMazeName(){
+string Maze::getMazeName()const{
     return mazeName;
 }

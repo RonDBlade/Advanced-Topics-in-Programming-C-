@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <dlfcn.h>
+#include <cstring>
 #include "gameManager.h"
 #include "parser.h"
 

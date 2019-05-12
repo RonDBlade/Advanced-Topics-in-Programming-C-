@@ -47,7 +47,7 @@ bool file_exists(const string& file_path){
 }
 
 std::shared_ptr<Maze> addMaze(string mazePath){
-    bool input_correct = true;
+    bool input_correct;
     ifstream input_file(mazePath);
     if (!input_file.is_open()){
         cout << "File: " << mazePath << "doesn't lead to a maze file or leads to a file that cannot be opened" << endl;
@@ -59,8 +59,8 @@ std::shared_ptr<Maze> addMaze(string mazePath){
         return nullptr;
     }
     string fileName = std::filesystem::path(mazePath).stem();
-    std::shared_ptr<Maze> gameMaze = std::make_shared<Maze>(fileName, maze_data[0], maze_data[1], maze_data[2]});
-    input_correct = input_correct && gameMaze->parse_maze(input_file);
+    std::shared_ptr<Maze> gameMaze = std::make_shared<Maze>(fileName, maze_data[0], maze_data[1], maze_data[2]);
+    input_correct = gameMaze->parse_maze(input_file);
     input_file.close();
     if (input_correct){
         return gameMaze;
@@ -71,37 +71,36 @@ std::shared_ptr<Maze> addMaze(string mazePath){
 string getPathFromVector(vector<string> arguments, string search_string){
     std::error_code err;
     auto place_in_vector = std::find(std::begin(arguments), std::end(arguments), search_string);
-    string path = filesystem.current_path();
+    string path = std::filesystem::current_path();
     if (place_in_vector != std::end(arguments)){
         if (std::next(place_in_vector) != std::end(arguments)){
-            path = std::next(place_in_vector);
+            path = *(std::next(place_in_vector));
         }
     }
     if ((search_string == "-output") && (place_in_vector == std::end(arguments))){
         return nullptr;
     }
     // Return the path found in the arguments or the default path of current working directory
-    return (std::filesystem::is_directory(path, err)) ? path : filesystem.current_path();
+    return (std::filesystem::is_directory(path, err)) ? path : std::filesystem::current_path().string();
 }
 
 
-parser::FilePaths::FilePaths(int num_of_arguments, char* arguments[]): maze_path(std::filesystem::current_path()), algorithm_path(std::filesystem::current_path()){
+FilePaths::FilePaths(int num_of_arguments, char* arguments[]): maze_path(std::filesystem::current_path().string()), algorithm_path(std::filesystem::current_path()){
     string argument;
-    vector<string> arguments;
-    auto place_in_vector;
+    vector<string> argumentsStrings;
     for (int i = 1; i <= num_of_arguments; i++){
         argument = string(arguments[i]);
-        arguments.push_back(argument);
+        argumentsStrings.push_back(argument);
     }
-    maze_path = getPathFromVector(arguments, "-maze_path");
-    algorithm_path = getPathFromVector(arguments, "-algorithm_path");
-    output_path = getPathFromVector(arguments, "-output");
+    maze_path = getPathFromVector(argumentsStrings, "-maze_path");
+    algorithm_path = getPathFromVector(argumentsStrings, "-algorithm_path");
+    output_path = getPathFromVector(argumentsStrings, "-output");
 }
 
 
 vector<string> findAllFilesByExtension(string path, string extension){
     vector<string> filesPaths;
-    for (auto& p: filesystem::directory_iterator(path)){
+    for (auto& p: std::filesystem::directory_iterator(path)){
         if (p.path().extension() == extension){
             filesPaths.push_back(p.path());
         }

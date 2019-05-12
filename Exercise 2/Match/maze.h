@@ -118,7 +118,7 @@ class Maze{
     }
 
 public:
-    Maze(int maxSteps_, int rows_, int cols_);
+    Maze(string mazeName_, int maxSteps_, int rows_, int cols_);
     bool parse_maze(ifstream &input_file);
     pair<int, int> getStart()const;
     pair<int, int> getTreasure()const;

@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include <cstring>
+#include <filesystem>
 #include <sys/stat.h>
 #include "maze.h"
 
@@ -16,7 +17,6 @@ using std::endl;
 using std::stoi;
 using std::strtok;
 using std::ifstream;
-using std::filesystem;
 
 
 struct FilePaths{

@@ -21,7 +21,7 @@ vector<void*> registerSoFiles(vector<string> algoFiles){
     vector<void*> handles;
     void *handle;
     for (auto algoPath = std::begin(algoFiles); algoPath != std::end(algoFiles); algoPath++){
-        handle = dlopen (algoPath, RTLD_LAZY);
+        handle = dlopen ((*algoPath).c_str(), RTLD_LAZY);
         if (!handle) {
             fprintf (stderr, "%s\n", dlerror());
         }
@@ -35,7 +35,7 @@ vector<void*> registerSoFiles(vector<string> algoFiles){
 
 void closeSoFiles(vector<void *> handles){
     for (auto handle = std::begin(handles); handle != std::end(handles); handle++){
-        dlclose(handle);
+        dlclose(*handle);
     }
 }
 
