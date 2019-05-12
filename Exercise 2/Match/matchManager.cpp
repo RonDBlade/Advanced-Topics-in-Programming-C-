@@ -11,7 +11,7 @@ void runMatches(vector<string> mazeFiles, string outputFolder){
         std::shared_ptr<Maze> gameMaze = addMaze(*mazeFile);
         if (gameMaze != nullptr){
             validMazes.push_back(*mazeFile);
-            resultsForMaze.push_back(std::make_pair(*mazeFile, runAlgorithmsOnMaze(gameMaze, matchManager::loadedAlgorithms, outputFolder));
+            resultsForMaze.push_back(std::make_pair(*mazeFile, runAlgorithmsOnMaze(gameMaze, matchManager::getInstance().getAlgorithms(), outputFolder)));
         }
     }
 
@@ -20,7 +20,6 @@ void runMatches(vector<string> mazeFiles, string outputFolder){
 vector<void*> registerSoFiles(vector<string> algoFiles){
     vector<void*> handles;
     void *handle;
-    char *error;
     for (auto algoPath = std::begin(algoFiles); algoPath != std::end(algoFiles); algoPath++){
         handle = dlopen (algoPath, RTLD_LAZY);
         if (!handle) {
@@ -28,7 +27,7 @@ vector<void*> registerSoFiles(vector<string> algoFiles){
         }
         else{
             handles.push_back(handle);
-            loadedAlgorithms.back().first = *algoPath;
+            matchManager::getInstance().getAlgorithms().back().first = *algoPath;
         }
     }
     return handles;
