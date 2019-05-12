@@ -11,17 +11,18 @@ using std::cout;
 using std::endl;
 using std::vector;
 using std::string;
+using std::to_string;
 
 void printer(bool tofile,const string toprint)
 {
-
+    cout<<toprint<<endl;
 }
 
 vector<int> find_line_length(const vector<string> algs,const vector<string> mazes){
-    int i=0,maxlen=4,alglen=0;
+    int i=0,maxlen=7,alglen=0;
     vector<int> lengths;
     for(i=0;i<algs.size();i++){
-        if(maxlen<algs[i].length())
+        if(alglen<algs[i].length())
             alglen=algs[i].length();
     }
     maxlen+=alglen;
@@ -49,14 +50,16 @@ void outputData(bool tofile,const vector<vector<int>> steps,const vector<string>
     printer(tofile,string(linelen,'-'));
     string toprint="|"+string(alglen+1,' ')+"|";
     for(int i=0;i<mazes.size();i++){//print the first line here
-
+        toprint=toprint+mazes[i]+string(lengths[i]-mazes[i].length(),' ')+"|";
     }
     printer(tofile,toprint);
     printer(tofile,string(linelen,'-'));
     for(int i=0;i<algs.size();i++){//print the rest of the lines
+        toprint="|"+algs[i]+" |";
         for(int j=0;j<mazes.size();j++){
-
+            toprint=toprint+string(lengths[i]-to_string(steps[i][j]).length(),' ')+to_string(steps[i][j])+"|";
         }
+        printer(tofile,toprint);
         printer(tofile,string(linelen,'-'));
     }
 }
