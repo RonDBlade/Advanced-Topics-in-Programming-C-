@@ -3,35 +3,31 @@
 
 matchManager matchManager::instance;
 
-void matchManager::updateAlgorithmName(string algorithmName){
-    loadedAlgorithms.back().first = algorithmName;
-        std::cout << "QWE" << std::endl;
-}
-
 vector<void*> registerSoFiles(vector<string> algoFiles){
     vector<void*> handles;
     void *handle;
     for (auto algoPath = std::begin(algoFiles); algoPath != std::end(algoFiles); algoPath++){
         matchManager::getInstance().getAlgorithms().push_back(std::make_pair(std::filesystem::path(*algoPath).stem().string(), nullptr));
+        std::cout << matchManager::getInstance().getAlgorithms().size() << std::endl;
         handle = dlopen ((*algoPath).c_str(), RTLD_LAZY);
         if (!handle) {
             fprintf (stderr, "%s\n", dlerror());
         }
         else{
             handles.push_back(handle);
-        matchManager::getInstance().updateAlgorithmName(std::filesystem::path(*algoPath).stem().string());
-        std::cout << matchManager::getInstance().getAlgorithms().back().first << endl;
         }
     }
     return handles;
 }
 
 void closeSoFiles(vector<void *> handles){
+    std::cout << handles.size() << std::endl;
     for (auto handle = std::begin(handles); handle != std::end(handles); handle++){
         dlclose(*handle);
+        std::cout << "NO" << std::endl;
     }
+        std::cout << "HERE?" << std::endl;
 }
-
 
 void printer(const string toprint)
 {
@@ -75,9 +71,9 @@ void outputData(const vector<vector<int>> steps,const vector<string> algs,const 
     printer(toprint);
     printer(string(linelen,'-'));
     for(unsigned int i=0;i<algs.size();i++){//print the rest of the lines
-        toprint="|"+algs[i]+" |";
+        toprint="|"+algs[i]+string(alglen-algs[i].length(),' ')+" |";
         for(unsigned int j=0;j<mazes.size();j++){
-            toprint=toprint+string(lengths[i]-std::to_string(steps[i][j]).length(),' ')+std::to_string(steps[i][j])+"|";
+            toprint=toprint+string(lengths[j]-to_string(steps[i][j]).length(),' ')+to_string(steps[i][j])+"|";
         }
         printer(toprint);
         printer(string(linelen,'-'));

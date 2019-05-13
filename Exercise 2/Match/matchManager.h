@@ -17,16 +17,15 @@ class matchManager{
 
 public:
     void registerAlgorithm(std::function<std::unique_ptr<AbstractAlgorithm>()> algorithm) {
-        loadedAlgorithms.back().second = algorithm;
+        matchManager::getInstance().getAlgorithms().back().second = algorithm;
     }
     static matchManager& getInstance() {
         return instance;
     }
-    std::vector<pair <string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> getAlgorithms(){
+    std::vector<pair <string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> &getAlgorithms(){
         return loadedAlgorithms;
     }
     void processMatch (int num_of_arguments, char *arguments[]);
-    void updateAlgorithmName(string algorithmName);
 };
 
 #endif // MATCHMANAGER_H_INCLUDED
