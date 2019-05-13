@@ -19,7 +19,7 @@ void printer(const string toprint)
 }
 
 vector<int> find_line_length(const vector<string> algs,const vector<string> mazes){
-    unsigned int i=0,maxlen=7,alglen=0;
+    unsigned int i=0,maxlen=3+mazes.size(),alglen=0;
     vector<int> lengths;
     for(i=0;i<algs.size();i++){
         if(alglen<algs[i].length())
@@ -67,9 +67,9 @@ void outputData(const vector<vector<int>> steps,const vector<string> algs,const 
 /*outputData is the real function,the main is just so that we give him the data.in the real implementation,we need to*/
 int main()
 {
-    vector<string> mazes = {"ma","maze23","maze456","maze7890"};
+    vector<string> mazes = {"ma","maze23","maze456","maze7890","dsa","fidajskfda","skdaosd"};
     vector<string> algs = {"alg1j","alg2kjk","alg3lkkjk"};
-    vector<vector<int>> steps_per_alg= {{1,2,3,999},{4,5,6,35},{7,8,-1,3}}; //each vector is what each alg did in each maze by order
+    vector<vector<int>> steps_per_alg= {{1,2,3,999,-1,-1,-1},{4,5,6,35,3,3,5},{7,8,-1,3,1293,293,488}}; //each vector is what each alg did in each maze by order
     outputData(steps_per_alg,algs,mazes);
     return 0;
 }
