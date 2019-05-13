@@ -12,14 +12,15 @@ vector<void*> registerSoFiles(vector<string> algoFiles){
     vector<void*> handles;
     void *handle;
     for (auto algoPath = std::begin(algoFiles); algoPath != std::end(algoFiles); algoPath++){
+        matchManager::getInstance().getAlgorithms().push_back(std::make_pair(std::filesystem::path(*algoPath).stem().string(), nullptr));
         handle = dlopen ((*algoPath).c_str(), RTLD_LAZY);
         if (!handle) {
             fprintf (stderr, "%s\n", dlerror());
         }
         else{
             handles.push_back(handle);
-        //matchManager::getInstance().updateAlgorithmName(std::filesystem::path(*algoPath).stem().string());
-//std::cout << matchManager::getInstance().getAlgorithms().back().first << endl;
+        matchManager::getInstance().updateAlgorithmName(std::filesystem::path(*algoPath).stem().string());
+        std::cout << matchManager::getInstance().getAlgorithms().back().first << endl;
         }
     }
     return handles;

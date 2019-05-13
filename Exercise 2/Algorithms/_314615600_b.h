@@ -1,5 +1,5 @@
-#ifndef PLAYER_H_INCLUDED
-#define PLAYER_H_INCLUDED
+#ifndef _314615600_B_H_INCLUDED
+#define _314615600_B_H_INCLUDED
 #include <map>
 #include <utility>
 #include <vector>
@@ -11,9 +11,9 @@ using std::pair;
 using std::vector;
 
 
-class Player: public AbstractAlgorithm {
-    map<int, map<int,char> > player_map;
-    map<int, map<int,int> > when_wasOn; //keeps for each location when we have last visited it.helps us decide which way to go.
+class _314615600_b: public AbstractAlgorithm {
+    map<int, map<int,char>> player_map;
+    map<int, map<int,int>> when_wasOn; //keeps for each location when we have last visited it.helps us decide which way to go.
     int moveNumber=0;//keeps the count of moves for
     Move lastMove;
     pair<int, int> current_position;
@@ -27,7 +27,7 @@ class Player: public AbstractAlgorithm {
     int highest_bookmark=0;
 
 public:
-    Player();
+    _314615600_b();
     Move move();
     void hitWall();
     void hitBookmark(int seq);
@@ -52,4 +52,4 @@ private:
     bool isKnown(int x,int y);
 };
 
-#endif // PLAYER_H_INCLUDED
+#endif // _314615600_B_H_INCLUDED
