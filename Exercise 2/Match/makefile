@@ -2,8 +2,8 @@ COMP = g++-8.3.0
 
 OBJS = AlgorithmRegistration.o gameManager.o matchManager.o parser.o maze.o main.o
 EXEC = match
-CPP_COMP_FLAG = -std=c++17 -Wall -Wextra -Werror -pedantic-errors -DNDEBUG
-CPP_LINK_FLAG = -ldl -export-dynamic#(-rdynamic) -lstdc++fs
+CPP_COMP_FLAG = -std=c++17 -Wall -Wextra -Werror -pedantic-errors -DNDEBUG 
+CPP_LINK_FLAG =  -lstdc++fs -ldl -export-dynamic
 
 $(EXEC): $(OBJS)
 	$(COMP) $(OBJS) $(CPP_LINK_FLAG) -o $@ 
