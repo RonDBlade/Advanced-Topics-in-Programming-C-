@@ -3,7 +3,7 @@
 #include <map>
 #include <utility>
 #include <vector>
-#include "AbstractAlgorithm.h"
+#include "AlgorithmRegistration.h"
 
 
 using std::map;

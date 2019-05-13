@@ -1,5 +1,5 @@
 #include "player.h"
-
+REGISTER_ALGORITHM(_314615600_b)
 
 bool Player::isKnown(int x,int y){//this method checks if player has been on this coordination yet.On HIS map,not the maze map.
         if(!player_map.count(x))//no point in this x coordination has been discovered,so this one hasn't either
@@ -209,7 +209,7 @@ AbstractAlgorithm::Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         lastMove=Move::UP;
         return Move::UP;
     }
-    
+
     checkLoc=Player::isKnown(current_position.first+1,current_position.second); //same for right
     if(!checkLoc){
         current_position.first++;

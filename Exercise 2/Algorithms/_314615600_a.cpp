@@ -1,5 +1,23 @@
 #include "player.h"
+REGISTER_ALGORITHM(_314615600_a)
 
+class _314615600_a:{
+    bool isKnown(int x,int y);
+    bool isWall(int x,int y);
+    bool putBookmark();
+    void pushtoMoveKeep(Move moved,char tileWentTo);
+    int findMoveNum(Move mov);
+    void setbyMove(Move mov);
+    void hitWall();
+    pair<int, int> bookmark_pos()const;
+    void hitBookmark(int seq);
+    Player(): current_position(0, 0), bookmark_position(0, 0);
+    pair<int, int> player_pos()const;
+    void increaseMovenum();
+    void setLocMove(int x,int y);
+    int getLocMove(int x, int y);
+    AbstractAlgorithm::Move move();
+};
 
 bool Player::isKnown(int x,int y){//this method checks if player has been on this coordination yet.On HIS map,not the maze map.
         if(!player_map.count(x))//no point in this x coordination has been discovered,so this one hasn't either
@@ -13,25 +31,25 @@ bool Player::isWall(int x,int y){
         return player_map[x][y]=='#';
     }
 
-    bool Player::putBookmark(){
-        highest_bookmark++;
-        if(moveNumber==1){
-            //just started the game
-            bookmark_on=true;
-            return true;
-        }
-        else if(bookmark_on==false&&moved_to_new){
-            //if we dont have a bookmark and this is a new place we just went to
-            bookmark_on=true;
-            return true;
-        }
-        else if(bookmark_count==put_bookmark){//if we waited too long for a bookmark
-            put_bookmark*=2;
-            bookmark_on=true;
-            return true;
-        }
-        return false;
+bool Player::putBookmark(){
+    highest_bookmark++;
+    if(moveNumber==1){
+        //just started the game
+        bookmark_on=true;
+        return true;
     }
+    else if(bookmark_on==false&&moved_to_new){
+        //if we dont have a bookmark and this is a new place we just went to
+        bookmark_on=true;
+        return true;
+    }
+    else if(bookmark_count==put_bookmark){//if we waited too long for a bookmark
+        put_bookmark*=2;
+        bookmark_on=true;
+        return true;
+    }
+    return false;
+}
 
 void Player::pushtoMoveKeep(Move moved,char tileWentTo){
         movekeep.push_back({moved,tileWentTo});

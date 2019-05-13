@@ -17,7 +17,7 @@ class matchManager{
 
 public:
     void registerAlgorithm(std::function<std::unique_ptr<AbstractAlgorithm>()> algorithm) {
-        loadedAlgorithms.push_back(std::make_pair("", algorithm));
+        loadedAlgorithms.push_back(std::make_pair("ABC", algorithm));
     }
     static matchManager& getInstance() {
         return instance;
@@ -26,6 +26,7 @@ public:
         return loadedAlgorithms;
     }
     void processMatch (int num_of_arguments, char *arguments[]);
+    void updateAlgorithmName(string algorithmName);
 };
 
 #endif // MATCHMANAGER_H_INCLUDED
