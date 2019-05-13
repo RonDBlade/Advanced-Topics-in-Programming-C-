@@ -19,7 +19,7 @@ void printer(const string toprint)
 }
 
 vector<int> find_line_length(const vector<string> algs,const vector<string> mazes){
-    int i=0,maxlen=7,alglen=0;
+    unsigned int i=0,maxlen=7,alglen=0;
     vector<int> lengths;
     for(i=0;i<algs.size();i++){
         if(alglen<algs[i].length())
@@ -27,7 +27,7 @@ vector<int> find_line_length(const vector<string> algs,const vector<string> maze
     }
     maxlen+=alglen;
     for(i=0;i<mazes.size();i++){
-        if(mazes[i].length()<6){
+        if(mazes[i].length()<3){
             maxlen+=6;
             lengths.push_back(6);
         }
@@ -49,15 +49,15 @@ void outputData(const vector<vector<int>> steps,const vector<string> algs,const 
     lengths.pop_back();
     printer(string(linelen,'-'));
     string toprint="|"+string(alglen+1,' ')+"|";
-    for(int i=0;i<mazes.size();i++){//print the first line here
+    for(unsigned int i=0;i<mazes.size();i++){//print the first line here
         toprint=toprint+mazes[i]+string(lengths[i]-mazes[i].length(),' ')+"|";
     }
     printer(toprint);
     printer(string(linelen,'-'));
-    for(int i=0;i<algs.size();i++){//print the rest of the lines
-        toprint="|"+algs[i]+" |";
-        for(int j=0;j<mazes.size();j++){
-            toprint=toprint+string(lengths[i]-to_string(steps[i][j]).length(),' ')+to_string(steps[i][j])+"|";
+    for(unsigned int i=0;i<algs.size();i++){//print the rest of the lines
+        toprint="|"+algs[i]+string(alglen-algs[i].length(),' ')+" |";
+        for(unsigned int j=0;j<mazes.size();j++){
+            toprint=toprint+string(lengths[j]-to_string(steps[i][j]).length(),' ')+to_string(steps[i][j])+"|";
         }
         printer(toprint);
         printer(string(linelen,'-'));
@@ -67,8 +67,8 @@ void outputData(const vector<vector<int>> steps,const vector<string> algs,const 
 /*outputData is the real function,the main is just so that we give him the data.in the real implementation,we need to*/
 int main()
 {
-    vector<string> mazes = {"maze1","maze2","maze3","maze4"};
-    vector<string> algs = {"alg1","alg2","alg3"};
+    vector<string> mazes = {"ma","maze23","maze456","maze7890"};
+    vector<string> algs = {"alg1j","alg2kjk","alg3lkkjk"};
     vector<vector<int>> steps_per_alg= {{1,2,3,999},{4,5,6,35},{7,8,-1,3}}; //each vector is what each alg did in each maze by order
     outputData(steps_per_alg,algs,mazes);
     return 0;
