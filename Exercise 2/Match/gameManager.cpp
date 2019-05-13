@@ -2,6 +2,10 @@
 
 gameInstance::gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_): algorithm(algorithm_), playerPos(gameMaze_->getStart()), foundTreasure(false), stepsTaken(0), bookmarkCount(0){}
 
+string gameInstance::getAlgorithmName(){
+    return algorithm.first;
+}
+
 pair<int, int> gameInstance::getPlayerPos(){
     return playerPos;
 }
@@ -83,7 +87,6 @@ vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<
         allGamesForMaze.push_back(instance);
         numOfAlgorithms++;
     }
-    std::cout << numOfAlgorithms << std::endl;
     while((currMoveNumber < maxSteps) && (numFinished < numOfAlgorithms)){
         currMoveNumber++;
         for(auto player = allGamesForMaze.begin(); player != allGamesForMaze.end(); player++){

@@ -24,6 +24,7 @@ class gameInstance{
 public:
     gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_);
 
+    string getAlgorithmName();
     pair<int, int> getPlayerPos();
     int getPlayerRow();
     int getPlayerCol();

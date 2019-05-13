@@ -76,8 +76,9 @@ void outputData(const vector<vector<int>> steps,const vector<string> algs,const 
     }
 }
 
-void runMatches(vector<string> mazeFiles){
+void runMatches(vector<string> mazeFiles, string outputFolder){
     vector<string> validMazes;
+    string outputFileName;
     vector<vector<int>> steps;
     vector<int> stepsForMaze;
     vector<string> algorithmsNames;
@@ -94,6 +95,13 @@ void runMatches(vector<string> mazeFiles){
             resultsForMaze.push_back(std::make_pair(*mazeFile, algorithmsResultsOnMaze));
             for(auto result = algorithmsResultsOnMaze.begin(); result!= algorithmsResultsOnMaze.end(); result++){
                 stepsForMaze.push_back(result->getStepsTaken());
+                if(outputFolder != ""){
+                    outputFileName = outputFolder + std::filesystem::path(*mazeFile).stem().string() + "_" + (*result).getAlgorithmName() + ".output";
+                    std::ofstream outputfile(outputFileName);
+                    for (auto gameMove = (*result).getGameOutput().begin(); gameMove != (*result).getGameOutput().end(); gameMove++){
+                        outputfile << *gameMove << endl;
+                    }
+                }
             }
             steps.push_back(stepsForMaze);
         }
@@ -106,6 +114,6 @@ void matchManager::processMatch (int num_of_arguments, char *arguments[]){
     vector<string> mazeFiles = findAllFilesByExtension(filesPaths.maze_path, ".maze");
     vector<string> algoFiles = findAllFilesByExtension(filesPaths.algorithm_path, ".so");
     vector<void*> handles = registerSoFiles(algoFiles);
-    runMatches(mazeFiles);
+    runMatches(mazeFiles, filesPaths.output_path);
     closeSoFiles(handles);
 }
