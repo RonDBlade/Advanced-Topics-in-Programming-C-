@@ -13,7 +13,7 @@
 using std::pair;
 
 class gameInstance{
-    pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> algorithm;
+    pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm;
     pair<int, int> playerPos;
     vector<pair<int, pair<int, int>>> bookmarkPositions;
     bool foundTreasure;
@@ -22,7 +22,7 @@ class gameInstance{
     int bookmarkCount;
 
 public:
-    gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> algorithm_);
+    gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_);
 
     pair<int, int> getPlayerPos();
     int getPlayerRow();
@@ -48,6 +48,6 @@ inline int positiveModulo(int i, int n) {
     return (i % n + n) % n;
 }
 
-vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> loadedAlgorithms);
+vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> &loadedAlgorithms);
 
 #endif // GAMEMANAGER_H_INCLUDED

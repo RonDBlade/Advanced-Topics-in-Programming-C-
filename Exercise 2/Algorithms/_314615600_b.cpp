@@ -1,3 +1,4 @@
+#include <iostream>
 #include "_314615600_b.h"
 REGISTER_ALGORITHM(_314615600_b)
 
@@ -187,6 +188,7 @@ AbstractAlgorithm::Move _314615600_b::move(){//for now,SIMPLE IMPLEMENTATION
         when_wasOn[current_position.first][current_position.second]=moveNumber;
         return Move::BOOKMARK;
     }
+        std::cout << "ARG222" << std::endl;
     bool checkLoc=_314615600_b::isKnown(current_position.first,current_position.second-1); //same for down
     if(!checkLoc){
         current_position.second--;

@@ -8,7 +8,6 @@ vector<void*> registerSoFiles(vector<string> algoFiles){
     void *handle;
     for (auto algoPath = std::begin(algoFiles); algoPath != std::end(algoFiles); algoPath++){
         matchManager::getInstance().getAlgorithms().push_back(std::make_pair(std::filesystem::path(*algoPath).stem().string(), nullptr));
-        std::cout << matchManager::getInstance().getAlgorithms().size() << std::endl;
         handle = dlopen ((*algoPath).c_str(), RTLD_LAZY);
         if (!handle) {
             fprintf (stderr, "%s\n", dlerror());
@@ -21,12 +20,9 @@ vector<void*> registerSoFiles(vector<string> algoFiles){
 }
 
 void closeSoFiles(vector<void *> handles){
-    std::cout << handles.size() << std::endl;
     for (auto handle = std::begin(handles); handle != std::end(handles); handle++){
         dlclose(*handle);
-        std::cout << "NO" << std::endl;
     }
-        std::cout << "HERE?" << std::endl;
 }
 
 void printer(const string toprint)
@@ -35,7 +31,7 @@ void printer(const string toprint)
 }
 
 vector<int> find_line_length(const vector<string> algs,const vector<string> mazes){
-    unsigned int i=0,maxlen=7,alglen=0;
+    unsigned int i=0,maxlen=3+mazes.size(),alglen=0;
     vector<int> lengths;
     for(i=0;i<algs.size();i++){
         if(alglen<algs[i].length())
@@ -73,7 +69,7 @@ void outputData(const vector<vector<int>> steps,const vector<string> algs,const 
     for(unsigned int i=0;i<algs.size();i++){//print the rest of the lines
         toprint="|"+algs[i]+string(alglen-algs[i].length(),' ')+" |";
         for(unsigned int j=0;j<mazes.size();j++){
-            toprint=toprint+string(lengths[j]-to_string(steps[i][j]).length(),' ')+to_string(steps[i][j])+"|";
+            toprint=toprint+string(lengths[j]-std::to_string(steps[i][j]).length(),' ')+std::to_string(steps[i][j])+"|";
         }
         printer(toprint);
         printer(string(linelen,'-'));
@@ -86,7 +82,7 @@ void runMatches(vector<string> mazeFiles){
     vector<int> stepsForMaze;
     vector<string> algorithmsNames;
     vector<pair<string, vector<gameInstance>>> resultsForMaze;
-    vector<pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> loadedAlgorithms = matchManager::getInstance().getAlgorithms();
+    vector<pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> &loadedAlgorithms = matchManager::getInstance().getAlgorithms();
     for(auto algorithmInstance = loadedAlgorithms.begin(); algorithmInstance != loadedAlgorithms.end(); algorithmInstance++){
         algorithmsNames.push_back(algorithmInstance->first);
     }

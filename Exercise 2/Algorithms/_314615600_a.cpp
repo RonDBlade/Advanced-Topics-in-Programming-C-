@@ -1,3 +1,4 @@
+#include <iostream>
 #include "_314615600_a.h"
 REGISTER_ALGORITHM(_314615600_a)
 
@@ -187,6 +188,7 @@ AbstractAlgorithm::Move _314615600_a::move(){//for now,SIMPLE IMPLEMENTATION
         when_wasOn[current_position.first][current_position.second]=moveNumber;
         return Move::BOOKMARK;
     }
+    std::cout << "ARG" << std::endl;
     bool checkLoc=_314615600_a::isKnown(current_position.first,current_position.second+1);//checks if the player discovered whats above him already
     if(!checkLoc){
         current_position.second++;
