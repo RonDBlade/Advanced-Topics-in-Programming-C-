@@ -4,14 +4,15 @@
 matchManager matchManager::instance;
 
 
-void runMatches(vector<string> mazeFiles, string outputFolder){
+void runMatches(vector<string> mazeFiles){
     vector<string> validMazes;
     vector<pair<string, vector<gameInstance>>> resultsForMaze;
     for(auto mazeFile = mazeFiles.begin(); mazeFile != mazeFiles.end(); mazeFile++){
         std::shared_ptr<Maze> gameMaze = addMaze(*mazeFile);
         if (gameMaze != nullptr){
             validMazes.push_back(*mazeFile);
-            resultsForMaze.push_back(std::make_pair(*mazeFile, runAlgorithmsOnMaze(gameMaze, matchManager::getInstance().getAlgorithms(), outputFolder)));
+            vector<gameInstance> algorithmsResultsOnMaze = runAlgorithmsOnMaze(gameMaze, matchManager::getInstance().getAlgorithms());
+            resultsForMaze.push_back(std::make_pair(*mazeFile, algorithmsResultsOnMaze));
         }
     }
 
@@ -40,11 +41,11 @@ void closeSoFiles(vector<void *> handles){
 }
 
 
-void processMatch (int num_of_arguments, char *arguments[]){
+void matchManager::processMatch (int num_of_arguments, char *arguments[]){
     FilePaths paths = FilePaths(num_of_arguments, arguments);
     vector<string> mazeFiles = findAllFilesByExtension(paths.maze_path, ".maze");
     vector<string> algoFiles = findAllFilesByExtension(paths.algorithm_path, ".so");
     vector<void*> handles = registerSoFiles(algoFiles);
-    runMatches(mazeFiles, paths.output_path);
+    runMatches(mazeFiles);
     closeSoFiles(handles);
 }

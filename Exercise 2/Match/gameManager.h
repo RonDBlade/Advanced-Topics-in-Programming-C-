@@ -48,6 +48,6 @@ inline int positiveModulo(int i, int n) {
     return (i % n + n) % n;
 }
 
-vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> loadedAlgorithms, string outputFolder);
+vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> loadedAlgorithms);
 
 #endif // GAMEMANAGER_H_INCLUDED

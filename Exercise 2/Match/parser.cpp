@@ -78,7 +78,7 @@ string getPathFromVector(vector<string> arguments, string search_string){
         }
     }
     if ((search_string == "-output") && (place_in_vector == std::end(arguments))){
-        return nullptr;
+        return "";
     }
     // Return the path found in the arguments or the default path of current working directory
     return (std::filesystem::is_directory(path, err)) ? path : std::filesystem::current_path().string();
@@ -88,7 +88,7 @@ string getPathFromVector(vector<string> arguments, string search_string){
 FilePaths::FilePaths(int num_of_arguments, char* arguments[]): maze_path(std::filesystem::current_path().string()), algorithm_path(std::filesystem::current_path().string()){
     string argument;
     vector<string> argumentsStrings;
-    for (int i = 1; i <= num_of_arguments; i++){
+    for (int i = 1; i < num_of_arguments; i++){
         argument = string(arguments[i]);
         argumentsStrings.push_back(argument);
     }

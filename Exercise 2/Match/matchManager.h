@@ -9,7 +9,6 @@
 #include "gameManager.h"
 #include "parser.h"
 
-
 using std::string;
 
 class matchManager{
