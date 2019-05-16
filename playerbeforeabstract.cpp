@@ -1,53 +1,106 @@
-#include <vector>
-#include "player.h"
 #include <iostream>
+#include "player.h"
 
-using std::map;
-using std::pair;
-using std::vector;
+bool Player::isKnown(int x,int y) //this method checks if player has been on this coordination yet.On HIS map,not the maze map.
+{
+    if(!player_map.count(x))//no point in this x coordination has been discovered,so this one hasn't either
+        return false;
+    if(!player_map[x].count(y))//this specific point hasn't been discovered yet
+        return false;
+    return true;//we have visited this cell in the past
+}
 
+bool Player::isWall(int x,int y)
+{
+    return player_map[x][y]=='#';
+}
 
-void Player::setbyMove(Move mov){
-        if(mov==Move::UP){
-            current_position.second++;
-        }
-        else if(mov==Move::DOWN){
-            current_position.second--;
-        }
-        else if(mov==Move::LEFT){
-            current_position.first--;
-        }
-        else if(mov==Move::RIGHT){
-            current_position.first++;
-        }
-        when_wasOn[current_position.first][current_position.second]=moveNumber;
-        player_map[current_position.first][current_position.second]=' ';
+bool Player::putBookmark()
+{
+    if(moveNumber==1)
+    {
+        //just started the game
+        return true;
     }
+    else if(bookmark_on==false&&moved_to_new)
+    {
+        //if we dont have a bookmark and this is a new place we just went to
+        return true;
+    }
+    else if(bookmark_count==put_bookmark) //if we waited too long for a bookmark
+    {
+        put_bookmark*=2;
+        return true;
+    }
+    return false;
+}
 
-void Player::hitWall(){
-    std::cout << "ouch!" << std::endl;
-    player_map[current_position.first][current_position.second]='#';
-    if(lastMove==Move::UP){
-        std::cout << "UP TO WALL" << std::endl;
-        current_position.second--;
-    }
-    else if(lastMove==Move::DOWN){
-        std::cout << "DOWN TO WALL" << std::endl;
-        current_position.second++;
-    }
-    else if(lastMove==Move::LEFT){
-        std::cout << "LEFT TO WALL" << std::endl;
-        current_position.first++;
-    }
-    else if(lastMove==Move::RIGHT){
-        std::cout << "RIGHT TO WALL" << std::endl;
-        current_position.first--;
-    }
-    else if(lastMove==Move::BOOKMARK){
-        std::cout << "BOOKMARK TO WALL" << std::endl;
+void Player::pushtoMoveKeep(Move moved,char tileWentTo)
+{
+    if(moved!=Move::BOOKMARK){
+    movekeep.back().push_back({moved,tileWentTo});
     }
     else{
-        std::cout << "the fuck?" << std::endl;
+        vector<pair<Move,char> > vec;
+        movekeep.push_back(vec);
+    }
+}
+
+int Player::findMoveNum(Move mov)
+{
+    if(mov==Move::UP)
+        return Player::getLocMove(current_position.first,current_position.second+1);
+    if(mov==Move::DOWN)
+        return Player::getLocMove(current_position.first,current_position.second-1);
+    if(mov==Move::LEFT)
+        return Player::getLocMove(current_position.first-1,current_position.second);
+    return Player::getLocMove(current_position.first+1,current_position.second);
+}
+
+
+void Player::setbyMove(Move mov)
+{
+    if(mov==Move::UP)
+    {
+        current_position.second++;
+    }
+    else if(mov==Move::DOWN)
+    {
+        current_position.second--;
+    }
+    else if(mov==Move::LEFT)
+    {
+        current_position.first--;
+    }
+    else if(mov==Move::RIGHT)
+    {
+        current_position.first++;
+    }
+    when_wasOn[current_position.first][current_position.second]=moveNumber;
+    player_map[current_position.first][current_position.second]=' ';
+}
+
+void Player::hitWall()
+{
+    player_map[current_position.first][current_position.second]='#';
+    if(lastMove==Move::UP)
+    {
+        current_position.second--;
+    }
+    else if(lastMove==Move::DOWN)
+    {
+        current_position.second++;
+    }
+    else if(lastMove==Move::LEFT)
+    {
+        current_position.first++;
+    }
+    else if(lastMove==Move::RIGHT)
+    {
+        current_position.first--;
+    }
+    else if(lastMove==Move::BOOKMARK)
+    {
     }
     if(bookmark_on)
         movekeep.back().back().second='#';
@@ -56,108 +109,133 @@ void Player::hitWall(){
 
 
 
-pair<int, int> Player::bookmark_pos(seq)const{
-    return bookmark_position;
+pair<int, int> Player::bookmark_pos(int seq)const
+{
+    return bookmark_position[seq-biggest_met-1];
 }
 
-void Player::hitBookmark(int seq){//we want to update the map of locations
-    int cnt=moveNumber;
-    std::cout << "FOUND BOOKMARK IN POSITION"<<bookmark_position.first << " "<< bookmark_position.second << std::endl;
-    bookmark_counter--
-    if(!bookmark_counter){
-        bookmark_on=false;
+void Player::removeBookmarkUntill(int seq)
+{
+    auto it = bookmark_position.begin();
+    for(int i=0; i<seq-biggest_met; i++)
+    {
+        bookmark_position.erase(it);
     }
-    if(seq>max_bookmark){//if we hit an older bookmark,ignore it.doesnt matter for us.MIGHT change later,but for now,seems better to ignore it.
-        std::cout << "put_bookmark is of size before"<< put_bookmark << std::endl;
+}
+
+void Player::cleanKeepUntil(int seq){
+    auto it = movekeep.begin();
+    for(int i=0; i<seq-biggest_met; i++)
+    {
+        movekeep.erase(it);
+    }
+}
+
+void Player::hitBookmark(int seq) //we want to update the map of locations
+{
+    if(seq>biggest_met)
+    {
+        int cnt=moveNumber;
         put_bookmark/=2;
         if(put_bookmark<10)
             put_bookmark=10;
         bookmark_count=0;
-        std::cout << "put_bookmark is of size after"<< put_bookmark << std::endl;
         current_position=bookmark_pos(seq);
         pair<int, int> pos=current_position;
         pair<Move,char> tmp;
-        unsigned int tmpsize=movekeep.size();//so wont need to keep calculating this
-        for(int i=0;(unsigned int)i<tmpsize;i++){
-            cnt--;
-            if((unsigned int)i==tmpsize-1){//last iteration.this is where we started.which means it has to be a space.
-                continue;
-            }
-            tmp=movekeep[tmpsize-1-i];
-            if(tmp.first==Move::BOOKMARK)
-                continue;
-            if(tmp.second==' '){
-                if(tmp.first==Move::UP){
-                    pos.second--;
-                    player_map[pos.first][pos.second]=tmp.second;
-                    when_wasOn[pos.first][pos.second]=cnt;//put it in each if SPECIFICALLY AND ON PURPOSE.DONT PUT THIS IN THE END TO SAVE LINES
-
+        unsigned int tmpsize;
+        for(int j=seq-biggest_met-1;j>=0;j--){
+            tmpsize=movekeep[j].size();//so wont need to keep calculating this
+            for(int i=0; (unsigned int)i<tmpsize; i++)
+            {
+                cnt--;
+                if((unsigned int)i==tmpsize-1) //last iteration.this is where we started.which means it has to be a space.
+                {
+                    continue;
                 }
-                else if(tmp.first==Move::DOWN){
-                    pos.second++;
+                tmp=movekeep[j][tmpsize-1-i];
+                if(tmp.first==Move::BOOKMARK)
+                    continue;
+                if(tmp.second==' ')
+                {
+                    if(tmp.first==Move::UP)
+                    {
+                        pos.second--; //put it in each if SPECIFICALLY AND ON PURPOSE.DONT PUT THIS IN THE END TO SAVE LINES
+                    }
+                    else if(tmp.first==Move::DOWN)
+                    {
+                        pos.second++;
+                    }
+                    else if(tmp.first==Move::LEFT)
+                    {
+                        pos.first++;
+                    }
+                    else if(tmp.first==Move::RIGHT)
+                    {
+                        pos.first--;
+                    }
                     player_map[pos.first][pos.second]=tmp.second;
                     when_wasOn[pos.first][pos.second]=cnt;
-
                 }
-                else if(tmp.first==Move::LEFT){
-                    pos.first++;
-                    player_map[pos.first][pos.second]=tmp.second;
-                    when_wasOn[pos.first][pos.second]=cnt;
+                else //if we walked into a wall in that one,then only need to set it as a wall for later.
+                {
+                    if(tmp.first==Move::UP)
+                    {
+                        player_map[pos.first][pos.second+1]=tmp.second;
 
-                }
-                else if(tmp.first==Move::RIGHT){
-                    pos.first--;
-                    player_map[pos.first][pos.second]=tmp.second;
-                    when_wasOn[pos.first][pos.second]=cnt;
-                }
+                    }
+                    else if(tmp.first==Move::DOWN)
+                    {
+                        player_map[pos.first][pos.second-1]=tmp.second;
 
-            }
-            else{//if we walked into a wall in that one,then only need to set it as a wall for later.
-                if(tmp.first==Move::UP){
-                    player_map[pos.first][pos.second+1]=tmp.second;
+                    }
+                    else if(tmp.first==Move::LEFT)
+                    {
+                        player_map[pos.first-1][pos.second]=tmp.second;
 
-                }
-                else if(tmp.first==Move::DOWN){
-                    player_map[pos.first][pos.second-1]=tmp.second;
+                    }
+                    else if(tmp.first==Move::RIGHT)
+                    {
+                        player_map[pos.first+1][pos.second]=tmp.second;
 
-                }
-                else if(tmp.first==Move::LEFT){
-                    player_map[pos.first-1][pos.second]=tmp.second;
-
-                }
-                else if(tmp.first==Move::RIGHT){
-                    player_map[pos.first+1][pos.second]=tmp.second;
-
+                    }
                 }
             }
         }
-        movekeep.clear();
+        removeBookmarkUntill(seq);
+        if(bookmark_position.empty())
+        {
+            bookmark_on=false;
+        }
+        cleanKeepUntil(seq);
+        biggest_met=seq;
     }
 }
 
-Player::Player(): current_position(0, 0), bookmark_position(0, 0){
+Player::Player(): current_position(0, 0)
+{
     player_map[0][0]=' ';
     when_wasOn[0][0]=0;
 }
-pair<int, int> Player::player_pos()const{
+pair<int, int> Player::player_pos()const
+{
     return current_position;
 }
-void Player::increaseMovenum(){
-        moveNumber++;
-    }
-void Player::setLocMove(int x,int y){
-        when_wasOn[x][y]=moveNumber;
-    }
 
+void Player::setLocMove(int x,int y)
+{
+    when_wasOn[x][y]=moveNumber;
+}
 
-int Player::getLocMove(int x, int y){
+int Player::getLocMove(int x, int y)
+{
     return when_wasOn[x][y];
 }
 
 
-Move Player::move(){//for now,SIMPLE IMPLEMENTATION
+Move Player::move() //for now,SIMPLE IMPLEMENTATION
+{
     //first check places we haven't been to yet.
-    std::cout<< "player at before move" << current_position.first << " " << current_position.second << std::endl;
     int tmp1;
     int tmp2;
     tmp2=2147483647;//to keep the least visited loc for later in the func.tmp2 is max integer value for flow in loop
@@ -165,17 +243,20 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
     moveNumber++;
     if(bookmark_on)
         bookmark_count++;
-    if(putBookmark()){
-        bookmark_counter++;
+    if(putBookmark())
+    {
+        bookmark_on=true;
+        total_bookmarks++;
         bookmark_count=0;
-        bookmark_position.push(current_position,pair(bookmark_counter,moveNumber));
+        bookmark_position.push_back(current_position);
         pushtoMoveKeep(Move::BOOKMARK,' ');
+        std::cout << "jeff" << std::endl;
         when_wasOn[current_position.first][current_position.second]=moveNumber;
-        std::cout<< "BOOKMARK IN POSITION"<<bookmark_position.first << " "<< bookmark_position.second << std::endl;
         return Move::BOOKMARK;
     }
     bool checkLoc=Player::isKnown(current_position.first,current_position.second+1);//checks if the player discovered whats above him already
-    if(!checkLoc){
+    if(!checkLoc)
+    {
         current_position.second++;
         setLocMove(current_position.first,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
@@ -183,11 +264,11 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
             pushtoMoveKeep(Move::UP,' ');
         moved_to_new=true;
         lastMove=Move::UP;
-        std::cout<< "UP" << std::endl;
         return Move::UP;
     }
     checkLoc=Player::isKnown(current_position.first,current_position.second-1); //same for down
-    if(!checkLoc){
+    if(!checkLoc)
+    {
         current_position.second--;
         setLocMove(current_position.first,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
@@ -195,11 +276,11 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
             pushtoMoveKeep(Move::DOWN,' ');
         moved_to_new=true;
         lastMove=Move::DOWN;
-        std::cout<< "DOWN" << std::endl;
         return Move::DOWN;
     }
     checkLoc=Player::isKnown(current_position.first-1,current_position.second); //same for left
-    if(!checkLoc){
+    if(!checkLoc)
+    {
         current_position.first--;
         setLocMove(current_position.first,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
@@ -207,11 +288,11 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
             pushtoMoveKeep(Move::LEFT,' ');
         moved_to_new=true;
         lastMove=Move::LEFT;
-        std::cout<< "LEFT" << std::endl;
         return Move::LEFT;
     }
     checkLoc=Player::isKnown(current_position.first+1,current_position.second); //same for right
-    if(!checkLoc){
+    if(!checkLoc)
+    {
         current_position.first++;
         setLocMove(current_position.first,current_position.second);
         player_map[current_position.first][current_position.second]=' ';
@@ -219,36 +300,29 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
             pushtoMoveKeep(Move::RIGHT,' ');
         moved_to_new=true;
         lastMove=Move::RIGHT;
-        std::cout<< "RIGHT" << std::endl;
         return Move::RIGHT;
     }
-    //if we got here,we already know ALL the locations which surround the player.Time to find which are a wall and which arent.
+    //if we got here,we already know ALL the locations which surround the player.Time to find which are a wall and which aren't.
     vector<Move> movevec;
 
     checkLoc=Player::isWall(current_position.first,current_position.second+1);//checks if the position above the player is a wall
     if(!checkLoc)
         movevec.push_back(Move::UP);
-    else
-        std::cout << "cant go up theres a wall m8!" << std::endl;
     checkLoc=Player::isWall(current_position.first,current_position.second-1);//same for down
     if(!checkLoc)
         movevec.push_back(Move::DOWN);
-    else
-        std::cout << "cant go down theres a wall m8!" << std::endl;
     checkLoc=Player::isWall(current_position.first-1,current_position.second);//same for left
     if(!checkLoc)
         movevec.push_back(Move::LEFT);
-    else
-        std::cout << "cant go left theres a wall m8!" << std::endl;
     checkLoc=Player::isWall(current_position.first+1,current_position.second);//same for right
-    if(!checkLoc){
+    if(!checkLoc)
+    {
         movevec.push_back(Move::RIGHT);
     }
-    else
-        std::cout << "cant go right theres a wall m8!" << std::endl;
     if (movevec.empty())
-        return Move::BOOKMARK;//if everything is a wall he is fucked lmaoooooooooooooooooooooo
-    else if (movevec.size()==1){
+        return Move::BOOKMARK;// everything is a wall
+    else if (movevec.size()==1)
+    {
         if(bookmark_on)
             pushtoMoveKeep(movevec.front(),' ');
         lastMove=movevec.front();
@@ -256,12 +330,13 @@ Move Player::move(){//for now,SIMPLE IMPLEMENTATION
         return lastMove;
     }
     //now we have all the tiles around him which are not walls.lets visit the one we visited the earliest between them!
-    for(int i=0;movevec.size()!=0;i++){//finally, find the place we visited the most in the past from our current options
+    for(int i=0; movevec.size()!=0; i++) //finally, find the place we visited the most in the past from our current options
+    {
         tmp3=movevec.back();
         movevec.pop_back();
         tmp1=findMoveNum(tmp3);
-        std::cout << tmp1 << std::endl;
-        if(tmp1<tmp2){
+        if(tmp1<tmp2)
+        {
             tmp2=tmp1;
             returnMove=tmp3;
         }
