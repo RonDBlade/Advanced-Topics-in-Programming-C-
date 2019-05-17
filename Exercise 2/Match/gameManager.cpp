@@ -116,6 +116,7 @@ vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<
                 }
                 requestedTile = gameMaze->getChar(player->getPlayerPos());
                 switch(requestedTile){
+                case '@':
                 case ' ':
                     for(auto bookmark = player->getBookmarkPositions().begin(); bookmark != player->getBookmarkPositions().end(); bookmark++){
                         if (bookmark->second == player->getPlayerPos()){
