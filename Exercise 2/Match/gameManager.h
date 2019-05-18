@@ -25,6 +25,7 @@ class gameInstance{
 
 public:
     gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_);
+    gameInstance( const gameInstance& instance );
     gameInstance& operator=(gameInstance&& other);
 
     string getAlgorithmName();

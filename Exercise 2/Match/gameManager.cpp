@@ -2,7 +2,7 @@
 
 gameInstance::gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_): algorithmGenerator(algorithm_.second), algoName(algorithm_.first), playerPos(gameMaze_->getStart()), foundTreasure(false), stepsTaken(0), bookmarkCount(0){}
 
-gameInstance( const gameInstance& instance ) : algorithmGenerator(instance.algorithmGenerator), algoName(instance.algoName), algorithmInstance(std::move(instance.algorithmInstance)), playerPos(instance.playerPos), foundTreasure(instance.foundTreasure), stepsTaken(instance.stepsTaken), bookmarkCount(instance.bookmarkCount){}
+gameInstance::gameInstance( const gameInstance& instance ) : algorithmGenerator(instance.algorithmGenerator), algoName(instance.algoName), algorithmInstance(std::move(instance.algorithmInstance)), playerPos(instance.playerPos), foundTreasure(instance.foundTreasure), stepsTaken(instance.stepsTaken), bookmarkCount(instance.bookmarkCount){}
 
 /*
 // move assignment, takes a rvalue reference &&
