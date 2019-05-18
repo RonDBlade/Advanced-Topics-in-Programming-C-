@@ -1,9 +1,9 @@
 #include "gameManager.h"
 
-gameInstance::gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_): algorithm(algorithm_), playerPos(gameMaze_->getStart()), foundTreasure(false), stepsTaken(0), bookmarkCount(0){}
+gameInstance::gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_): algorithm(algorithm_): algoName(algorithm_.first), algorithmInstance(std::move(algorithm_.second)), playerPos(gameMaze_->getStart()), foundTreasure(false), stepsTaken(0), bookmarkCount(0){}
 
 string gameInstance::getAlgorithmName(){
-    return algorithm.first;
+    return algoName;
 }
 
 pair<int, int> gameInstance::getPlayerPos(){
@@ -35,15 +35,15 @@ int gameInstance::getStepsTaken(){
 }
 
 AbstractAlgorithm::Move gameInstance::moveAlgorithm(){
-    return algorithm.second()->move();
+    return algorithmInstance->move();
 }
 
 void gameInstance::hitAlgorithmWall(){
-    algorithm.second()->hitWall();
+    algorithmInstance->hitWall();
 }
 
 void gameInstance::hitAlgorithmBookmark(int seq, int index){
-    algorithm.second()->hitBookmark(seq);
+    algorithmInstance->hitBookmark(seq);
     bookmarkPositions.erase(bookmarkPositions.begin() + index);
 }
 
@@ -52,6 +52,7 @@ void gameInstance::setPlayerPos(pair<int, int> position){
 }
 
 void gameInstance::setPlayerRow(int row){
+    cout << "Trying to set row to " << row << endl;
     playerPos.second = row;
 }
 
@@ -60,6 +61,7 @@ void gameInstance::setPlayerCol(int col){
 }
 
 void gameInstance::addBookmarkPosition(){
+    cout << "Adding bookmark" << endl;
     bookmarkPositions.push_back(std::make_pair(++bookmarkCount, playerPos));
 }
 
@@ -82,8 +84,8 @@ vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<
     int numFinished = 0;
     AbstractAlgorithm::Move currPlayerMove;
     char requestedTile;
-    for(auto it = loadedAlgorithms.begin(); it != loadedAlgorithms.end(); it++){
-        gameInstance instance = gameInstance(gameMaze, *it);
+    for(auto& it : loadedAlgorithms){
+        gameInstance instance = gameInstance(gameMaze, it);
         allGamesForMaze.push_back(instance);
         numOfAlgorithms++;
     }
@@ -92,6 +94,7 @@ vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<
         for(auto player = allGamesForMaze.begin(); player != allGamesForMaze.end(); player++){
             if(!player->getFoundTreasure()){
                 currPlayerMove = player->moveAlgorithm();
+                cout << "Player details: treasure: " << player->getFoundTreasure() << " move: " << currPlayerMove << " position: " << player->getPlayerPos().first << " , " <<  player->getPlayerPos().second << endl;
                 switch(currPlayerMove){
                 case AbstractAlgorithm::Move::UP:
                     player->setPlayerRow(positiveModulo(player->getPlayerRow() - 1, gameMaze->getRows()));

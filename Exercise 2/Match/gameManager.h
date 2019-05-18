@@ -13,7 +13,8 @@
 using std::pair;
 
 class gameInstance{
-    pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm;
+    string algoName;
+    std::unique_ptr<AbstractAlgorithm> algorithmInstance;
     pair<int, int> playerPos;
     vector<pair<int, pair<int, int>>> bookmarkPositions;
     bool foundTreasure;

@@ -25,7 +25,7 @@ public:
         return instance;
     }
     std::vector<pair <string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> &getAlgorithms(){
-        return loadedAlgorithms;
+        return instance.loadedAlgorithms;
     }
     void processMatch(int num_of_arguments, char *arguments[]);
 };
