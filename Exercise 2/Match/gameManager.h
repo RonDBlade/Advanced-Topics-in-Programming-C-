@@ -13,6 +13,7 @@
 using std::pair;
 
 class gameInstance{
+    std::function<std::unique_ptr<AbstractAlgorithm>()> algorithmGenerator;
     string algoName;
     std::unique_ptr<AbstractAlgorithm> algorithmInstance;
     pair<int, int> playerPos;
@@ -24,6 +25,7 @@ class gameInstance{
 
 public:
     gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_);
+    gameInstance& operator=(gameInstance&& other);
 
     string getAlgorithmName();
     pair<int, int> getPlayerPos();

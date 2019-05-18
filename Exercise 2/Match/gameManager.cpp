@@ -1,7 +1,35 @@
 #include "gameManager.h"
 
-gameInstance::gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_): algorithm(algorithm_): algoName(algorithm_.first), algorithmInstance(std::move(algorithm_.second)), playerPos(gameMaze_->getStart()), foundTreasure(false), stepsTaken(0), bookmarkCount(0){}
+gameInstance::gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_): algorithmGenerator(algorithm_.second), algoName(algorithm_.first), playerPos(gameMaze_->getStart()), foundTreasure(false), stepsTaken(0), bookmarkCount(0){}
 
+gameInstance( const gameInstance& instance ) : algorithmGenerator(instance.algorithmGenerator), algoName(instance.algoName), algorithmInstance(std::move(instance.algorithmInstance)), playerPos(instance.playerPos), foundTreasure(instance.foundTreasure), stepsTaken(instance.stepsTaken), bookmarkCount(instance.bookmarkCount){}
+
+/*
+// move assignment, takes a rvalue reference &&
+gameInstance& operator=(gameInstance&& other)
+{
+    // "other" is soon going to be destroyed, so we let it destroy our current resource instead and we take "other"'s current resource via swapping
+    std::swap(algorithmGenerator, other.algorithmGenerator);
+    std::swap(algoName, other.algoName);
+    std::swap(algorithmInstance, other.algorithmInstance);
+    std::swap(playerPos, other.playerPos);
+    std::sqap(bookmarkPositions, other.bookmarkPositions);
+    std::swap(foundTreasure, other.foundTreasure);
+    std::swap(gameOutput, other.gameOutput);
+    std::swap(stepsTaken, other.stepsTaken);
+    std::swap(bookmarkCount, other.bookmarkCount);
+    return *this;
+}
+// move constructor, takes a rvalue reference &&
+gameInstance (gameInstance&& other)
+{
+    algorithmGenerator = other.algorithmGenerator;
+    // we "steal" the resource from "other"
+    m_dirac=other.m_dirac;
+    // "other" will soon be destroyed and its destructor will do nothing because we null out its resource here
+    other.m_dirac=0;
+}
+*/
 string gameInstance::getAlgorithmName(){
     return algoName;
 }
@@ -84,9 +112,8 @@ vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<
     int numFinished = 0;
     AbstractAlgorithm::Move currPlayerMove;
     char requestedTile;
-    for(auto& it : loadedAlgorithms){
-        gameInstance instance = gameInstance(gameMaze, it);
-        allGamesForMaze.push_back(instance);
+    for(auto it = loadedAlgorithms.begin(); it != loadedAlgorithms.end(); it++){
+        allGamesForMaze.emplace_back(std::move(gameInstance(gameMaze, *it)));
         numOfAlgorithms++;
     }
     while((currMoveNumber < maxSteps) && (numFinished < numOfAlgorithms)){
