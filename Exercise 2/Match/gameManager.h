@@ -15,7 +15,6 @@ using std::pair;
 class gameInstance{
     std::function<std::unique_ptr<AbstractAlgorithm>()> algorithmGenerator;
     string algoName;
-    std::unique_ptr<AbstractAlgorithm> algorithmInstance;
     pair<int, int> playerPos;
     vector<pair<int, pair<int, int>>> bookmarkPositions;
     bool foundTreasure;
@@ -25,8 +24,6 @@ class gameInstance{
 
 public:
     gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_);
-    gameInstance( const gameInstance& instance );
-    gameInstance& operator=(gameInstance&& other);
 
     string getAlgorithmName();
     pair<int, int> getPlayerPos();
