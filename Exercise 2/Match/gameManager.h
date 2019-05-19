@@ -25,6 +25,7 @@ class gameInstance{
 public:
     gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_);
 
+    std::unique_ptr<AbstractAlgorithm> generateAlgorithm();
     string getAlgorithmName();
     pair<int, int> getPlayerPos();
     int getPlayerRow();
@@ -33,10 +34,11 @@ public:
     bool getFoundTreasure();
     vector<string> getGameOutput();
     int getStepsTaken();
-    AbstractAlgorithm::Move moveAlgorithm();
 
-	void hitAlgorithmWall();
-	void hitAlgorithmBookmark(int seq, int index);
+    AbstractAlgorithm::Move moveAlgorithm(std::unique_ptr<AbstractAlgorithm> &algorithmPtr);
+	void hitAlgorithmWall(std::unique_ptr<AbstractAlgorithm> &algorithmPtr);
+	void hitAlgorithmBookmark(std::unique_ptr<AbstractAlgorithm> &algorithmPtr, int seq, int index);
+
     void setPlayerPos(pair<int, int> position);
     void setPlayerRow(int row);
     void setPlayerCol(int col);
