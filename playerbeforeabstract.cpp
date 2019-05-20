@@ -37,10 +37,12 @@ bool Player::putBookmark()
 
 void Player::pushtoMoveKeep(Move moved,char tileWentTo)
 {
-    if(moved!=Move::BOOKMARK){
-    movekeep.back().push_back({moved,tileWentTo});
+    if(moved!=Move::BOOKMARK)
+    {
+        movekeep.back().push_back({moved,tileWentTo});
     }
-    else{
+    else
+    {
         vector<pair<Move,char> > vec;
         movekeep.push_back(vec);
     }
@@ -123,7 +125,8 @@ void Player::removeBookmarkUntill(int seq)
     }
 }
 
-void Player::cleanKeepUntil(int seq){
+void Player::cleanKeepUntil(int seq)
+{
     auto it = movekeep.begin();
     for(int i=0; i<seq-biggest_met; i++)
     {
@@ -144,12 +147,13 @@ void Player::hitBookmark(int seq) //we want to update the map of locations
         pair<int, int> pos=current_position;
         pair<Move,char> tmp;
         unsigned int tmpsize;
-        for(int j=seq-biggest_met-1;j>=0;j--){
+        for(int j=seq-biggest_met-1; j>=0; j--)
+        {
             tmpsize=movekeep[j].size();//so wont need to keep calculating this
             for(int i=0; (unsigned int)i<tmpsize; i++)
             {
                 cnt--;
-                if((unsigned int)i==tmpsize-1) //last iteration.this is where we started.which means it has to be a space.
+                if((unsigned int)i==tmpsize-1 && j==0) //last iteration.this is where we started.which means it has to be a space.
                 {
                     continue;
                 }
@@ -209,6 +213,9 @@ void Player::hitBookmark(int seq) //we want to update the map of locations
         }
         cleanKeepUntil(seq);
         biggest_met=seq;
+        std::cout << when_wasOn[current_position.first][current_position.second+1] << std::endl;
+        std::cout << when_wasOn[current_position.first][current_position.second-1] << std::endl;
+        std::cout << when_wasOn[current_position.first][current_position.second-2] << std::endl;
     }
 }
 
@@ -250,7 +257,6 @@ Move Player::move() //for now,SIMPLE IMPLEMENTATION
         bookmark_count=0;
         bookmark_position.push_back(current_position);
         pushtoMoveKeep(Move::BOOKMARK,' ');
-        std::cout << "jeff" << std::endl;
         when_wasOn[current_position.first][current_position.second]=moveNumber;
         return Move::BOOKMARK;
     }
@@ -300,6 +306,7 @@ Move Player::move() //for now,SIMPLE IMPLEMENTATION
             pushtoMoveKeep(Move::RIGHT,' ');
         moved_to_new=true;
         lastMove=Move::RIGHT;
+        std::cout << "moved right,it is new on "  << current_position.first << " " << current_position.second << std::endl;
         return Move::RIGHT;
     }
     //if we got here,we already know ALL the locations which surround the player.Time to find which are a wall and which aren't.
@@ -314,6 +321,10 @@ Move Player::move() //for now,SIMPLE IMPLEMENTATION
     checkLoc=Player::isWall(current_position.first-1,current_position.second);//same for left
     if(!checkLoc)
         movevec.push_back(Move::LEFT);
+    else
+    {
+        std::cout << "cant go left on "  << current_position.first << " " << current_position.second << std::endl;
+    }
     checkLoc=Player::isWall(current_position.first+1,current_position.second);//same for right
     if(!checkLoc)
     {
@@ -327,6 +338,10 @@ Move Player::move() //for now,SIMPLE IMPLEMENTATION
             pushtoMoveKeep(movevec.front(),' ');
         lastMove=movevec.front();
         setbyMove(lastMove);
+        if(lastMove==Move::RIGHT)
+        {
+            std::cout << "went right,it is the only place to move on "  << current_position.first << " " << current_position.second << std::endl;
+        }
         return lastMove;
     }
     //now we have all the tiles around him which are not walls.lets visit the one we visited the earliest between them!
