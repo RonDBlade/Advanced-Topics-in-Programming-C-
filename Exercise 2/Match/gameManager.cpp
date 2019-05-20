@@ -1,6 +1,9 @@
 #include "gameManager.h"
 
-gameInstance::gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_): algorithmGenerator(algorithm_.second), algoName(algorithm_.first), playerPos(gameMaze_->getStart()), foundTreasure(false), stepsTaken(0), bookmarkCount(0){}
+gameInstance::gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_): algorithmGenerator(algorithm_.second), algoName(algorithm_.first), playerPos(gameMaze_->getStart()), foundTreasure(false), stepsTaken(0), bookmarkCount(0){
+    bookmarkPositions.clear();
+    gameOutput.clear();
+}
 
 std::unique_ptr<AbstractAlgorithm> gameInstance::generateAlgorithm(){
     return algorithmGenerator();
@@ -47,6 +50,7 @@ void gameInstance::hitAlgorithmWall(std::unique_ptr<AbstractAlgorithm> &algorith
 }
 
 void gameInstance::hitAlgorithmBookmark(std::unique_ptr<AbstractAlgorithm> &algorithmPtr, int seq, int index){
+    cout << "Hit bookmark number " << seq << " Placed in index " << index << endl;
     algorithmPtr->hitBookmark(seq);
     bookmarkPositions.erase(bookmarkPositions.begin() + index);
 }
@@ -56,7 +60,6 @@ void gameInstance::setPlayerPos(pair<int, int> position){
 }
 
 void gameInstance::setPlayerRow(int row){
-    cout << "Trying to set row to " << row << endl;
     playerPos.second = row;
 }
 
@@ -65,7 +68,6 @@ void gameInstance::setPlayerCol(int col){
 }
 
 void gameInstance::addBookmarkPosition(){
-    cout << "Adding bookmark" << endl;
     bookmarkPositions.push_back(std::make_pair(++bookmarkCount, playerPos));
 }
 
@@ -113,18 +115,24 @@ void runSingleAlgorithm(std::shared_ptr<Maze> gameMaze, gameInstance &player){
             continue; // Next loop iteration, don't check current character
         }
         requestedTile = gameMaze->getChar(player.getPlayerPos());
+        cout << "Requested : " << requestedTile << " In position: " << player.getPlayerPos().first << " " << player.getPlayerPos().second << endl;
         switch(requestedTile){
         case '@':
         case ' ':
             for(auto bookmark = player.getBookmarkPositions().begin(); bookmark != player.getBookmarkPositions().end(); bookmark++){
                 if (bookmark->second == player.getPlayerPos()){
-                    std::ptrdiff_t index = std::distance(player.getBookmarkPositions().begin(), bookmark);
+                    int index = std::distance(player.getBookmarkPositions().begin(), bookmark);
+                    cout << "Found distance is " << index << " in bookmark placed in " << bookmark->second.first << " " << bookmark->second.second << endl;
+                    int lastBook = (player.getBookmarkPositions().end()-1)->first;
+                    cout << "Current max bookmark is " << lastBook << endl;
                     player.hitAlgorithmBookmark(algorithmPtr, bookmark->first, index);
                     break;
                 }
             }
+            cout << "AAA" << endl;
             break;
         case '#':
+            cout << "HIT WALL" << endl;
             player.hitAlgorithmWall(algorithmPtr);
             switch(currPlayerMove){// Reverse player move
             case AbstractAlgorithm::Move::UP:
@@ -156,11 +164,14 @@ void runSingleAlgorithm(std::shared_ptr<Maze> gameMaze, gameInstance &player){
 vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> &loadedAlgorithms){
     vector<gameInstance> allGamesForMaze;
     for(auto it = loadedAlgorithms.begin(); it != loadedAlgorithms.end(); it++){
-        allGamesForMaze.emplace_back(gameInstance(gameMaze, *it));
+        gameInstance GI = gameInstance(gameMaze, *it);
+        cout << "Running game " << GI.getAlgorithmName() << endl;
+        runSingleAlgorithm(gameMaze, GI);
+        cout << "Steps taken to complete maze: " << GI.getStepsTaken() << endl;
+            allGamesForMaze.emplace_back(GI);
     }
     for (auto player = allGamesForMaze.begin(); player != allGamesForMaze.end(); player++){
-        cout << "Running game " << player->getAlgorithmName() << endl;
-        runSingleAlgorithm(gameMaze, *player);
+
     }
     return allGamesForMaze;
 }

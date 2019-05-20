@@ -15,7 +15,6 @@ bool _314615600_b::isWall(int x,int y){
     }
 
     bool _314615600_b::putBookmark(){
-        highest_bookmark++;
         if(moveNumber==1){
             //just started the game
             bookmark_on=true;
@@ -94,7 +93,10 @@ pair<int, int> _314615600_b::bookmark_pos()const{
 }
 
 void _314615600_b::hitBookmark(int seq){//we want to update the map of locations
+    std::cout << "Sequence : " << seq << std::endl;
+    std::cout << "highest " << highest_bookmark << std::endl;
         if(seq==highest_bookmark){
+            std::cout << "is restoring" <<std::endl;
             int cnt=moveNumber;
             bookmark_on=false;
             put_bookmark/=2;
@@ -181,6 +183,7 @@ AbstractAlgorithm::Move _314615600_b::move(){//for now,SIMPLE IMPLEMENTATION
     if(bookmark_on)
         bookmark_count++;
     if(putBookmark()){
+        highest_bookmark++;
         bookmark_count=0;
         bookmark_position.first=player_pos().first;
         bookmark_position.second=player_pos().second;
