@@ -1,17 +1,15 @@
-#ifndef PLAYER_H_INCLUDED
-#define PLAYER_H_INCLUDED
+#ifndef _314615600_A_H_INCLUDED
+#define _314615600_A_H_INCLUDED
 #include <map>
 #include <utility>
 #include <vector>
-
+#include "AlgorithmRegistration.h"
 
 using std::map;
 using std::pair;
 using std::vector;
 
-enum class Move{LEFT, RIGHT, UP, DOWN, BOOKMARK};
-
-class Player{
+class _314615600_a: public AbstractAlgorithm{
     map<int, map<int,char> > player_map; /*should change to map of maps.From my understanding of the implementation we start the player from position
     (0,0) in his perspective,and if we treat some positions as "-" positions(down from (0,0) is (0,-1)),we cant do that with vectors*/
     map<int, map<int,int> > when_wasOn; //keeps for each location when we have last visited it.helps us decide which way to go.
@@ -29,7 +27,7 @@ class Player{
 
 
 public:
-    Player();
+    _314615600_a();
     void hitBookmark(int seq);
     Move move();
     void hitWall();
@@ -52,4 +50,4 @@ private:
     int getLocMove(int x, int y);
 };
 
-#endif // PLAYER_H_INCLUDED
+#endif // _314615600_A_H_INCLUDED
