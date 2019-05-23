@@ -38,9 +38,7 @@ private:
     pair<int, int> player_pos()const;
     pair<int, int> bookmark_pos()const;
     void updateMap(char to_put,Move where);
-    void increaseMovenum();
     void setLocMove(int x,int y);
-    int getLocMove(int x, int y);
     int firstPlyr();
     int secondPlyr();
     int firstBook();
@@ -51,6 +49,7 @@ private:
     bool isWall(int x,int y);
     bool isKnown(int x,int y);
     void pushtoMoveKeep(Move moved,char tileWentTo);
+    int getLocMove(int x, int y);
 };
 
 #endif // PLAYER_H_INCLUDED
