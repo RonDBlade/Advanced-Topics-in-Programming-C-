@@ -1,16 +1,17 @@
-#ifndef PLAYER_H_INCLUDED
-#define PLAYER_H_INCLUDED
+#ifndef _314615600_B_H_INCLUDED
+#define _314615600_B_H_INCLUDED
 #include <map>
 #include <utility>
 #include <vector>
+#include "AlgorithmRegistration.h"
+
 
 using std::map;
 using std::pair;
 using std::vector;
 
-enum class Move{LEFT, RIGHT, UP, DOWN, BOOKMARK};
 
-class Player{
+class _314615600_b: public AbstractAlgorithm{
     map<int, map<int,char> > player_map;
     map<int, map<int,int> > when_wasOn; //keeps for each location when we have last visited it.helps us decide which way to go.
     int moveNumber=0;//keeps the count of moves for
@@ -27,7 +28,7 @@ class Player{
     bool moved_to_new=false;
 
 public:
-    Player();
+    _314615600_b();
     Move move();
     void hitWall();
     void hitBookmark(int seq);
@@ -49,4 +50,4 @@ private:
     void cleanKeepUntil(int seq);//removes data from move_keep until the bookmark we met,which is given at seq
 };
 
-#endif // _314615600_A_H_INCLUDED
+#endif // _314615600_B_H_INCLUDED
