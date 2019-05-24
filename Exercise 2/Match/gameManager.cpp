@@ -1,6 +1,6 @@
 #include "gameManager.h"
 
-gameInstance::gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_): algorithmGenerator(algorithm_.second), algoName(algorithm_.first), playerPos(gameMaze_->getStart()), foundTreasure(false), stepsTaken(0), bookmarkCount(0){
+gameInstance::gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_): algorithmGenerator(algorithm_.second), algoName(algorithm_.first), playerPos(gameMaze_->getStart()), stepsTaken(0), bookmarkCount(0){
     bookmarkPositions.clear();
     gameOutput.clear();
 }
@@ -9,35 +9,31 @@ std::unique_ptr<AbstractAlgorithm> gameInstance::generateAlgorithm(){
     return algorithmGenerator();
 }
 
-string gameInstance::getAlgorithmName(){
+string gameInstance::getAlgorithmName() const{
     return algoName;
 }
 
-pair<int, int> gameInstance::getPlayerPos(){
+pair<int, int> gameInstance::getPlayerPos() const{
     return playerPos;
 }
 
-int gameInstance::getPlayerRow(){
+int gameInstance::getPlayerRow() const{
     return playerPos.second;
 }
 
-int gameInstance::getPlayerCol(){
+int gameInstance::getPlayerCol() const{
     return playerPos.first;
 }
 
-vector<pair<int, pair<int, int>>> gameInstance::getBookmarkPositions(){
+vector<pair<int, pair<int, int>>> gameInstance::getBookmarkPositions() const{
     return bookmarkPositions;
 }
 
-bool gameInstance::getFoundTreasure(){
-    return foundTreasure;
-}
-
-vector<string> gameInstance::getGameOutput(){
+vector<string> gameInstance::getGameOutput() const{
     return gameOutput;
 }
 
-int gameInstance::getStepsTaken(){
+int gameInstance::getStepsTaken() const{
     return stepsTaken;
 }
 
@@ -71,9 +67,6 @@ void gameInstance::addBookmarkPosition(){
     bookmarkPositions.push_back(std::make_pair(++bookmarkCount, playerPos));
 }
 
-void gameInstance::setFoundTreasure(bool treasureStatus){
-    foundTreasure = treasureStatus;
-}
 
 void gameInstance::addToGameOutput(string newLine){
     gameOutput.push_back(newLine);

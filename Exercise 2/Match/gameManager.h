@@ -14,10 +14,10 @@ using std::pair;
 
 class gameInstance{
     std::function<std::unique_ptr<AbstractAlgorithm>()> algorithmGenerator;
+    Maze gameMaze;
     string algoName;
     pair<int, int> playerPos;
     vector<pair<int, pair<int, int>>> bookmarkPositions;
-    bool foundTreasure;
     vector<string> gameOutput;
     int stepsTaken;
     int bookmarkCount;
@@ -26,14 +26,13 @@ public:
     gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_);
 
     std::unique_ptr<AbstractAlgorithm> generateAlgorithm();
-    string getAlgorithmName();
-    pair<int, int> getPlayerPos();
-    int getPlayerRow();
-    int getPlayerCol();
-    vector<pair<int, pair<int, int>>> getBookmarkPositions();
-    bool getFoundTreasure();
-    vector<string> getGameOutput();
-    int getStepsTaken();
+    string getAlgorithmName() const;
+    pair<int, int> getPlayerPos() const;
+    int getPlayerRow() const;
+    int getPlayerCol() const;
+    vector<pair<int, pair<int, int>>> getBookmarkPositions() const;
+    vector<string> getGameOutput() const;
+    int getStepsTaken() const;
 
     AbstractAlgorithm::Move moveAlgorithm(std::unique_ptr<AbstractAlgorithm> &algorithmPtr);
 	void hitAlgorithmWall(std::unique_ptr<AbstractAlgorithm> &algorithmPtr);
@@ -43,7 +42,6 @@ public:
     void setPlayerRow(int row);
     void setPlayerCol(int col);
     void addBookmarkPosition();
-    void setFoundTreasure(bool treasureStatus);
     void addToGameOutput(string newLine);
     void setStepsTaken(int steps);
 };
