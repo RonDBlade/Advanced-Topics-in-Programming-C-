@@ -46,7 +46,7 @@ bool file_exists(const string& file_path){
     return ((stat(file_path.c_str(), &buffer) == 0) && (buffer.st_mode & S_IFREG )); // Check the given output path doesn't exist as a file (and not folder)
 }
 
-std::shared_ptr<Maze> addMaze(string mazePath){
+Maze addMaze(string mazePath){
     bool input_correct;
     ifstream input_file(mazePath);
     if (!input_file.is_open()){
@@ -59,7 +59,7 @@ std::shared_ptr<Maze> addMaze(string mazePath){
         return nullptr;
     }
     string fileName = std::filesystem::path(mazePath).stem();
-    std::shared_ptr<Maze> gameMaze = std::make_shared<Maze>(fileName, maze_data[0], maze_data[1], maze_data[2]);
+    Maze gameMaze = Maze(fileName, maze_data[0], maze_data[1], maze_data[2]);
     input_correct = gameMaze->parse_maze(input_file);
     input_file.close();
     if (input_correct){
@@ -68,7 +68,7 @@ std::shared_ptr<Maze> addMaze(string mazePath){
     return nullptr;
 }
 
-string getPathFromVector(vector<string> arguments, string search_string){
+string parseStringFromVector(vector<string> arguments, string search_string){
     std::error_code err;
     auto place_in_vector = std::find(std::begin(arguments), std::end(arguments), search_string);
     string path = std::filesystem::current_path();
@@ -80,21 +80,32 @@ string getPathFromVector(vector<string> arguments, string search_string){
     if ((search_string == "-output") && (place_in_vector == std::end(arguments))){
         return "";
     }
+    if ((search_string == "-num_threads") && (place_in_vector == std::end(arguments))){
+        return "0";
+    }
     // Return the path found in the arguments or the default path of current working directory
     return (std::filesystem::is_directory(path, err)) ? path : std::filesystem::current_path().string();
 }
 
 
-FilePaths::FilePaths(int num_of_arguments, char* arguments[]): maze_path(std::filesystem::current_path().string()), algorithm_path(std::filesystem::current_path().string()){
+ParsedInput::ParsedInput(int num_of_arguments, char* arguments[]): maze_path(std::filesystem::current_path().string()), algorithm_path(std::filesystem::current_path().string()){
     string argument;
     vector<string> argumentsStrings;
+    string threadsAsStrings;
     for (int i = 1; i < num_of_arguments; i++){
         argument = string(arguments[i]);
         argumentsStrings.push_back(argument);
     }
-    maze_path = getPathFromVector(argumentsStrings, "-maze_path");
-    algorithm_path = getPathFromVector(argumentsStrings, "-algorithm_path");
-    output_path = getPathFromVector(argumentsStrings, "-output");
+    maze_path = parseStringFromVector(argumentsStrings, "-maze_path");
+    algorithm_path = parseStringFromVector(argumentsStrings, "-algorithm_path");
+    output_path = parseStringFromVector(argumentsStrings, "-output");
+    threadsAsStrings = parseStringFromVector(argumentsStrings, "-num_threads");
+    try:
+        num_of_threads = stoi(threadsAsStrings);
+    catch(const std::invalid_argument& e){
+        cout << "Error parsing number of threads, not running any additional threads." << endl;
+        num_of_threads = 0;
+    }
 }
 
 

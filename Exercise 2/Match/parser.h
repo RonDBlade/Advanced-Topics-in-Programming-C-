@@ -19,16 +19,17 @@ using std::strtok;
 using std::ifstream;
 
 
-struct FilePaths{
+struct ParsedInput{
     string maze_path;
     string algorithm_path;
     string output_path;
+    int num_of_threads;
 
 public:
-    FilePaths(int num_of_arguments, char* arguments[]);
+    ParsedInput(int num_of_arguments, char* arguments[]);
 };
 
 vector<string> findAllFilesByExtension(string path, string extension);
-std::shared_ptr<Maze> addMaze(string mazePath);
+Maze addMaze(string mazePath);
 
 #endif // PARSER_H_INCLUDED
