@@ -203,19 +203,7 @@ void _314615600_a::setLocMove(int x,int y)
     when_wasOn[x][y]=moveNumber;
 }
 
-Move whatMove(int movnum)
-{
-    if(movnum==0)
-        return Move::UP;
-    else if(movnum==1)
-        return Move::DOWN;
-    else if(movnum==2)
-        return Move::LEFT;
-    return Move::RIGHT;
-}
-
-
-AbstractAlgorithm::Move _314615600_a::move() 
+AbstractAlgorithm::Move _314615600_a::move()
 {
     //first check places we haven't been to yet.
     int tmp1;

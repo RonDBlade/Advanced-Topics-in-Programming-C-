@@ -1,6 +1,6 @@
 COMP = g++-8.3.0
 
-OBJS = AlgorithmRegistration.o gameManager.o matchManager.o parser.o maze.o main.o
+OBJS = AlgorithmRegistration.o gameManager.o matchManager.o rewindQueue.o parser.o maze.o main.o
 EXEC = match
 CPP_COMP_FLAG = -std=c++17 -Wall -Wextra -Werror -pedantic-errors -DNDEBUG 
 CPP_LINK_FLAG =  -lstdc++fs -ldl -export-dynamic
@@ -16,10 +16,13 @@ AlgorithmRegistration.o: AlgorithmRegistration.cpp AlgorithmRegistration.h
 gameManager.o: gameManager.cpp gameManager.h parser.h maze.h AbstractAlgorithm.h
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
 
-matchManager.o: matchManager.cpp matchManager.h gameManager.h parser.h
+matchManager.o: matchManager.cpp matchManager.h gameManager.h parser.h rewindQueue.h
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
 	
 maze.o: maze.cpp maze.h AbstractAlgorithm.h
+	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
+
+rewindQueue.o: rewindQueue.cpp rewindQueue.h
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
 
 parser.o: parser.cpp parser.h maze.h
