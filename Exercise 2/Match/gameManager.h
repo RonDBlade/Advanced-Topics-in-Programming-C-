@@ -23,22 +23,25 @@ class gameInstance{
     int bookmarkCount;
 
 public:
-    gameInstance(std::shared_ptr<Maze> gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_);
+    gameInstance(Maze &gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_);
 
-    std::unique_ptr<AbstractAlgorithm> generateAlgorithm();
+    void runGame()
     string getAlgorithmName() const;
+    vector<string> getGameOutput() const;
+    int getStepsTaken() const;
+
+private:
+    std::unique_ptr<AbstractAlgorithm> generateAlgorithm();
     pair<int, int> getPlayerPos() const;
     int getPlayerRow() const;
     int getPlayerCol() const;
     vector<pair<int, pair<int, int>>> getBookmarkPositions() const;
-    vector<string> getGameOutput() const;
-    int getStepsTaken() const;
 
     AbstractAlgorithm::Move moveAlgorithm(std::unique_ptr<AbstractAlgorithm> &algorithmPtr);
 	void hitAlgorithmWall(std::unique_ptr<AbstractAlgorithm> &algorithmPtr);
 	void hitAlgorithmBookmark(std::unique_ptr<AbstractAlgorithm> &algorithmPtr, int seq, int index);
 
-    void setPlayerPos(pair<int, int> position);
+    void setPlayerPos(pair<int, int> &position);
     void setPlayerRow(int row);
     void setPlayerCol(int col);
     void addBookmarkPosition();
