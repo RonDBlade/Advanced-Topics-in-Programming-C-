@@ -3,7 +3,7 @@
 
 matchManager matchManager::instance;
 
-void matchManager::registerSoFiles(vector<string> algoFiles, vector<string> mazeFiles, string outputPath){
+void matchManager::registerSoFiles(vector<string> algoFiles, vector<string> mazeFiles){
     vector<void*> fileHandles;
     void *handle;
     for (auto algoPath = std::begin(algoFiles); algoPath != std::end(algoFiles); algoPath++){
@@ -16,9 +16,9 @@ void matchManager::registerSoFiles(vector<string> algoFiles, vector<string> maze
             fileHandles.push_back(handle);
         }
     }
-    runMatches(mazeFiles, outputPath);
-    for (auto handle = std::begin(fileHandles); handle != std::end(fileHandles); handle++){
-        dlclose(*handle);
+    loadMazes(mazeFiles);
+    for (auto& handle : fileHandles){
+        dlclose(handle);
     }
 }
 
@@ -50,7 +50,7 @@ vector<int> find_line_length(const vector<string> algs,const vector<string> maze
     return lengths;
 }
 
-void outputData(const vector<vector<int>> steps,const vector<string> algs,const vector<string> mazes){
+void outputData(const vector<vector<int>> steps, const vector<string> algs, const vector<string> mazes){
     vector<int> lengths=find_line_length(algs,mazes); //give this the arguments by their length,calculate how long each line should be
     int linelen=lengths.back();
     lengths.pop_back();
@@ -73,7 +73,50 @@ void outputData(const vector<vector<int>> steps,const vector<string> algs,const 
     }
 }
 
-void matchManager::runMatches(vector<string> mazeFiles, string outputFolder){
+void matchManager::runGames(){
+    gameInstance game;
+    while(allGames.popElement(game)){
+        game
+    }
+}
+
+void matchManager::runThreads(){
+    vector<std::thread> programThreads;
+    for(int i = 0; i < numOfThreads; i++){
+        progrmThreads.push_back(std::thread(runGames));
+    }
+    runGames();
+    for (thread : programThreads){
+        thread.join();
+    }
+
+}
+
+void matchManager::pairGames(){
+    gameInstance game;
+    for(auto& maze : loadedMazes){
+        for(auto algorithm& : loadedAlgorithms){
+            game = gameInstance(maze, algorithm);
+            allGames.push(game);
+        }
+    }
+    runThreads();
+}
+
+void matchManager::loadMazes(vector<string> mazeFiles, string outputFolder){
+    Maze gameMaze;
+    for(auto& mazeFile : mazeFiles){
+        gameMaze = addMaze(mazeFile);
+        if (gameMaze != nullptr){
+            loadedMazes.push_back(gameMaze);
+        }
+    }
+    pairGames()
+}
+
+
+
+
     vector<string> validMazes;
     string outputFileName;
     vector<vector<int>> steps;
@@ -83,8 +126,9 @@ void matchManager::runMatches(vector<string> mazeFiles, string outputFolder){
     for(auto algorithmInstance = instance.loadedAlgorithms.begin(); algorithmInstance != instance.loadedAlgorithms.end(); algorithmInstance++){
         algorithmsNames.push_back(algorithmInstance->first);
     }
+
     for(auto mazeFile = mazeFiles.begin(); mazeFile != mazeFiles.end(); mazeFile++){
-        std::shared_ptr<Maze> gameMaze = addMaze(*mazeFile);
+        Maze gameMaze = addMaze(*mazeFile);
         if (gameMaze != nullptr){
             validMazes.push_back(std::filesystem::path(*mazeFile).stem().string());
             vector<gameInstance> algorithmsResultsOnMaze = runAlgorithmsOnMaze(gameMaze, instance.loadedAlgorithms);
@@ -105,9 +149,12 @@ void matchManager::runMatches(vector<string> mazeFiles, string outputFolder){
     outputData(steps, algorithmsNames, validMazes);
 }
 
+
 void matchManager::processMatch (int num_of_arguments, char *arguments[]){
-    FilePaths filesPaths = FilePaths(num_of_arguments, arguments);
-    vector<string> mazeFiles = findAllFilesByExtension(filesPaths.maze_path, ".maze");
-    vector<string> algoFiles = findAllFilesByExtension(filesPaths.algorithm_path, ".so");
-    registerSoFiles(algoFiles, mazeFiles, filesPaths.output_path);
+    ParsedInput parsedInput = ParsedInput(num_of_arguments, arguments);
+    vector<string> mazeFiles = findAllFilesByExtension(parsedInput.maze_path, ".maze");
+    vector<string> algoFiles = findAllFilesByExtension(parsedInput.algorithm_path, ".so");
+    outputFolder = parsedInput.output_path;
+    numOfThreads = parsedInput.num_of_threads;
+    registerSoFiles(algoFiles, mazeFiles);
 }
