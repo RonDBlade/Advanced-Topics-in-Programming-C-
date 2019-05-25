@@ -74,10 +74,36 @@ void outputData(const vector<vector<int>> steps, const vector<string> algs, cons
 }
 
 void matchManager::runGames(){
+    // As long there are games in the queue, the thread will run more games.
+    // Since all the games are produced before we run the threads, when the queue is empty, all the games have started running.
     gameInstance game;
     while(allGames.popElement(game)){
-        game
+        game.runGame();
     }
+}
+
+void matchManager::printScores(){
+    allGames.rewindQueue();
+    gameInstance currentGame;
+    vector<vector<int>> steps;
+    vector<int> stepsForAlgorithm;
+    vector<string> mazeNames;
+    vector<string> algorithmsNames;
+    for(auto& algorithm : loadedAlgorithms){
+        algorithmsNames.push_back(algorithm.first);
+    }
+    for(auto& maze : loadedMazes){
+        mazeNames.push_back(maze.getMazeName());
+    }
+    for(int i = 0; i < loadedAlgorithms.size(); i++){
+        stepsForAlgorithm.clear();
+        for(int j = 0; j < loadedMazes.size(); j++){
+            allGames.popElement(currentGame);
+            stepsForAlgorithm.push_back(currentGame.getStepsTaken());
+        }
+        steps.push_back(stepsForAlgorithm);
+    }
+    outputData(steps, algorithmsNames, mazeNames);
 }
 
 void matchManager::runThreads(){
@@ -89,15 +115,16 @@ void matchManager::runThreads(){
     for (thread : programThreads){
         thread.join();
     }
-
+    printScores();
 }
 
 void matchManager::pairGames(){
     gameInstance game;
+    allGames.setSize(loadedMazes.size() * loadedAlgorithms.size());
     for(auto& maze : loadedMazes){
         for(auto algorithm& : loadedAlgorithms){
             game = gameInstance(maze, algorithm);
-            allGames.push(game);
+            allGames.addElement(game);
         }
     }
     runThreads();

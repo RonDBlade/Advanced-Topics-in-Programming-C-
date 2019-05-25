@@ -9,7 +9,7 @@
 #include <cstring>
 #include "gameManager.h"
 #include "parser.h"
-#include "safeQueue.h"
+#include "rewindQueue.h"
 
 using std::string;
 
@@ -19,7 +19,7 @@ class matchManager{
     std::vector<Maze> loadedMazes;
     string outputFolder;
     int numOfThreads;
-    SafeQueue<gameInstance> allGames;
+    RewindQueue<gameInstance> allGames;
 
 public:
     void registerAlgorithm(std::function<std::unique_ptr<AbstractAlgorithm>()> algorithm) {

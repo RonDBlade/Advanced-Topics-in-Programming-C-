@@ -4,7 +4,9 @@
 #include <mutex>
 #include <queue>
 
+void setSize(int expectedSize);
 void addElement(T* elem);
 bool popElement(T& elem);
+void rewindQueue();
 
 #endif // SAFEQUEUE_H_INCLUDED
