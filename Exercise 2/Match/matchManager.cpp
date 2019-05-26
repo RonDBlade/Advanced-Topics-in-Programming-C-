@@ -76,15 +76,23 @@ void outputData(const vector<vector<int>> steps, const vector<string> algs, cons
 void matchManager::runGames(){
     // As long there are games in the queue, the thread will run more games.
     // Since all the games are produced before we run the threads, when the queue is empty, all the games have started running.
-    gameInstance game;
-    while(allGames.popElement(game)){
-        game.runGame();
+    std::unique_ptr<gameInstance> game;
+    string outputFileName;
+    while(allGames.popElement(*game)){
+        game->runGame();
+        if(outputFolder != ""){
+            outputFileName = outputFolder + game->getMazeName() + "_" + game->getAlgorithmName() + ".output";
+            std::ofstream outputfile(outputFileName);
+            for (auto gameMove : game->getGameOutput()){
+                outputfile << gameMove << endl;
+            }
+        }
     }
 }
 
 void matchManager::printScores(){
     allGames.rewindQueue();
-    gameInstance currentGame;
+    std::unique_ptr<gameInstance> currentGame;
     vector<vector<int>> steps;
     vector<int> stepsForAlgorithm;
     vector<string> mazeNames;
@@ -95,11 +103,11 @@ void matchManager::printScores(){
     for(auto& maze : loadedMazes){
         mazeNames.push_back(maze.getMazeName());
     }
-    for(int i = 0; i < loadedAlgorithms.size(); i++){
+    for(size_type i = 0; i < loadedAlgorithms.size(); i++){
         stepsForAlgorithm.clear();
-        for(int j = 0; j < loadedMazes.size(); j++){
-            allGames.popElement(currentGame);
-            stepsForAlgorithm.push_back(currentGame.getStepsTaken());
+        for(size_type j = 0; j < loadedMazes.size(); j++){
+            allGames.popElement(*currentGame);
+            stepsForAlgorithm.push_back(currentGame->getStepsTaken());
         }
         steps.push_back(stepsForAlgorithm);
     }
@@ -109,28 +117,28 @@ void matchManager::printScores(){
 void matchManager::runThreads(){
     vector<std::thread> programThreads;
     for(int i = 0; i < numOfThreads; i++){
-        progrmThreads.push_back(std::thread(runGames));
+        programThreads.push_back(std::move(std::thread(runGames)));
     }
     runGames();
-    for (thread : programThreads){
+    for (auto& thread : programThreads){
         thread.join();
     }
     printScores();
 }
 
 void matchManager::pairGames(){
-    gameInstance game;
+    std::unique_ptr<gameInstance> game;
     allGames.setSize(loadedMazes.size() * loadedAlgorithms.size());
     for(auto& maze : loadedMazes){
-        for(auto algorithm& : loadedAlgorithms){
-            game = gameInstance(maze, algorithm);
-            allGames.addElement(game);
+        for(auto& algorithm : loadedAlgorithms){
+            *game = gameInstance(maze, algorithm);
+            allGames.addElement(*game);
         }
     }
     runThreads();
 }
 
-void matchManager::loadMazes(vector<string> mazeFiles, string outputFolder){
+void matchManager::loadMazes(vector<string> mazeFiles){
     Maze gameMaze;
     for(auto& mazeFile : mazeFiles){
         gameMaze = addMaze(mazeFile);
@@ -138,44 +146,8 @@ void matchManager::loadMazes(vector<string> mazeFiles, string outputFolder){
             loadedMazes.push_back(gameMaze);
         }
     }
-    pairGames()
+    pairGames();
 }
-
-
-
-
-    vector<string> validMazes;
-    string outputFileName;
-    vector<vector<int>> steps;
-    vector<int> stepsForMaze;
-    vector<string> algorithmsNames;
-    vector<pair<string, vector<gameInstance>>> resultsForMaze;
-    for(auto algorithmInstance = instance.loadedAlgorithms.begin(); algorithmInstance != instance.loadedAlgorithms.end(); algorithmInstance++){
-        algorithmsNames.push_back(algorithmInstance->first);
-    }
-
-    for(auto mazeFile = mazeFiles.begin(); mazeFile != mazeFiles.end(); mazeFile++){
-        Maze gameMaze = addMaze(*mazeFile);
-        if (gameMaze != nullptr){
-            validMazes.push_back(std::filesystem::path(*mazeFile).stem().string());
-            vector<gameInstance> algorithmsResultsOnMaze = runAlgorithmsOnMaze(gameMaze, instance.loadedAlgorithms);
-            resultsForMaze.push_back(std::make_pair(*mazeFile, algorithmsResultsOnMaze));
-            for(auto result = algorithmsResultsOnMaze.begin(); result!= algorithmsResultsOnMaze.end(); result++){
-                stepsForMaze.push_back(result->getStepsTaken());
-                if(outputFolder != ""){
-                    outputFileName = outputFolder + std::filesystem::path(*mazeFile).stem().string() + "_" + (*result).getAlgorithmName() + ".output";
-                    std::ofstream outputfile(outputFileName);
-                    for (auto gameMove = (*result).getGameOutput().begin(); gameMove != (*result).getGameOutput().end(); gameMove++){
-                        outputfile << *gameMove << endl;
-                    }
-                }
-            }
-            steps.push_back(stepsForMaze);
-        }
-    }
-    outputData(steps, algorithmsNames, validMazes);
-}
-
 
 void matchManager::processMatch (int num_of_arguments, char *arguments[]){
     ParsedInput parsedInput = ParsedInput(num_of_arguments, arguments);

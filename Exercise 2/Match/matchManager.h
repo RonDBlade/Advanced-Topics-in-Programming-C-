@@ -33,9 +33,12 @@ public:
     }
     void processMatch(int num_of_arguments, char *arguments[]);
 private:
-    void registerSoFiles(vector<string> algoFiles, vector<string> mazeFiles, string outputPath);
-    void loadMazes(vector<string> mazeFiles, string outputFolder);
+    void registerSoFiles(vector<string> algoFiles, vector<string> mazeFiles);
+    void loadMazes(vector<string> mazeFiles);
     void pairGames();
+    void printScores();
+    void runGames();
+    void runThreads();
 
 };
 
