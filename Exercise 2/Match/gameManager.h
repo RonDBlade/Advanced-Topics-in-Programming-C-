@@ -25,8 +25,9 @@ class gameInstance{
 public:
     gameInstance(Maze &gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_);
 
-    void runGame()
+    void runGame();
     string getAlgorithmName() const;
+    string getMazeName()const;
     vector<string> getGameOutput() const;
     int getStepsTaken() const;
 
@@ -52,7 +53,5 @@ private:
 inline int positiveModulo(int i, int n) {
     return (i % n + n) % n;
 }
-
-vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> &loadedAlgorithms);
 
 #endif // GAMEMANAGER_H_INCLUDED

@@ -1,6 +1,6 @@
 #include "gameManager.h"
 
-gameInstance::gameInstance(Maze &gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_): algorithmGenerator(algorithm_.second), gameMaze(gameMaze_), algoName(algorithm_.first), playerPos(gameMaze_->getStart()), stepsTaken(0), bookmarkCount(0){
+gameInstance::gameInstance(Maze &gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_): algorithmGenerator(algorithm_.second), gameMaze(gameMaze_), algoName(algorithm_.first), playerPos(gameMaze_.getStart()), stepsTaken(0), bookmarkCount(0){
     bookmarkPositions.clear();
     gameOutput.clear();
 }
@@ -11,6 +11,10 @@ std::unique_ptr<AbstractAlgorithm> gameInstance::generateAlgorithm(){
 
 string gameInstance::getAlgorithmName() const{
     return algoName;
+}
+
+string gameInstance::getMazeName()const{
+    return gameMaze.getMazeName();
 }
 
 pair<int, int> gameInstance::getPlayerPos() const{
@@ -51,7 +55,7 @@ void gameInstance::hitAlgorithmBookmark(std::unique_ptr<AbstractAlgorithm> &algo
     bookmarkPositions.erase(bookmarkPositions.begin() + index);
 }
 
-void gameInstance::setPlayerPos(pair<int, int> position){
+void gameInstance::setPlayerPos(pair<int, int> &position){
     playerPos = position;
 }
 
@@ -77,15 +81,15 @@ void gameInstance::setStepsTaken(int steps){
 }
 
 void gameInstance::runGame(){
-    int maxSteps = gameMaze->getMaxSteps(), currMoveNumber = 0;
-    int rows = gameMaze->getRows(), cols = gameMaze->getCols();
+    int maxSteps = gameMaze.getMaxSteps(), currMoveNumber = 0;
+    int rows = gameMaze.getRows(), cols = gameMaze.getCols();
     AbstractAlgorithm::Move currPlayerMove;
     char requestedTile;
     std::unique_ptr<AbstractAlgorithm> algorithmPtr = generateAlgorithm();
     while(currMoveNumber < maxSteps){
         currMoveNumber++;
         currPlayerMove = moveAlgorithm(algorithmPtr);
-        cout << "Player details: " << " move: " << currPlayerMove << " position: " << getPlayerPos().first << " , " <<  player.getPlayerPos().second << endl;
+        cout << "Player details: " << " move: " << currPlayerMove << " position: " << getPlayerPos().first << " , " <<  getPlayerPos().second << endl;
         switch(currPlayerMove){
         case AbstractAlgorithm::Move::UP:
             setPlayerRow(positiveModulo(getPlayerRow() - 1, rows));
@@ -108,7 +112,7 @@ void gameInstance::runGame(){
             addToGameOutput("B");
             continue; // Next loop iteration, don't check current character
         }
-        requestedTile = gameMaze->getChar(getPlayerPos());
+        requestedTile = gameMaze.getChar(getPlayerPos());
         cout << "Requested : " << requestedTile << " In position: " << getPlayerPos().first << " " << getPlayerPos().second << endl;
         switch(requestedTile){
         case '@':
@@ -155,17 +159,3 @@ void gameInstance::runGame(){
     setStepsTaken(-1);
 }
 
-vector<gameInstance> runAlgorithmsOnMaze(std::shared_ptr<Maze> gameMaze, vector<pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> &loadedAlgorithms){
-    vector<gameInstance> allGamesForMaze;
-    for(auto it = loadedAlgorithms.begin(); it != loadedAlgorithms.end(); it++){
-        gameInstance GI = gameInstance(gameMaze, *it);
-        cout << "Running game " << GI.getAlgorithmName() << endl;
-        runSingleAlgorithm(gameMaze, GI);
-        cout << "Steps taken to complete maze: " << GI.getStepsTaken() << endl;
-            allGamesForMaze.emplace_back(GI);
-    }
-    for (auto player = allGamesForMaze.begin(); player != allGamesForMaze.end(); player++){
-
-    }
-    return allGamesForMaze;
-}
