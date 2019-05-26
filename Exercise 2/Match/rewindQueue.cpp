@@ -1,15 +1,5 @@
 #include "safeQueue.h"
 
-template<class T>
-class RewindQueue {
-
-    std::vector<T*> vec;
-    std::vector<T>::iterator it;
-    std::mutex m;
-
-public:
-
-    RewindQueue() {}
 
 void RewindQueue::setSize(int expectedSize){
     vec.reserve(expectedSize);
@@ -40,5 +30,3 @@ void RewindQueue::rewindQueue(){
     std::lock_guard<std::mutex> lock(m);
     it = vec.begin();
 }
-
-};

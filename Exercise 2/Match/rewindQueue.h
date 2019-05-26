@@ -4,9 +4,19 @@
 #include <mutex>
 #include <queue>
 
-void setSize(int expectedSize);
-void addElement(T* elem);
-bool popElement(T& elem);
-void rewindQueue();
+template<class T>
+class RewindQueue {
+
+    std::vector<T*> vec;
+    typename std::vector<T>::iterator it;
+    std::mutex m;
+
+public:
+    RewindQueue() {}
+    void setSize(int expectedSize);
+    void addElement(T* elem);
+    bool popElement(T& elem);
+    void rewindQueue();
+};
 
 #endif // SAFEQUEUE_H_INCLUDED
