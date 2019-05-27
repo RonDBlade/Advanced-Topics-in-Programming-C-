@@ -27,6 +27,7 @@ class Maze{
     vector<string> mazeData;
 
 public:
+    Maze();
     Maze(string mazeName_, int maxSteps_, int rows_, int cols_);
     bool parse_maze(ifstream &input_file);
     pair<int, int> getStart()const;
@@ -36,6 +37,13 @@ public:
     int getCols()const;
     char getChar(pair<int, int>)const;
     string getMazeName()const;
+    bool isValidMaze()const;
+
+private:
+    void readMaze(ifstream& input_file);
+    bool findCharInMaze(char charToFind);
+    void printErrorHeader();
+    bool checkWrongChars(string allowedChars);
 };
 
 #endif // MAZE_H_INCLUDED

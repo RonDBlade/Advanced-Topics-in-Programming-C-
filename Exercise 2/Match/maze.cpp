@@ -1,5 +1,9 @@
 #include "maze.h"
 
+Maze::Maze(): mazeName(""), maxSteps(0), rows(0), cols(0), mazeValid(false){
+    //Empty constructors used as "Dummy" when no maze exists yet
+}
+
 Maze::Maze(string mazeName_, int maxSteps_, int rows_, int cols_): mazeName(mazeName_), maxSteps(maxSteps_), rows(rows_), cols(cols_), mazeValid(true){
     mazeData.reserve(rows);
 }
@@ -44,6 +48,10 @@ string Maze::getMazeName()const{
     return mazeName;
 }
 
+bool Maze::isValidMaze()const{
+    return mazeValid;
+}
+
 string fixInputLine(string line, int required_length){
     int line_length = line.length();
     if (line_length > required_length){
@@ -55,7 +63,7 @@ string fixInputLine(string line, int required_length){
     return line;
 }
 
-void readMaze(ifstream& input_file){
+void Maze::readMaze(ifstream& input_file){
     string line;
     int current_line = 0;
     while (getline(input_file, line) && current_line++ < rows){
@@ -69,7 +77,7 @@ void readMaze(ifstream& input_file){
 }
 
 
-bool findCharInMaze(char charToFind){
+bool Maze::findCharInMaze(char charToFind){
     bool found_char = false;
     size_t index_of_char;
     for (auto it = mazeData.begin(); it != mazeData.end(); it++){
@@ -107,14 +115,14 @@ bool findCharInMaze(char charToFind){
     return true;
 }
 
-void printErrorHeader(){
+void Maze::printErrorHeader(){
     if (mazeValid){
         cout << "Bad maze in maze file:" << endl;
         mazeValid = false;
     }
 }
 
-bool checkWrongChars(string allowedChars){
+bool Maze::checkWrongChars(string allowedChars){
     std::size_t index_of_char;
     bool is_valid = true;
     for (vector<string>::iterator it = mazeData.begin(); it != mazeData.end(); it++){
