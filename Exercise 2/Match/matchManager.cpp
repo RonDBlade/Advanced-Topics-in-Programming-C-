@@ -16,6 +16,10 @@ void matchManager::registerSoFiles(vector<string> algoFiles, vector<string> maze
             fileHandles.push_back(handle);
         }
     }
+    if (instance.loadedAlgorithms.size() < 1){
+        cout << "No valid algorithms files found, aborting." << endl;
+        exit(1);
+    }
     loadMazes(mazeFiles);
     for (auto& handle : fileHandles){
         dlclose(handle);
@@ -76,14 +80,16 @@ void outputData(const vector<vector<int>> steps, const vector<string> algs, cons
 void matchManager::runGames(){
     // As long there are games in the queue, the thread will run more games.
     // Since all the games are produced before we run the threads, when the queue is empty, all the games have started running.
-    std::unique_ptr<gameInstance> game;
+    gameInstance game;
     string outputFileName;
-    while(allGames.popElement(*game)){
-        game->runGame();
+    cout << "Thread " << std::this_thread::get_id() << " has begun" << endl;
+    while(allGames.popElement(game)){
+        cout << "Thread: " << std::this_thread::get_id() << " runs: " << game.getAlgorithmName() << "_" << game.getMazeName() << endl;
+        game.runGame();
         if(outputFolder != ""){
-            outputFileName = outputFolder + game->getMazeName() + "_" + game->getAlgorithmName() + ".output";
+            outputFileName = outputFolder + game.getMazeName() + "_" + game.getAlgorithmName() + ".output";
             std::ofstream outputfile(outputFileName);
-            for (auto gameMove : game->getGameOutput()){
+            for (auto gameMove : game.getGameOutput()){
                 outputfile << gameMove << endl;
             }
         }
@@ -92,7 +98,7 @@ void matchManager::runGames(){
 
 void matchManager::printScores(){
     allGames.rewindQueue();
-    std::unique_ptr<gameInstance> currentGame;
+    gameInstance currentGame;
     vector<vector<int>> steps;
     vector<int> stepsForAlgorithm;
     vector<string> mazeNames;
@@ -103,11 +109,11 @@ void matchManager::printScores(){
     for(auto& maze : loadedMazes){
         mazeNames.push_back(maze.getMazeName());
     }
-    for(size_type i = 0; i < loadedAlgorithms.size(); i++){
+    for(size_t i = 0; i < loadedAlgorithms.size(); i++){
         stepsForAlgorithm.clear();
-        for(size_type j = 0; j < loadedMazes.size(); j++){
-            allGames.popElement(*currentGame);
-            stepsForAlgorithm.push_back(currentGame->getStepsTaken());
+        for(size_t j = 0; j < loadedMazes.size(); j++){
+            allGames.popElement(currentGame);
+            stepsForAlgorithm.push_back(currentGame.getStepsTaken());
         }
         steps.push_back(stepsForAlgorithm);
     }
@@ -116,8 +122,9 @@ void matchManager::printScores(){
 
 void matchManager::runThreads(){
     vector<std::thread> programThreads;
+    cout << "Main thread: " << std::this_thread::get_id() << endl;
     for(int i = 0; i < numOfThreads; i++){
-        programThreads.push_back(std::move(std::thread(runGames)));
+        programThreads.push_back((std::thread(&matchManager::runGames, this)));
     }
     runGames();
     for (auto& thread : programThreads){
@@ -127,12 +134,11 @@ void matchManager::runThreads(){
 }
 
 void matchManager::pairGames(){
-    std::unique_ptr<gameInstance> game;
-    allGames.setSize(loadedMazes.size() * loadedAlgorithms.size());
+    allGames.setSize(loadedMazes.size() * instance.loadedAlgorithms.size());
     for(auto& maze : loadedMazes){
-        for(auto& algorithm : loadedAlgorithms){
-            *game = gameInstance(maze, algorithm);
-            allGames.addElement(*game);
+        for(auto& algorithm : instance.loadedAlgorithms){
+            gameInstance game = gameInstance(maze, algorithm);
+            allGames.addElement(game);
         }
     }
     runThreads();
@@ -142,8 +148,12 @@ void matchManager::loadMazes(vector<string> mazeFiles){
     Maze gameMaze;
     for(auto& mazeFile : mazeFiles){
         gameMaze = addMaze(mazeFile);
-        if (gameMaze != nullptr){
+        if (gameMaze.isValidMaze()){
             loadedMazes.push_back(gameMaze);
+        }
+        if (loadedMazes.size() < 1){
+            cout << "No valid maze files, aborting" << endl;
+            exit(1);
         }
     }
     pairGames();
