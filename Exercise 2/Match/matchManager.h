@@ -17,11 +17,14 @@ class matchManager{
     static matchManager instance;
     std::vector<pair <string, std::function<std::unique_ptr<AbstractAlgorithm>()>>> loadedAlgorithms;
     std::vector<Maze> loadedMazes;
+    vector<void*> fileHandles;
     string outputFolder;
     int numOfThreads;
     RewindQueue<gameInstance> allGames;
 
 public:
+    ~matchManager();
+
     void registerAlgorithm(std::function<std::unique_ptr<AbstractAlgorithm>()> algorithm) {
         instance.loadedAlgorithms.back().second = algorithm;
     }

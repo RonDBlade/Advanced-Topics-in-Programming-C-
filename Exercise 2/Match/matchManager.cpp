@@ -3,8 +3,15 @@
 
 matchManager matchManager::instance;
 
+matchManager::~matchManager(){
+    for (auto& handle : fileHandles){
+        cout << "Closing file" << endl;
+        dlclose(handle);
+        cout << "Closed successfully" << endl;
+    }
+}
+
 void matchManager::registerSoFiles(vector<string> algoFiles, vector<string> mazeFiles){
-    vector<void*> fileHandles;
     void *handle;
     for (auto algoPath = std::begin(algoFiles); algoPath != std::end(algoFiles); algoPath++){
         instance.loadedAlgorithms.push_back(std::make_pair(std::filesystem::path(*algoPath).stem().string(), nullptr));
@@ -21,9 +28,6 @@ void matchManager::registerSoFiles(vector<string> algoFiles, vector<string> maze
         exit(1);
     }
     loadMazes(mazeFiles);
-    for (auto& handle : fileHandles){
-        dlclose(handle);
-    }
 }
 
 void printer(const string toprint)
@@ -83,9 +87,7 @@ void matchManager::runGames(){
     gameInstance game;
     string outputFileName;
     int gameID;
-    cout << "Thread " << std::this_thread::get_id() << " has begun" << endl;
     while((gameID = allGames.popElement(game)) > -1){
-        cout << "Thread: " << std::this_thread::get_id() << " runs: " << game.getAlgorithmName() << "_" << game.getMazeName() << endl;
         game.runGame();
         if(outputFolder != ""){
             outputFileName = outputFolder + game.getMazeName() + "_" + game.getAlgorithmName() + ".output";
@@ -127,7 +129,6 @@ void matchManager::printScores(){
 
 void matchManager::runThreads(){
     vector<std::thread> programThreads;
-    cout << "Main thread: " << std::this_thread::get_id() << endl;
     for(int i = 0; i < numOfThreads; i++){
         programThreads.push_back((std::thread(&matchManager::runGames, this)));
     }
@@ -174,5 +175,9 @@ void matchManager::processMatch (int num_of_arguments, char *arguments[]){
         outputFolder += "/";
     }
     numOfThreads = parsedInput.num_of_threads;
+    if (numOfThreads < 0){
+        cout << "usage error" << endl;
+        return;
+    }
     registerSoFiles(algoFiles, mazeFiles);
 }
