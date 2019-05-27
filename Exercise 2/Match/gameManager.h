@@ -23,6 +23,7 @@ class gameInstance{
     int bookmarkCount;
 
 public:
+    gameInstance();
     gameInstance(Maze &gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_);
 
     void runGame();

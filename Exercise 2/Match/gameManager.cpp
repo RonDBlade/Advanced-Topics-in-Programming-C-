@@ -1,5 +1,8 @@
 #include "gameManager.h"
 
+gameInstance::gameInstance(){
+}
+
 gameInstance::gameInstance(Maze &gameMaze_, pair<string, std::function<std::unique_ptr<AbstractAlgorithm>()>> &algorithm_): algorithmGenerator(algorithm_.second), gameMaze(gameMaze_), algoName(algorithm_.first), playerPos(gameMaze_.getStart()), stepsTaken(0), bookmarkCount(0){
     bookmarkPositions.clear();
     gameOutput.clear();
