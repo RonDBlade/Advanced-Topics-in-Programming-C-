@@ -82,39 +82,36 @@ void matchManager::runGames(){
     // Since all the games are produced before we run the threads, when the queue is empty, all the games have started running.
     gameInstance game;
     string outputFileName;
+    int gameID;
     cout << "Thread " << std::this_thread::get_id() << " has begun" << endl;
-    while(allGames.popElement(game)){
+    while((gameID = allGames.popElement(game)) > -1){
         cout << "Thread: " << std::this_thread::get_id() << " runs: " << game.getAlgorithmName() << "_" << game.getMazeName() << endl;
         game.runGame();
-        cout << "Game " << game.getAlgorithmName() << " _ " << game.getMazeName() << " ended with " << game.getStepsTaken() << endl;
         if(outputFolder != ""){
             outputFileName = outputFolder + game.getMazeName() + "_" + game.getAlgorithmName() + ".output";
-                        cout << "Writing to file " << outputFileName << endl;
             std::ofstream outputfile(outputFileName);
             for (auto gameMove : game.getGameOutput()){
                 outputfile << gameMove << endl;
             }
         }
+        if(!allGames.updateElement(gameID, game)){
+            cout << "There was an error updating game score for algorithm " << game.getAlgorithmName() << " run on maze " << game.getMazeName() << ". Summary table may be wrong." << endl;
+        }
     }
-            cout << "OUTSIDE Game " << game.getAlgorithmName() << " _ " << game.getMazeName() << " ended with " << game.getStepsTaken() << endl;
 }
 
 void matchManager::printScores(){
     allGames.rewindQueue();
     gameInstance currentGame;
-    allGames.popElement(currentGame);
-    cout << currentGame.getAlgorithmName() << " _ " << currentGame.getMazeName() << " _ " << currentGame.getStepsTaken() << endl;
     vector<vector<int>> steps;
     vector<int> stepsForAlgorithm;
     vector<string> mazeNames;
     vector<string> algorithmsNames;
     for(auto& algorithm : instance.loadedAlgorithms){
         algorithmsNames.push_back(algorithm.first);
-        cout << algorithm.first << endl;
     }
     for(auto& maze : loadedMazes){
         mazeNames.push_back(maze.getMazeName());
-        cout << maze.getMazeName() << endl;
     }
     for(size_t i = 0; i < instance.loadedAlgorithms.size(); i++){
         stepsForAlgorithm.clear();
@@ -143,8 +140,8 @@ void matchManager::runThreads(){
 
 void matchManager::pairGames(){
     allGames.setSize(loadedMazes.size() * instance.loadedAlgorithms.size());
-    for(auto& maze : loadedMazes){
-        for(auto& algorithm : instance.loadedAlgorithms){
+    for(auto& algorithm : instance.loadedAlgorithms){
+        for(auto& maze : loadedMazes){
             gameInstance game = gameInstance(maze, algorithm);
             allGames.addElement(game);
         }
