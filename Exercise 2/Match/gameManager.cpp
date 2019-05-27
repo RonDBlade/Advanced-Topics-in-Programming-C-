@@ -32,10 +32,6 @@ int gameInstance::getPlayerCol() const{
     return playerPos.first;
 }
 
-vector<pair<int, pair<int, int>>> gameInstance::getBookmarkPositions() const{
-    return bookmarkPositions;
-}
-
 vector<string> gameInstance::getGameOutput() const{
     return gameOutput;
 }
@@ -52,9 +48,8 @@ void gameInstance::hitAlgorithmWall(std::unique_ptr<AbstractAlgorithm> &algorith
     algorithmPtr->hitWall();
 }
 
-void gameInstance::hitAlgorithmBookmark(std::unique_ptr<AbstractAlgorithm> &algorithmPtr, int seq, int index){
+void gameInstance::hitAlgorithmBookmark(std::unique_ptr<AbstractAlgorithm> &algorithmPtr, int seq){
     algorithmPtr->hitBookmark(seq);
-    bookmarkPositions.erase(bookmarkPositions.begin() + index);
 }
 
 void gameInstance::setPlayerPos(pair<int, int> &position){
@@ -117,10 +112,10 @@ void gameInstance::runGame(){
         switch(requestedTile){
         case '@':
         case ' ':
-            for(auto bookmark = getBookmarkPositions().begin(); bookmark != getBookmarkPositions().end(); bookmark++){
-                if (bookmark->second == getPlayerPos()){
-                    int index = std::distance(getBookmarkPositions().begin(), bookmark);
-                    hitAlgorithmBookmark(algorithmPtr, bookmark->first, index);
+            for(auto& bookmark : bookmarkPositions){
+                if (bookmark.second == getPlayerPos()){
+                    hitAlgorithmBookmark(algorithmPtr, bookmark.first);
+                    bookmarkPositions.erase(std::remove(bookmarkPositions.begin(), bookmarkPositions.end(), bookmark), bookmarkPositions.end());
                     break;
                 }
             }

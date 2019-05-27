@@ -37,11 +37,10 @@ private:
     pair<int, int> getPlayerPos() const;
     int getPlayerRow() const;
     int getPlayerCol() const;
-    vector<pair<int, pair<int, int>>> getBookmarkPositions() const;
 
     AbstractAlgorithm::Move moveAlgorithm(std::unique_ptr<AbstractAlgorithm> &algorithmPtr);
 	void hitAlgorithmWall(std::unique_ptr<AbstractAlgorithm> &algorithmPtr);
-	void hitAlgorithmBookmark(std::unique_ptr<AbstractAlgorithm> &algorithmPtr, int seq, int index);
+	void hitAlgorithmBookmark(std::unique_ptr<AbstractAlgorithm> &algorithmPtr, int seq);
 
     void setPlayerPos(pair<int, int> &position);
     void setPlayerRow(int row);
