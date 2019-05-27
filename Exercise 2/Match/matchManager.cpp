@@ -3,14 +3,6 @@
 
 matchManager matchManager::instance;
 
-matchManager::~matchManager(){
-    for (auto& handle : fileHandles){
-        cout << "Closing file" << endl;
-        dlclose(handle);
-        cout << "Closed successfully" << endl;
-    }
-}
-
 void matchManager::registerSoFiles(vector<string> algoFiles, vector<string> mazeFiles){
     void *handle;
     for (auto algoPath = std::begin(algoFiles); algoPath != std::end(algoFiles); algoPath++){
@@ -119,7 +111,6 @@ void matchManager::printScores(){
         stepsForAlgorithm.clear();
         for(size_t j = 0; j < loadedMazes.size(); j++){
             allGames.popElement(currentGame);
-            cout << "Game: " << currentGame.getAlgorithmName() << "_" << currentGame.getMazeName() << " got " << currentGame.getStepsTaken() << " steps" << endl;
             stepsForAlgorithm.push_back(currentGame.getStepsTaken());
         }
         steps.push_back(stepsForAlgorithm);

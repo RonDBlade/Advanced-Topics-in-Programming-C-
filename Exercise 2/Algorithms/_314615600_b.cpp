@@ -304,7 +304,6 @@ AbstractAlgorithm::Move _314615600_b::move() //for now,SIMPLE IMPLEMENTATION
             pushtoMoveKeep(Move::RIGHT,' ');
         moved_to_new=true;
         lastMove=Move::RIGHT;
-        std::cout << "moved right,it is new on "  << current_position.first << " " << current_position.second << std::endl;
         return Move::RIGHT;
     }
     //if we got here,we already know ALL the locations which surround the player.Time to find which are a wall and which aren't.
@@ -319,10 +318,6 @@ AbstractAlgorithm::Move _314615600_b::move() //for now,SIMPLE IMPLEMENTATION
     checkLoc=_314615600_b::isWall(current_position.first-1,current_position.second);//same for left
     if(!checkLoc)
         movevec.push_back(Move::LEFT);
-    else
-    {
-        std::cout << "cant go left on "  << current_position.first << " " << current_position.second << std::endl;
-    }
     checkLoc=_314615600_b::isWall(current_position.first+1,current_position.second);//same for right
     if(!checkLoc)
     {
@@ -336,10 +331,6 @@ AbstractAlgorithm::Move _314615600_b::move() //for now,SIMPLE IMPLEMENTATION
             pushtoMoveKeep(movevec.front(),' ');
         lastMove=movevec.front();
         setbyMove(lastMove);
-        if(lastMove==Move::RIGHT)
-        {
-            std::cout << "went right,it is the only place to move on "  << current_position.first << " " << current_position.second << std::endl;
-        }
         return lastMove;
     }
     //now we have all the tiles around him which are not walls.lets visit the one we visited the earliest between them!

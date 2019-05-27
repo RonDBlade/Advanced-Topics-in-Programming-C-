@@ -23,8 +23,6 @@ class matchManager{
     RewindQueue<gameInstance> allGames;
 
 public:
-    ~matchManager();
-
     void registerAlgorithm(std::function<std::unique_ptr<AbstractAlgorithm>()> algorithm) {
         instance.loadedAlgorithms.back().second = algorithm;
     }
@@ -42,7 +40,6 @@ private:
     void printScores();
     void runGames();
     void runThreads();
-
 };
 
 #endif // MATCHMANAGER_H_INCLUDED
