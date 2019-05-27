@@ -48,24 +48,25 @@ bool file_exists(const string& file_path){
 
 Maze addMaze(string mazePath){
     bool input_correct;
+    Maze dummyMaze; // Initialized as "Dummy" with empty constructor
     ifstream input_file(mazePath);
     if (!input_file.is_open()){
         cout << "File: " << mazePath << "doesn't lead to a maze file or leads to a file that cannot be opened" << endl;
-        return nullptr;
+        return dummyMaze;
     }
     int maze_data[3] = {0};
     if (!is_header_valid(input_file, maze_data)){
         input_file.close();
-        return nullptr;
+        return dummyMaze;
     }
     string fileName = std::filesystem::path(mazePath).stem();
     Maze gameMaze = Maze(fileName, maze_data[0], maze_data[1], maze_data[2]);
-    input_correct = gameMaze->parse_maze(input_file);
+    input_correct = gameMaze.parse_maze(input_file);
     input_file.close();
     if (input_correct){
         return gameMaze;
     }
-    return nullptr;
+    return dummyMaze;
 }
 
 string parseStringFromVector(vector<string> arguments, string search_string){
@@ -80,8 +81,11 @@ string parseStringFromVector(vector<string> arguments, string search_string){
     if ((search_string == "-output") && (place_in_vector == std::end(arguments))){
         return "";
     }
-    if ((search_string == "-num_threads") && (place_in_vector == std::end(arguments))){
-        return "0";
+    if (search_string == "-num_threads"){
+        if (place_in_vector == std::end(arguments)){
+            return "0";
+        }
+        return path;
     }
     // Return the path found in the arguments or the default path of current working directory
     return (std::filesystem::is_directory(path, err)) ? path : std::filesystem::current_path().string();
@@ -100,8 +104,11 @@ ParsedInput::ParsedInput(int num_of_arguments, char* arguments[]): maze_path(std
     algorithm_path = parseStringFromVector(argumentsStrings, "-algorithm_path");
     output_path = parseStringFromVector(argumentsStrings, "-output");
     threadsAsStrings = parseStringFromVector(argumentsStrings, "-num_threads");
-    try:
-        num_of_threads = stoi(threadsAsStrings);
+    cout << "maze: " << maze_path << " algorithm: " << algorithm_path << " output: " << output_path << " threads: " << threadsAsStrings << endl;
+    try{
+        // Reducing 1 since main thread runs also
+        num_of_threads = stoi(threadsAsStrings) - 1;
+    }
     catch(const std::invalid_argument& e){
         cout << "Error parsing number of threads, not running any additional threads." << endl;
         num_of_threads = 0;
