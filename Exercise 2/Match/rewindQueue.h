@@ -8,12 +8,11 @@ template<class T>
 class RewindQueue {
 
     std::vector<T> vec;
-    typename std::vector<T>::iterator it;
-    bool initalized;
+    size_t placeInVec;
     std::mutex m;
 
 public:
-    RewindQueue(): initalized(false){}
+    RewindQueue(): placeInVec(0){}
 
     void setSize(int expectedSize){
         vec.reserve(expectedSize);
@@ -24,23 +23,27 @@ public:
         vec.push_back(elem);
     }
 
-    bool popElement(T& elem) {
-        if (!initalized){
-            it = vec.begin();
-            initalized = true;
-        }
+    int popElement(T& elem) {
         std::lock_guard<std::mutex> lock(m);
-        if(it == vec.end()) {
-            return false;
+        if(placeInVec == vec.size()) {
+            return -1;
         }
-        elem = *it;
-        it++;
-        return true;
+        elem = vec[placeInVec];
+        return placeInVec++;
+    }
+
+    bool updateElement(int placeToUpdate, T& elem){
+        if (placeToUpdate < (int)vec.size()){
+            std::lock_guard<std::mutex> lock(m);
+            vec[placeToUpdate] = elem;
+            return true;
+        }
+        return false;
     }
 
     void rewindQueue(){
         std::lock_guard<std::mutex> lock(m);
-        it = vec.begin();
+        placeInVec = 0;
     }
 
 };
