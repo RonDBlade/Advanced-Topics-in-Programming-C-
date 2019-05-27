@@ -19,7 +19,7 @@ public:
         vec.reserve(expectedSize);
     }
 
-    void addElement(T& elem) {
+    void addElement(T elem) {
         std::lock_guard<std::mutex> lock(m);
         vec.push_back(elem);
     }
