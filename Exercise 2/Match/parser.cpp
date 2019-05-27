@@ -78,8 +78,14 @@ string parseStringFromVector(vector<string> arguments, string search_string){
             path = *(std::next(place_in_vector));
         }
     }
-    if ((search_string == "-output") && (place_in_vector == std::end(arguments))){
-        return "";
+    if (search_string == "-output"){
+        if (place_in_vector == std::end(arguments)){
+            return "";
+        }
+        if (!std::filesystem::is_directory(path, err)){
+            std::filesystem::create_directory(path);
+        }
+        return path;
     }
     if (search_string == "-num_threads"){
         if (place_in_vector == std::end(arguments)){
@@ -104,7 +110,6 @@ ParsedInput::ParsedInput(int num_of_arguments, char* arguments[]): maze_path(std
     algorithm_path = parseStringFromVector(argumentsStrings, "-algorithm_path");
     output_path = parseStringFromVector(argumentsStrings, "-output");
     threadsAsStrings = parseStringFromVector(argumentsStrings, "-num_threads");
-    cout << "maze: " << maze_path << " algorithm: " << algorithm_path << " output: " << output_path << " threads: " << threadsAsStrings << endl;
     try{
         // Reducing 1 since main thread runs also
         num_of_threads = stoi(threadsAsStrings) - 1;
