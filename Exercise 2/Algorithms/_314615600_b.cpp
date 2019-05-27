@@ -30,7 +30,7 @@ bool _314615600_b::putBookmark()
     }
     else if(bookmark_count==put_bookmark) //if we waited too long for a bookmark
     {
-        put_bookmark*=2;
+        put_bookmark=put_bookmark*2+(total_bookmarks-biggest_met)*1.2;
         return true;
     }
     return false;
@@ -140,7 +140,7 @@ void _314615600_b::hitBookmark(int seq) //we want to update the map of locations
     if(seq>biggest_met)
     {
         int cnt=moveNumber;
-        put_bookmark/=2;
+        put_bookmark=put_bookmark/2+(total_bookmarks-biggest_met)*1.2;
         if(put_bookmark<10)
             put_bookmark=10;
         bookmark_count=0;
