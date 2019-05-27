@@ -86,33 +86,41 @@ void matchManager::runGames(){
     while(allGames.popElement(game)){
         cout << "Thread: " << std::this_thread::get_id() << " runs: " << game.getAlgorithmName() << "_" << game.getMazeName() << endl;
         game.runGame();
+        cout << "Game " << game.getAlgorithmName() << " _ " << game.getMazeName() << " ended with " << game.getStepsTaken() << endl;
         if(outputFolder != ""){
             outputFileName = outputFolder + game.getMazeName() + "_" + game.getAlgorithmName() + ".output";
+                        cout << "Writing to file " << outputFileName << endl;
             std::ofstream outputfile(outputFileName);
             for (auto gameMove : game.getGameOutput()){
                 outputfile << gameMove << endl;
             }
         }
     }
+            cout << "OUTSIDE Game " << game.getAlgorithmName() << " _ " << game.getMazeName() << " ended with " << game.getStepsTaken() << endl;
 }
 
 void matchManager::printScores(){
     allGames.rewindQueue();
     gameInstance currentGame;
+    allGames.popElement(currentGame);
+    cout << currentGame.getAlgorithmName() << " _ " << currentGame.getMazeName() << " _ " << currentGame.getStepsTaken() << endl;
     vector<vector<int>> steps;
     vector<int> stepsForAlgorithm;
     vector<string> mazeNames;
     vector<string> algorithmsNames;
-    for(auto& algorithm : loadedAlgorithms){
+    for(auto& algorithm : instance.loadedAlgorithms){
         algorithmsNames.push_back(algorithm.first);
+        cout << algorithm.first << endl;
     }
     for(auto& maze : loadedMazes){
         mazeNames.push_back(maze.getMazeName());
+        cout << maze.getMazeName() << endl;
     }
-    for(size_t i = 0; i < loadedAlgorithms.size(); i++){
+    for(size_t i = 0; i < instance.loadedAlgorithms.size(); i++){
         stepsForAlgorithm.clear();
         for(size_t j = 0; j < loadedMazes.size(); j++){
             allGames.popElement(currentGame);
+            cout << "Game: " << currentGame.getAlgorithmName() << "_" << currentGame.getMazeName() << " got " << currentGame.getStepsTaken() << " steps" << endl;
             stepsForAlgorithm.push_back(currentGame.getStepsTaken());
         }
         steps.push_back(stepsForAlgorithm);
@@ -164,6 +172,10 @@ void matchManager::processMatch (int num_of_arguments, char *arguments[]){
     vector<string> mazeFiles = findAllFilesByExtension(parsedInput.maze_path, ".maze");
     vector<string> algoFiles = findAllFilesByExtension(parsedInput.algorithm_path, ".so");
     outputFolder = parsedInput.output_path;
+    // Adding backslash in case the user didn't added one
+    if (outputFolder.back() != '/'){
+        outputFolder += "/";
+    }
     numOfThreads = parsedInput.num_of_threads;
     registerSoFiles(algoFiles, mazeFiles);
 }

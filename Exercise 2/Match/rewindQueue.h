@@ -19,10 +19,9 @@ public:
         vec.reserve(expectedSize);
     }
 
-    void addElement(T elem) {
+    void addElement(T& elem) {
         std::lock_guard<std::mutex> lock(m);
         vec.push_back(elem);
-        std::cout << "Added " << vec.size() << " elements already" << std::endl;
     }
 
     bool popElement(T& elem) {
@@ -31,12 +30,9 @@ public:
             initalized = true;
         }
         std::lock_guard<std::mutex> lock(m);
-        std::cout << "Trying to get out an element" << endl;
         if(it == vec.end()) {
-            std::cout << "No elements" << endl;
             return false;
         }
-        std::cout << "Got an element, number " << it-vec.begin() << " out of " << vec.size() << endl; \
         elem = *it;
         it++;
         return true;

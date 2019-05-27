@@ -53,7 +53,6 @@ void gameInstance::hitAlgorithmWall(std::unique_ptr<AbstractAlgorithm> &algorith
 }
 
 void gameInstance::hitAlgorithmBookmark(std::unique_ptr<AbstractAlgorithm> &algorithmPtr, int seq, int index){
-    cout << "Hit bookmark number " << seq << " Placed in index " << index << endl;
     algorithmPtr->hitBookmark(seq);
     bookmarkPositions.erase(bookmarkPositions.begin() + index);
 }
@@ -92,7 +91,6 @@ void gameInstance::runGame(){
     while(currMoveNumber < maxSteps){
         currMoveNumber++;
         currPlayerMove = moveAlgorithm(algorithmPtr);
-        cout << "Player details: " << " move: " << currPlayerMove << " position: " << getPlayerPos().first << " , " <<  getPlayerPos().second << endl;
         switch(currPlayerMove){
         case AbstractAlgorithm::Move::UP:
             setPlayerRow(positiveModulo(getPlayerRow() - 1, rows));
@@ -116,24 +114,18 @@ void gameInstance::runGame(){
             continue; // Next loop iteration, don't check current character
         }
         requestedTile = gameMaze.getChar(getPlayerPos());
-        cout << "Requested : " << requestedTile << " In position: " << getPlayerPos().first << " " << getPlayerPos().second << endl;
         switch(requestedTile){
         case '@':
         case ' ':
             for(auto bookmark = getBookmarkPositions().begin(); bookmark != getBookmarkPositions().end(); bookmark++){
                 if (bookmark->second == getPlayerPos()){
                     int index = std::distance(getBookmarkPositions().begin(), bookmark);
-                    cout << "Found distance is " << index << " in bookmark placed in " << bookmark->second.first << " " << bookmark->second.second << endl;
-                    int lastBook = (getBookmarkPositions().end()-1)->first;
-                    cout << "Current max bookmark is " << lastBook << endl;
                     hitAlgorithmBookmark(algorithmPtr, bookmark->first, index);
                     break;
                 }
             }
-            cout << "AAA" << endl;
             break;
         case '#':
-            cout << "HIT WALL" << endl;
             hitAlgorithmWall(algorithmPtr);
             switch(currPlayerMove){// Reverse player move
             case AbstractAlgorithm::Move::UP:
