@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Exercise 4" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Exercise 4" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-pedantic-errors" />
+					<Add option="-Wextra" />
+					<Add option="-Wall -Werror" />
+					<Add option="-std=c++17" />
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Exercise 4" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="MazeGame/AbstractAlgorithm.h" />
+		<Unit filename="MazeGame/Match.h" />
+		<Unit filename="MazeGame/_314615600_a.cpp" />
+		<Unit filename="MazeGame/_314615600_a.h" />
+		<Unit filename="MazeGame/_314615600_b.cpp" />
+		<Unit filename="MazeGame/_314615600_b.h" />
+		<Unit filename="MazeGame/gameManager.cpp" />
+		<Unit filename="MazeGame/gameManager.h" />
+		<Unit filename="MazeGame/main.cpp" />
+		<Unit filename="MazeGame/matchManager.cpp" />
+		<Unit filename="MazeGame/matchManager.h" />
+		<Unit filename="MazeGame/maze.cpp" />
+		<Unit filename="MazeGame/maze.h" />
+		<Unit filename="MazeGame/parser.cpp" />
+		<Unit filename="MazeGame/parser.h" />
+		<Unit filename="SimpleGame/GameData.cpp" />
+		<Unit filename="SimpleGame/GameData.h" />
+		<Unit filename="SimpleGame/GameManager.cpp" />
+		<Unit filename="SimpleGame/GameManager.h" />
+		<Unit filename="SimpleGame/Match.h" />
+		<Unit filename="SimpleGame/PlayerOne.cpp" />
+		<Unit filename="SimpleGame/PlayerOne.h" />
+		<Unit filename="SimpleGame/main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
