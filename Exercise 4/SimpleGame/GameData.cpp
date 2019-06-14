@@ -1,18 +1,21 @@
 #include "GameData.h"
 
-GameData::GameData(): gamedone(false), moveCount(0){};
+GameData::instanceData::instanceData(int _chosenNumber): chosenNumber(_chosenNumber), moveCount(0), gameDone(false){}
 
-GameInstanceData GameData::newGameInstance(){
+GameData::GameData(Id _gameID, int _maxRange = MAX_NUM): gameID(_gameID), maxRange(_maxRange) {}
+
+GameData::GameInstanceData GameData::newGameInstance(){
     std::random_device rd;
     std::mt19937 rng(rd());
-    std::uniform_int_distribution<int> uni(MIN_NUM, MAX_NUM);
-    return chosenNumber = uni(rng);
-    }
+    std::uniform_int_distribution<int> uni(0, maxRange);
+    int chosenNumber = uni(rng);
+    return instanceData(chosenNumber);
+}
 
-MoveFeedback GameData::processMove(GameData::GameInstanceData& gameInstance, GameData::Move move){
+GameData::MoveFeedback GameData::processMove(GameData::GameInstanceData& gameInstance, GameData::Move move){
     moveCount++;
     if(gameInstance == move){
-        GameDone = true;
+        gameDone = true;
         return 0;
     }
     if(gameInstance > move){
@@ -21,10 +24,10 @@ MoveFeedback GameData::processMove(GameData::GameInstanceData& gameInstance, Gam
     return -1;
     }
 
-InitData GameData::GetInitData(){
-    return MAX_NUM;
+GameData::InitData GameData::GetInitData(){
+    return maxRange;
 }
 
 bool GameData::IsGameDone(){
-    return GameDone;
+    return gameDone;
 }

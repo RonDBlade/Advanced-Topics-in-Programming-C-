@@ -2,11 +2,12 @@
 #define GAMEMANAGER_H_INCLUDED
 
 #include "GameData.h"
+#include "PlayerOne.h"
 
 class GameManager {
 public:
     GameData::InitData getInitData(GameData& game, GameData::GameInstanceData& gameInstance) {
-        return GameData::get_init_Data();
+        return game.get_init_Data(gameInstance);
     }
     GameData::MoveFeedback processMove(GameData& game, GameData::GameInstanceData& gameInstance, GameData::Move move) {
         return game.processMove(gameInstance, move);

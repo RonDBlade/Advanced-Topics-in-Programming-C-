@@ -1,7 +1,8 @@
 #include "Match.h"
+#include "GameManager.h"
 
 
-int main(int argc, char *argv[]) {
+int main() {
     using MyMatch = Match<GameManager, GameData, Player>;
     GameManager g;
     MyMatch match{g};
